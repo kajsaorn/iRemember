@@ -6,13 +6,38 @@
     android:layout_height="match_parent"
     tools:context="com.iremember.master.iremembermaster.MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/btnBreakfast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="40dp"
+        android:onClick="btnBreakfastOnClick"
+        android:text="Breakfast (UDP broadcast)"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnBreakfastNDS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="24dp"
+        android:onClick="btnBreakfastNSDOnClick"
+        android:text="Breakfast (NDS)"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnBreakfast" />
+
+    <EditText
+        android:id="@+id/mEditText"
+        android:layout_width="305dp"
+        android:layout_height="278dp"
+        android:layout_marginEnd="39dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="23dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnBreakfastNDS" />
 </android.support.constraint.ConstraintLayout>
