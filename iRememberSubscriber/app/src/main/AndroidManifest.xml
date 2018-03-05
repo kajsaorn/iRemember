@@ -18,9 +18,11 @@
         </activity>
 
         <service
-            android:name=".availabilityService"
+            android:name=".AvailabilityService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".PlayerActivity"></activity>
     </application>
 
 </manifest>

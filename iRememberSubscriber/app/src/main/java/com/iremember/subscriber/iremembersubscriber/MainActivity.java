@@ -1,5 +1,6 @@
 package com.iremember.subscriber.iremembersubscriber;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         // om tom
         if((roomID != null) && !roomID.trim().equals("")){
             // - registrera tjänsten
-            makeAvailable();
+            makeAvailable(roomID);
 
             //      om det gick att registrera
             //          - visa stb vy
@@ -34,7 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void makeAvailable(){
-
+    /**
+     * Start the service that performs service registration and UDP-service
+     */
+    private void makeAvailable(String roomID){
+        Intent mIntent = new Intent(this, AvailabilityService.class);
+        mIntent.putExtra("roomId", roomID);
+        startService(mIntent);
     }
 }
