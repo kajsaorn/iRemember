@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">iRememberSubscriber</string>
-    <string name="title_activity_player">Player</string>
+    <string name="btn_start">Start</string>
+    <string name="tv_start">Ange rumsnummer</string>
 </resources>

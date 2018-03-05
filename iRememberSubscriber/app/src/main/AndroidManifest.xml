@@ -2,12 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.iremember.subscriber.iremembersubscriber">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,13 +17,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".CommandListenerService" />
-
-        <activity
-            android:name=".Player"
-            android:label="@string/title_activity_player"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DemoPlayerActivity"></activity>
+        <service
+            android:name=".availabilityService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

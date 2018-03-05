@@ -1,73 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.iremember.subscriber.iremembersubscriber.MainActivity">
 
-    <Button
-        android:id="@+id/btnStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
-        android:onClick="btnStartOnClick"
-        android:text="Start listen (UDP)"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/layout_padding">
 
-    <Button
-        android:id="@+id/btnStop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="48dp"
-        android:onClick="btnStopOnClick"
-        android:text="Stop listen (UDP)"
-        app:layout_constraintStart_toEndOf="@+id/btnStart"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv_roomid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/tv_padding"
+            android:text="@string/tv_start"
+            android:textSize="@dimen/tv_text_size"
+            />
 
-    <EditText
-        android:id="@+id/editTextReceived"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="85dp"
-        android:layout_marginTop="44dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStartNSD" />
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_green_light"
+            android:padding="@dimen/btn_padding"
+            android:layout_below="@id/tv_roomid"
+            android:text="@string/btn_start"
+            android:textColor="@android:color/background_light"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold"
+            />
 
-    <Button
-        android:id="@+id/btnShowPlayerActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="45dp"
-        android:onClick="btnToPlayOnClick"
-        android:text="To Player"
-        app:layout_constraintTop_toBottomOf="@+id/editTextReceived"
-        tools:layout_editor_absoluteX="144dp" />
 
-    <Button
-        android:id="@+id/btnStartNSD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:onClick="btnRegisterNSDOnClick"
-        android:text="Start Listen (NSD)"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStart" />
+    </RelativeLayout>
 
-    <Button
-        android:id="@+id/btnStopNSD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="24dp"
-        android:text="Stop Listen (NSD)"
-        app:layout_constraintStart_toEndOf="@+id/btnStartNSD"
-        app:layout_constraintTop_toBottomOf="@+id/btnStop" />
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>
