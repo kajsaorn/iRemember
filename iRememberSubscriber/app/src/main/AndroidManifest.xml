@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.iremember.subscriber.iremembersubscriber">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,11 +20,11 @@
         </activity>
 
         <service
-            android:name=".AvailabilityService"
+            android:name=".NetworkService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".PlayerActivity"></activity>
+        <activity android:name=".PlayerActivity" />
     </application>
 
 </manifest>

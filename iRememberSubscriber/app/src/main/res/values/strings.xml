@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">iRememberSubscriber</string>
-    <string name="btn_start">Start</string>
-    <string name="tv_start">Ange rumsnummer</string>
+    <string name="btn_connect">STARTA</string>
+    <string name="et_room_name_hint">ANGE RUMSNUMMER</string>
+    <string name="btn_disconnect">STÄNG AV NOTIFIERINGAR</string>
+    <string name="status_connected">NOTIFIERINGAR ÄR PÅ</string>
+    <string name="status_disconnected">NOTIFIERINGAR ÄR AVSTÄNGT</string>
 </resources>
