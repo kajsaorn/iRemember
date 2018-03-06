@@ -1,18 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.iremember.master.iremembermaster.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/layout_padding">
 
-</android.support.constraint.ConstraintLayout>
+        <Button
+            android:id="@+id/btn_breakfast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_green_light"
+            android:padding="@dimen/btn_padding"
+            android:text="@string/btn_breakfast"
+            android:textColor="@android:color/background_light"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold"
+            android:onClick="onBreakfastClick"
+            />
+
+        <Button
+            android:id="@+id/btn_lunch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_green_light"
+            android:padding="@dimen/btn_padding"
+            android:text="@string/btn_lunch"
+            android:textColor="@android:color/background_light"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold"
+            android:onClick="onLunchClick"
+            android:layout_below="@id/btn_breakfast"
+            />
+
+        <Button
+            android:id="@+id/btn_dinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_green_light"
+            android:padding="@dimen/btn_padding"
+            android:text="@string/btn_dinner"
+            android:textColor="@android:color/background_light"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold"
+            android:onClick="onDinnerClick"
+            android:layout_below="@id/btn_lunch"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>

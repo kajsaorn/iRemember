@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layout_padding">40dp</dimen>
+
+    <dimen name="btn_text_size">20sp</dimen>
+    <dimen name="btn_padding">20dp</dimen>
+    <dimen name="btn_margin">20dp</dimen>
+
+    <dimen name="tv_text_size">20sp</dimen>
+    <dimen name="tv_padding">20dp</dimen>
+    <dimen name="tv_margin">20dp</dimen>
+
+    <dimen name="et_text_size">20sp</dimen>
+    <dimen name="et_padding">20dp</dimen>
+    <dimen name="et_margin">20dp</dimen>
+
+
+</resources>
