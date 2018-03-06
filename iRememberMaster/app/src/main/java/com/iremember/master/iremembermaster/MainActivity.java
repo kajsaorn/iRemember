@@ -4,8 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
-import com.iremember.master.iremembermaster.Constants.Commands;
+import com.iremember.master.iremembermaster.Constants.Command;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,19 +17,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onBreakfastClick(View view) {
-        log(this.getApplicationContext().toString());
-        NetworkHandler mNetworkHandler = new NetworkHandler(Commands.BREAKFAST,
-                this.getApplicationContext());
+        new CommandHandler(Command.BREAKFAST, this);
     }
 
     public void onLunchClick(View view) {
+        new CommandHandler(Command.LUNCH, this);
     }
 
     public void onDinnerClick(View view) {
+        new CommandHandler(Command.DINNER, this);
     }
 
     public void log(String msg) {
         Log.d("MainActivity", msg);
-        //Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

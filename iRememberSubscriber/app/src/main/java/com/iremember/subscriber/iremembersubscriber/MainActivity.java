@@ -13,32 +13,47 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.iremember.subscriber.iremembersubscriber.Constants.NetworkActions;
+import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String TAG = "MainActivity";
-    private BroadcastReceiver mBroadcastReceiver;
-    private Button btnConnect, btnDisconnect;
-    private TextView tvStatus;
-    private EditText etRoomName;
     private String mRoomName;
+    private TextView mTvStatus;
+    private EditText mEtRoomName;
+    private Button mBtnConnect, mBtnDisconnect;
+    private BroadcastReceiver mBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mBroadcastReceiver = new MessageReceiver();
         initializeGUIElements();
         showDisconnectedMode();
         fetchRoomName();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mBroadcastReceiver == null) {
+            mBroadcastReceiver = new MessageReceiver();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mBroadcastReceiver != null) {
+            unregisterReceiver(mBroadcastReceiver);
+            mBroadcastReceiver = null;
+        }
+    }
+
     private void initializeGUIElements() {
-        btnConnect = (Button) findViewById(R.id.btn_connect);
-        btnDisconnect = (Button) findViewById(R.id.btn_disconnect);
-        tvStatus = (TextView) findViewById(R.id.tv_status);
-        etRoomName = (EditText) findViewById(R.id.et_room_name);
+        mBtnConnect = (Button) findViewById(R.id.btn_connect);
+        mBtnDisconnect = (Button) findViewById(R.id.btn_disconnect);
+        mTvStatus = (TextView) findViewById(R.id.tv_status);
+        mEtRoomName = (EditText) findViewById(R.id.et_room_name);
     }
 
     private void fetchRoomName() {
@@ -82,29 +97,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void disconnectFromNetwork() {
-        //...
-        Intent disconnectIntent = new Intent(this, NetworkService.class);
-        stopService(disconnectIntent);
+        Intent intent = new Intent(this, NetworkService.class);
+        stopService(intent);
     }
 
     private void showConnectedMode() {
-        tvStatus.setText(R.string.status_connected);
-        btnConnect.setVisibility(View.INVISIBLE);
-        btnDisconnect.setVisibility(View.VISIBLE);
-        etRoomName.setVisibility(View.INVISIBLE);
+        mTvStatus.setText(R.string.status_connected);
+        mBtnConnect.setVisibility(View.INVISIBLE);
+        mBtnDisconnect.setVisibility(View.VISIBLE);
+        mEtRoomName.setVisibility(View.INVISIBLE);
     }
 
     private void showDisconnectedMode() {
-        tvStatus.setText(R.string.status_disconnected);
-        btnConnect.setVisibility(View.VISIBLE);
-        btnDisconnect.setVisibility(View.INVISIBLE);
+        mTvStatus.setText(R.string.status_disconnected);
+        mBtnConnect.setVisibility(View.VISIBLE);
+        mBtnDisconnect.setVisibility(View.INVISIBLE);
         if (mRoomName == null) {
-            etRoomName.setVisibility(View.VISIBLE);
+            mEtRoomName.setVisibility(View.VISIBLE);
         }
     }
 
     public void log(String msg) {
-        Log.d(TAG, msg);
+        Log.d("MainActivity", msg);
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
@@ -115,11 +129,11 @@ public class MainActivity extends AppCompatActivity {
 
         public MessageReceiver() {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(NetworkActions.CONNECTION_SUCCESS);
-            intentFilter.addAction(NetworkActions.CONNECTION_FAILURE);
-            intentFilter.addAction(NetworkActions.DISCONNECTION_SUCCESS);
-            intentFilter.addAction(NetworkActions.DISCONNECT_FAILURE);
-            intentFilter.addAction(NetworkActions.SOCKET_FAILURE);
+            intentFilter.addAction(Broadcast.NETWORK_CONNECTION_SUCCESS);
+            intentFilter.addAction(Broadcast.NETWORK_CONNECTION_FAILURE);
+            intentFilter.addAction(Broadcast.NETWORK_DISCONNECTION_SUCCESS);
+            intentFilter.addAction(Broadcast.NETWORK_DISCONNECTION_FAILURE);
+            intentFilter.addAction(Broadcast.NETWORK_SOCKET_FAILURE);
             registerReceiver(this, intentFilter);
         }
 
@@ -128,23 +142,22 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
 
             switch (action) {
-                case NetworkActions.CONNECTION_SUCCESS:
+                case Broadcast.NETWORK_CONNECTION_SUCCESS:
                     showConnectedMode();
                     break;
-                case NetworkActions.DISCONNECTION_SUCCESS:
+                case Broadcast.NETWORK_DISCONNECTION_SUCCESS:
                     showDisconnectedMode();
                     break;
-                case NetworkActions.CONNECTION_FAILURE:
+                case Broadcast.NETWORK_CONNECTION_FAILURE:
                     // ...
                     break;
-                case NetworkActions.DISCONNECT_FAILURE:
+                case Broadcast.NETWORK_DISCONNECTION_FAILURE:
                     // ...
                     break;
-                case NetworkActions.SOCKET_FAILURE:
+                case Broadcast.NETWORK_SOCKET_FAILURE:
                     // ...
                     break;
             }
         }
     }
-
 }

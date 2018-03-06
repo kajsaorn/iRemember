@@ -7,10 +7,10 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.iremember.subscriber.iremembersubscriber.Constants.Commands;
-import com.iremember.subscriber.iremembersubscriber.Constants.NetworkActions;
+import com.iremember.subscriber.iremembersubscriber.Constants.Command;
+import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -18,10 +18,7 @@ import java.net.SocketException;
 
 public class NetworkService extends Service {
 
-    private final String TAG = "NetworkService";
-    private String mServiceType = "_iremember._udp";
-    private String mServiceName;
-
+    private String mDeviceName;
     private NsdManager mNsdManager;
     private NsdManager.RegistrationListener mRegistrationListener;
     private CommandReceiver mCommandReceiver;
@@ -36,7 +33,7 @@ public class NetworkService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int port = mCommandReceiver.getPort();
-        mServiceName = intent.getStringExtra("roomName");
+        mDeviceName = intent.getStringExtra("roomName");
 
         registerService(port);
         mCommandReceiver.start();
@@ -45,16 +42,15 @@ public class NetworkService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        unregisterCommandReceiver();
         unregisterService();
+        unregisterCommandReceiver();
+        super.onDestroy();
     }
-
 
     private void registerService(int port) {
         NsdServiceInfo serviceInfo = new NsdServiceInfo();
-        serviceInfo.setServiceName(mServiceName);
-        serviceInfo.setServiceType(mServiceType);
+        serviceInfo.setServiceName(Protocol.SERVICE_PREFIX + mDeviceName);
+        serviceInfo.setServiceType(Protocol.SERVICE_TYPE);
         serviceInfo.setPort(port);
         mNsdManager = (NsdManager) getApplicationContext().getSystemService(Context.NSD_SERVICE);
         mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
@@ -68,28 +64,28 @@ public class NetworkService extends Service {
                 // Save the service name. Android may have changed it in order to
                 // resolve a conflict, so update the name you initially requested
                 // with the name Android actually used.
-                mServiceName = NsdServiceInfo.getServiceName();
-                broadcast(NetworkActions.CONNECTION_SUCCESS);
+                mDeviceName = NsdServiceInfo.getServiceName();
+                broadcast(Broadcast.NETWORK_CONNECTION_SUCCESS);
                 //createNotification("Service registered", "registered", "iremember", 2, getApplicationContext());
             }
 
             @Override
             public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Registration failed! Put debugging code here to determine why.
-                broadcast(NetworkActions.CONNECTION_FAILURE);
+                broadcast(Broadcast.NETWORK_CONNECTION_FAILURE);
             }
 
             @Override
             public void onServiceUnregistered(NsdServiceInfo arg0) {
                 // Service has been unregistered. This only happens when you call
                 // NsdManager.unregisterService() and pass in this listener.
-                broadcast(NetworkActions.DISCONNECTION_SUCCESS);
+                broadcast(Broadcast.NETWORK_DISCONNECTION_SUCCESS);
             }
 
             @Override
             public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Unregistration failed. Put debugging code here to determine why.
-                broadcast(NetworkActions.DISCONNECT_FAILURE);
+                broadcast(Broadcast.NETWORK_DISCONNECTION_FAILURE);
             }
         };
     }
@@ -133,7 +129,7 @@ public class NetworkService extends Service {
                 port = socket.getLocalPort();
             } catch (SocketException e) {
                 e.printStackTrace();
-                broadcast(NetworkActions.SOCKET_FAILURE);
+                broadcast(Broadcast.NETWORK_SOCKET_FAILURE);
             }
         }
 
@@ -155,7 +151,7 @@ public class NetworkService extends Service {
                     play(command);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    broadcast(NetworkActions.SOCKET_FAILURE);
+                    broadcast(Broadcast.NETWORK_SOCKET_FAILURE);
                 }
 
             }
@@ -163,21 +159,21 @@ public class NetworkService extends Service {
 
 
         private void play(String command) {
-            if (command.equals(Commands.BREAKFAST) ||
-                    command.equals(Commands.LUNCH) ||
-                    command.equals(Commands.DINNER )) {
-                Intent reminderIntent = new Intent(getApplicationContext(), ReminderActivity.class);
-                reminderIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                reminderIntent.putExtra("meal_command", command);
-                startActivity(reminderIntent);
+            if (
+                    command.equals(Command.BREAKFAST) ||
+                    command.equals(Command.LUNCH) ||
+                    command.equals(Command.DINNER ))
+            {
+                Intent intent = new Intent(getApplicationContext(), ReminderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("command", command);
+                startActivity(intent);
             }
         }
     }
 
-
     public void log(String msg) {
-        Log.d(TAG, msg);
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Log.d("NetworkService", msg);
+        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
 }
