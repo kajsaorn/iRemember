@@ -83,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void disconnectFromNetwork() {
         //...
+        Intent disconnectIntent = new Intent(this, NetworkService.class);
+        stopService(disconnectIntent);
     }
 
     private void showConnectedMode() {

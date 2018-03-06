@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.iremember.subscriber.iremembersubscriber.Constants.Commands;
 import com.iremember.subscriber.iremembersubscriber.Constants.NetworkActions;
 
 import java.net.DatagramPacket;
@@ -41,6 +42,14 @@ public class NetworkService extends Service {
         mCommandReceiver.start();
         return START_NOT_STICKY;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterCommandReceiver();
+        unregisterService();
+    }
+
 
     private void registerService(int port) {
         NsdServiceInfo serviceInfo = new NsdServiceInfo();
@@ -101,6 +110,14 @@ public class NetworkService extends Service {
         return null;
     }
 
+    private void unregisterCommandReceiver() {
+        mCommandReceiver.interrupt();
+        mCommandReceiver = null;
+    }
+
+    private void unregisterService(){
+        mNsdManager.unregisterService(mRegistrationListener);
+    }
 
     /**
      * The CommandReceiver is a thread that listens for incoming UDP messages on the network.
@@ -135,10 +152,7 @@ public class NetworkService extends Service {
                     packet = new DatagramPacket(readBuffer, readBuffer.length);
                     socket.receive(packet);
                     command = new String(packet.getData(), 0, packet.getLength());
-
-                    log("COMMAND FROM NETWORK: " + command);
-                    //createNotification("Waiting for packet", "packetwait..", "iremember", 3, getApplicationContext());
-                    //play(command);
+                    play(command);
                 } catch (Exception e) {
                     e.printStackTrace();
                     broadcast(NetworkActions.SOCKET_FAILURE);
@@ -147,15 +161,17 @@ public class NetworkService extends Service {
             }
         }
 
-        /*
-        private void play(String command){
-            Intent playerIntent = new Intent(mContext,PlayerActivity.class);
-            playerIntent.putExtra("meal_command", command);
-            playerIntent.setType("text/plain");
-            startActivity(playerIntent);
-        }
-        */
 
+        private void play(String command) {
+            if (command.equals(Commands.BREAKFAST) ||
+                    command.equals(Commands.LUNCH) ||
+                    command.equals(Commands.DINNER )) {
+                Intent reminderIntent = new Intent(getApplicationContext(), ReminderActivity.class);
+                reminderIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                reminderIntent.putExtra("meal_command", command);
+                startActivity(reminderIntent);
+            }
+        }
     }
 
 

@@ -5,4 +5,5 @@
     <string name="btn_disconnect">STÄNG AV NOTIFIERINGAR</string>
     <string name="status_connected">NOTIFIERINGAR ÄR PÅ</string>
     <string name="status_disconnected">NOTIFIERINGAR ÄR AVSTÄNGT</string>
+    <string name="btn_reminder_stop">AVBRYT PÅMINNELSE</string>
 </resources>

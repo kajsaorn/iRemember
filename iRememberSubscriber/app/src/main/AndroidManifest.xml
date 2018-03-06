@@ -24,7 +24,9 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".PlayerActivity" />
+        <activity
+            android:name=".ReminderActivity"
+            android:launchMode="singleInstance"/>
     </application>
 
 </manifest>
