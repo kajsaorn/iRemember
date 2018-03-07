@@ -66,10 +66,6 @@ public class MainActivity extends AppCompatActivity {
      * Called when connect button is clicked.
      */
     public void onConnectClick(View v) {
-        NotificationUtils utils = new NotificationUtils();
-        utils.createNotification("Test Title", "Test text", this);
-
-/*
         if (mRoomName == null) {
             String input = ((EditText) findViewById(R.id.et_room_name)).getText().toString();
 
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
-        connectToNetwork(mRoomName);*/
+        connectToNetwork(mRoomName);
     }
 
     /**

@@ -16,6 +16,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import static com.iremember.subscriber.iremembersubscriber.Utilities.createNotification;
+
 public class NetworkService extends Service {
 
     private String mDeviceName;
@@ -66,7 +68,7 @@ public class NetworkService extends Service {
                 // with the name Android actually used.
                 mDeviceName = NsdServiceInfo.getServiceName();
                 broadcast(Network.CONNECTION_SUCCESS);
-                //createNotification("Service registered", "registered", "iremember", 2, getApplicationContext());
+                createNotification(Network.CONNECTION_MESSAGE, getApplicationContext());
             }
 
             @Override

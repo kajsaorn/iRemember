@@ -6,13 +6,12 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-public class NotificationUtils {
+public class Utilities {
 
-    private final String CHANNEL_ID = "com.iremember.subscriber";
-    private final String CHANNEL_NAME = "iRemember";
-    private int mNotificationId = 0;
+    public static final String CHANNEL_ID = "com.iremember.subscriber";
+    public static final String CHANNEL_NAME = "iRemember";
 
-    public void createNotification(String title, String text, Context context){
+    public static void createNotification(String title, Context context){
 
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -25,10 +24,9 @@ public class NotificationUtils {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentText(title)
-                .setContentText(text)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setChannelId(CHANNEL_ID);
 
-        mNotificationManager.notify(mNotificationId++, mBuilder.build());
+        mNotificationManager.notify(0, mBuilder.build());
     }
 }

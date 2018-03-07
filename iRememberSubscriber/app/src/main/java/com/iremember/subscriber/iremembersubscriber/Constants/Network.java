@@ -6,4 +6,5 @@ public class Network {
     public static final String CONNECTION_FAILURE = "connect_fail";
     public static final String DISCONNECTION_FAILURE = "disconnect_fail";
     public static final String SOCKET_FAILURE = "socket_fail";
+    public static final String CONNECTION_MESSAGE = "Du är ansluten till iRemember.";
 }
