@@ -56,7 +56,7 @@ public class CommandHandler {
 
             @Override
             public void onDiscoveryStarted(String regType) {
-                log("Discovery started");
+                log("Discovery started: " + mCommand);
             }
 
             @Override
@@ -71,19 +71,23 @@ public class CommandHandler {
             public void onServiceLost(NsdServiceInfo service) {
                 // When the network service is no longer available.
                 // Internal bookkeeping code goes here.
+                log("Lost a service: " + service.getServiceName());
             }
 
             @Override
             public void onDiscoveryStopped(String serviceType) {
+                log("Service discovery stopped: " + mCommand);
             }
 
             @Override
             public void onStartDiscoveryFailed(String serviceType, int errorCode) {
+                log("Service discovery failed to start");
                 mNsdManager.stopServiceDiscovery(this);
             }
 
             @Override
             public void onStopDiscoveryFailed(String serviceType, int errorCode) {
+                log("Service discovery failed to stop");
                 mNsdManager.stopServiceDiscovery(this);
             }
         };
@@ -128,7 +132,8 @@ public class CommandHandler {
 
     private void stopDeviceDiscovery() {
         mNsdManager.stopServiceDiscovery(mDiscoveryListener);
-        log("TIME IS UP!!!!");
+        mDatagramSocket.close();
+        log("Time is up for service discovery (" + mCommand + ")");
     }
 
     public void log(String msg) {

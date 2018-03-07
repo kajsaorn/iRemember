@@ -90,20 +90,8 @@ public class NetworkService extends Service {
         };
     }
 
-    private void broadcast(String action) {
-        Intent intent = new Intent();
-        intent.setAction(action);
-        sendBroadcast(intent);
-    }
-
-
     private void initializeCommandReceiver() {
         mCommandReceiver = new CommandReceiver();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
     private void unregisterCommandReceiver() {
@@ -113,6 +101,17 @@ public class NetworkService extends Service {
 
     private void unregisterService(){
         mNsdManager.unregisterService(mRegistrationListener);
+    }
+
+    private void broadcast(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        sendBroadcast(intent);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     /**
