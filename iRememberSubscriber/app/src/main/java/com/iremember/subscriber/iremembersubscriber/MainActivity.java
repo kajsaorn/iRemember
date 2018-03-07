@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.Network;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
      * Called when connect button is clicked.
      */
     public void onConnectClick(View v) {
+        NotificationUtils utils = new NotificationUtils();
+        utils.createNotification("Test Title", "Test text", this);
+
+/*
         if (mRoomName == null) {
             String input = ((EditText) findViewById(R.id.et_room_name)).getText().toString();
 
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
-        connectToNetwork(mRoomName);
+        connectToNetwork(mRoomName);*/
     }
 
     /**
@@ -129,11 +133,11 @@ public class MainActivity extends AppCompatActivity {
 
         public MessageReceiver() {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Broadcast.NETWORK_CONNECTION_SUCCESS);
-            intentFilter.addAction(Broadcast.NETWORK_CONNECTION_FAILURE);
-            intentFilter.addAction(Broadcast.NETWORK_DISCONNECTION_SUCCESS);
-            intentFilter.addAction(Broadcast.NETWORK_DISCONNECTION_FAILURE);
-            intentFilter.addAction(Broadcast.NETWORK_SOCKET_FAILURE);
+            intentFilter.addAction(Network.CONNECTION_SUCCESS);
+            intentFilter.addAction(Network.CONNECTION_FAILURE);
+            intentFilter.addAction(Network.DISCONNECTION_SUCCESS);
+            intentFilter.addAction(Network.DISCONNECTION_FAILURE);
+            intentFilter.addAction(Network.SOCKET_FAILURE);
             registerReceiver(this, intentFilter);
         }
 
@@ -142,19 +146,19 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
 
             switch (action) {
-                case Broadcast.NETWORK_CONNECTION_SUCCESS:
+                case Network.CONNECTION_SUCCESS:
                     showConnectedMode();
                     break;
-                case Broadcast.NETWORK_DISCONNECTION_SUCCESS:
+                case Network.DISCONNECTION_SUCCESS:
                     showDisconnectedMode();
                     break;
-                case Broadcast.NETWORK_CONNECTION_FAILURE:
+                case Network.CONNECTION_FAILURE:
                     // ...
                     break;
-                case Broadcast.NETWORK_DISCONNECTION_FAILURE:
+                case Network.DISCONNECTION_FAILURE:
                     // ...
                     break;
-                case Broadcast.NETWORK_SOCKET_FAILURE:
+                case Network.SOCKET_FAILURE:
                     // ...
                     break;
             }

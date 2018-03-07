@@ -9,7 +9,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Command;
-import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.Network;
 import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 
 import java.net.DatagramPacket;
@@ -65,27 +65,27 @@ public class NetworkService extends Service {
                 // resolve a conflict, so update the name you initially requested
                 // with the name Android actually used.
                 mDeviceName = NsdServiceInfo.getServiceName();
-                broadcast(Broadcast.NETWORK_CONNECTION_SUCCESS);
+                broadcast(Network.CONNECTION_SUCCESS);
                 //createNotification("Service registered", "registered", "iremember", 2, getApplicationContext());
             }
 
             @Override
             public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Registration failed! Put debugging code here to determine why.
-                broadcast(Broadcast.NETWORK_CONNECTION_FAILURE);
+                broadcast(Network.CONNECTION_FAILURE);
             }
 
             @Override
             public void onServiceUnregistered(NsdServiceInfo arg0) {
                 // Service has been unregistered. This only happens when you call
                 // NsdManager.unregisterService() and pass in this listener.
-                broadcast(Broadcast.NETWORK_DISCONNECTION_SUCCESS);
+                broadcast(Network.DISCONNECTION_SUCCESS);
             }
 
             @Override
             public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Unregistration failed. Put debugging code here to determine why.
-                broadcast(Broadcast.NETWORK_DISCONNECTION_FAILURE);
+                broadcast(Network.DISCONNECTION_FAILURE);
             }
         };
     }
@@ -128,7 +128,7 @@ public class NetworkService extends Service {
                 port = socket.getLocalPort();
             } catch (SocketException e) {
                 e.printStackTrace();
-                broadcast(Broadcast.NETWORK_SOCKET_FAILURE);
+                broadcast(Network.SOCKET_FAILURE);
             }
         }
 
@@ -150,7 +150,7 @@ public class NetworkService extends Service {
                     play(command);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    broadcast(Broadcast.NETWORK_SOCKET_FAILURE);
+                    broadcast(Network.SOCKET_FAILURE);
                 }
 
             }
