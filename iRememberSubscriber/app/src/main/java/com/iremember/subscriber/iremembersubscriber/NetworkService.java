@@ -10,13 +10,10 @@ import android.util.Log;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Command;
 import com.iremember.subscriber.iremembersubscriber.Constants.Network;
-import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-
-import static com.iremember.subscriber.iremembersubscriber.Utilities.createNotification;
 
 public class NetworkService extends Service {
 
@@ -24,12 +21,14 @@ public class NetworkService extends Service {
     private NsdManager mNsdManager;
     private NsdManager.RegistrationListener mRegistrationListener;
     private CommandReceiver mCommandReceiver;
+    private NotificationUtils mNotificationManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         initializeRegistrationListener();
-        initializeCommandReceiver();
+        mCommandReceiver = new CommandReceiver();
+        mNotificationManager = new NotificationUtils(this);
     }
 
     @Override
@@ -51,8 +50,8 @@ public class NetworkService extends Service {
 
     private void registerService(int port) {
         NsdServiceInfo serviceInfo = new NsdServiceInfo();
-        serviceInfo.setServiceName(Protocol.SERVICE_PREFIX + mDeviceName);
-        serviceInfo.setServiceType(Protocol.SERVICE_TYPE);
+        serviceInfo.setServiceName(Network.SERVICE_PREFIX + mDeviceName);
+        serviceInfo.setServiceType(Network.SERVICE_TYPE);
         serviceInfo.setPort(port);
         mNsdManager = (NsdManager) getApplicationContext().getSystemService(Context.NSD_SERVICE);
         mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
@@ -67,8 +66,8 @@ public class NetworkService extends Service {
                 // resolve a conflict, so update the name you initially requested
                 // with the name Android actually used.
                 mDeviceName = NsdServiceInfo.getServiceName();
+                mNotificationManager.createNotification(Network.CONNECTION_MESSAGE, getApplicationContext());
                 broadcast(Network.CONNECTION_SUCCESS);
-                createNotification(Network.CONNECTION_MESSAGE, getApplicationContext());
             }
 
             @Override
@@ -81,6 +80,7 @@ public class NetworkService extends Service {
             public void onServiceUnregistered(NsdServiceInfo arg0) {
                 // Service has been unregistered. This only happens when you call
                 // NsdManager.unregisterService() and pass in this listener.
+                mNotificationManager.clearNotifications();
                 broadcast(Network.DISCONNECTION_SUCCESS);
             }
 
@@ -90,10 +90,6 @@ public class NetworkService extends Service {
                 broadcast(Network.DISCONNECTION_FAILURE);
             }
         };
-    }
-
-    private void initializeCommandReceiver() {
-        mCommandReceiver = new CommandReceiver();
     }
 
     private void unregisterCommandReceiver() {
@@ -149,17 +145,15 @@ public class NetworkService extends Service {
                     packet = new DatagramPacket(readBuffer, readBuffer.length);
                     socket.receive(packet);
                     command = new String(packet.getData(), 0, packet.getLength());
-                    play(command);
+                    validateCommand(command);
                 } catch (Exception e) {
                     e.printStackTrace();
                     broadcast(Network.SOCKET_FAILURE);
                 }
-
             }
         }
 
-
-        private void play(String command) {
+        private void validateCommand(String command) {
             if (
                     command.equals(Command.BREAKFAST) ||
                     command.equals(Command.LUNCH) ||
