@@ -16,14 +16,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void onBreakfastClick(View view) {
-        new CommandHandler(Command.BREAKFAST, this);
-    }
+//    public void onBreakfastClick(View view) {new CommandHandler(Command.BREAKFAST, this);}
+    public void onBreakfastClick(View view) {new CommandHandler(Command.BREAKFAST, this);}
 
-    public void onLunchClick(View view) {
-        new CommandHandler(Command.LUNCH, this);
-    }
+//    public void onLunchClick(View view) { new CommandHandler(Command.LUNCH, this);}
+    public void onLunchClick(View view) { new CommandHandler(Command.LUNCH, this);}
 
+//    public void onDinnerClick(View view) {new CommandHandler(Command.DINNER, this);}
     public void onDinnerClick(View view) {
         new CommandHandler(Command.DINNER, this);
     }
