@@ -22,6 +22,4 @@
     <string name="toast_disconnection_success">Du är inte längre ansluten till iRemember</string>
     <string name="toast_socket_failure">Något gick fel. Försök starta igen!</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

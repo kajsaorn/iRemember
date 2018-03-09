@@ -15,52 +15,96 @@ import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsTextFragme
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private final int TAB_INFO = R.id.btn_info;
-    private final int TAB_BACKGROUND = R.id.btn_bg_color;
-    private final int TAB_TEXT = R.id.btn_txt_color;
-    private final int TAB_MUSIC = R.id.btn_music;
-    private int mCurrentTab;
+    private int mCurrentSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        showFragment(new SettingsInfoFragment());
-        selectTab(TAB_INFO);
+
+        mCurrentSetting = (savedInstanceState != null) ? savedInstanceState.getInt("mCurrentSetting") : R.id.btn_info;
+        showCurrentSettingFragment();
+        markCurrentSettingTab();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt("mCurrentSetting", mCurrentSetting);
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Called when info tab is clicked.
+     */
     public void onInfoClick(View view) {
-        showFragment(new SettingsInfoFragment());
-        selectTab(TAB_INFO);
+        mCurrentSetting = R.id.btn_info;
+        showCurrentSettingFragment();
+        markCurrentSettingTab();
     }
 
+    /**
+     * Called when background tab is clicked.
+     */
     public void onBgColorClick(View view) {
-        showFragment(new SettingsBackgroundFragment());
-        selectTab(TAB_BACKGROUND);
+        mCurrentSetting = R.id.btn_bg_color;
+        showCurrentSettingFragment();
+        markCurrentSettingTab();
     }
 
+    /**
+     * Called when text tab is clicked.
+     */
     public void onTextColorClick(View view) {
-        showFragment(new SettingsTextFragment());
-        selectTab(TAB_TEXT);
+        mCurrentSetting = R.id.btn_txt_color;
+        showCurrentSettingFragment();
+        markCurrentSettingTab();
     }
 
+    /**
+     * Called when music tab is clicked.
+     */
     public void onMusicClick(View view) {
-        showFragment(new SettingsMusicFragment());
-        selectTab(TAB_MUSIC);
+        mCurrentSetting = R.id.btn_music;
+        showCurrentSettingFragment();
+        markCurrentSettingTab();
     }
 
-    private void showFragment(Fragment fragment) {
+    /**
+     * Display a settings fragment to user and replace old one if there is one.
+     */
+    private void showCurrentSettingFragment() {
+        Fragment fragment;
+
+        switch (mCurrentSetting) {
+            case R.id.btn_info:
+                fragment = new SettingsInfoFragment();
+                break;
+            case R.id.btn_bg_color:
+                fragment = new SettingsBackgroundFragment();
+                break;
+            case R.id.btn_txt_color:
+                fragment = new SettingsTextFragment();
+                break;
+            case R.id.btn_music:
+                fragment = new SettingsMusicFragment();
+                break;
+            default:
+                return;
+        }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
     }
 
-    private void selectTab(int tab) {
-        if (mCurrentTab > 0) {
-            findViewById(mCurrentTab).setBackgroundResource(R.drawable.tab_unselected);
-        }
-        findViewById(tab).setBackgroundResource(R.drawable.tab_selected);
-        mCurrentTab = tab;
+    /**
+     * Display a certain tab as selected to user.
+     */
+    private void markCurrentSettingTab() {
+        findViewById(R.id.btn_info).setBackgroundResource(R.drawable.tab_unselected);
+        findViewById(R.id.btn_bg_color).setBackgroundResource(R.drawable.tab_unselected);
+        findViewById(R.id.btn_txt_color).setBackgroundResource(R.drawable.tab_unselected);
+        findViewById(R.id.btn_music).setBackgroundResource(R.drawable.tab_unselected);
+        findViewById(mCurrentSetting).setBackgroundResource(R.drawable.tab_selected);
     }
 
     /**
@@ -70,7 +114,10 @@ public class SettingsActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Debug.
+     */
     public void log(String msg) {
-        Log.d("MainActivity", msg);
+        Log.d("SettingsActivity", msg);
     }
 }
