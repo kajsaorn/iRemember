@@ -1,139 +1,87 @@
 package com.iremember.master.iremembermaster;
 
 import android.content.Context;
-import android.net.nsd.NsdManager;
-import android.net.nsd.NsdServiceInfo;
 import android.util.Log;
 
 import com.iremember.master.iremembermaster.Constants.Command;
-import com.iremember.master.iremembermaster.Constants.Protocol;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CommandHandler {
+/**
+ * Created by KEJ on 2018-03-09.
+ */
 
+public class CommandHandler extends Thread {
+    DatagramSocket datagramSocket;
     private String mCommand;
-    private Context mContext;
-    private NsdManager mNsdManager;
-    private NsdManager.DiscoveryListener mDiscoveryListener;
-    private NsdManager.ResolveListener mResolveListener;
-    private DatagramSocket mDatagramSocket;
+    private LinkedList<String> answers = new LinkedList<String>();
 
-    public CommandHandler(String command, Context context) {
+    public CommandHandler(String command, Context context){
         mCommand = command;
-        mContext = context;
-        setupDeviceDiscovery();
-        startDeviceDiscovery();
         setDeviceDiscoveryTimer();
+        this.start();
     }
 
-    private void setupDeviceDiscovery() {
-        try {
-            mDatagramSocket = new DatagramSocket();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        mNsdManager = (NsdManager) mContext.getSystemService(Context.NSD_SERVICE);
-        initializeDiscoveryListener();
-        initializeResolveListener();
-    }
+    @Override
+    public void run() {
+        log("Start of run");
+        DatagramPacket packetSend;
+        DatagramPacket packetReceived;
+        InetAddress receiverInetAddress;
+        int receiverPort = 12345;
+        byte[] buffer = new byte[1024];
+        String answer = null;
 
-    private void startDeviceDiscovery() {
-        mNsdManager.discoverServices(Protocol.SERVICE_TYPE,
-                NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
-    }
+        try{
+            receiverInetAddress = InetAddress.getByName("255.255.255.255");
+            datagramSocket = new DatagramSocket();
+            datagramSocket.setBroadcast(true);
+            buffer = mCommand.getBytes();
+            packetSend = new DatagramPacket(buffer, buffer.length,
+                    receiverInetAddress, receiverPort);
+            datagramSocket.send(packetSend);
+            log("After sending...");
 
-    public void initializeDiscoveryListener() {
+            // Ta emot svar från rumsenheter
+            byte[] readBuffer = new byte[1024];
 
-        // Instantiate a new DiscoveryListener
-        mDiscoveryListener = new NsdManager.DiscoveryListener() {
-
-            @Override
-            public void onDiscoveryStarted(String regType) {
-                log("Discovery started");
-            }
-
-            @Override
-            public void onServiceFound(NsdServiceInfo service) {
-                log("A service was found: " + service.getServiceName());
-                if (service.getServiceName().startsWith(Protocol.SERVICE_PREFIX)){
-                    mNsdManager.resolveService(service, mResolveListener);
+            while (true) {
+                log("In while");
+                try {
+                    packetReceived = new DatagramPacket(readBuffer, readBuffer.length);
+                    datagramSocket.receive(packetReceived);
+                    answer = new String(packetReceived.getData(),0, packetReceived.getLength());
+                    answers.addLast(answer);
+                }catch (Exception e) {
+                    log("Exception in while...");
+                    break;
                 }
             }
-
-            @Override
-            public void onServiceLost(NsdServiceInfo service) {
-                // When the network service is no longer available.
-                // Internal bookkeeping code goes here.
-            }
-
-            @Override
-            public void onDiscoveryStopped(String serviceType) {
-            }
-
-            @Override
-            public void onStartDiscoveryFailed(String serviceType, int errorCode) {
-                mNsdManager.stopServiceDiscovery(this);
-            }
-
-            @Override
-            public void onStopDiscoveryFailed(String serviceType, int errorCode) {
-                mNsdManager.stopServiceDiscovery(this);
-            }
-        };
-    }
-
-    public void initializeResolveListener() {
-        mResolveListener = new NsdManager.ResolveListener() {
-
-            @Override
-            public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
-                // Called when the resolve fails. Use the error code to debug.
-            }
-
-            @Override
-            public void onServiceResolved(NsdServiceInfo serviceInfo) {
-                int port = serviceInfo.getPort();
-                InetAddress host = serviceInfo.getHost();
-                sendCommand(host, port);
-            }
-        };
-    }
-
-    private void sendCommand(InetAddress host, int port){
-        byte[] buffer;
-        buffer = mCommand.getBytes();
-        DatagramPacket datagramPacket = new DatagramPacket(buffer,buffer.length, host, port);
-        try {
-            mDatagramSocket.send(datagramPacket);
-        } catch (IOException e) {
-            e.printStackTrace();
+        }catch (Exception e){
+            log("Exception when socket is closed");
         }
+
+        // Kolla hur många svar som kommit och jämför med hur många enheter som borde svarat.
+        log("Kolla hur många svar som inkommit...");
+
     }
 
     private void setDeviceDiscoveryTimer() {
         TimerTask task = new TimerTask() {
             public void run() {
-                stopDeviceDiscovery();
+                datagramSocket.close();
             }
         };
         new Timer().schedule(task, Command.DURATION);
-    }
-
-    private void stopDeviceDiscovery() {
-        mNsdManager.stopServiceDiscovery(mDiscoveryListener);
-        log("TIME IS UP!!!!");
     }
 
     public void log(String msg) {
         Log.d("CommandHandler", msg);
         //Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
-
 }
