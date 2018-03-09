@@ -1,68 +1,94 @@
 package com.iremember.subscriber.iremembersubscriber;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
-import com.iremember.subscriber.iremembersubscriber.Constants.SharedPrefs;
-import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
+import com.iremember.subscriber.iremembersubscriber.Constants.Network;
+import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
 public class StartActivity extends AppCompatActivity {
-
-    private String mRoomName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        fetchIntentContent();
+        //getSharedPreferences(BuildConfig.APPLICATION_ID, 0).edit().clear().commit();    // Remove later
         initializeGUIElements();
     }
 
-    private void fetchIntentContent() {
-        Intent intent = getIntent();
-        mRoomName = intent.getStringExtra(SharedPrefs.ROOM_NAME);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkStartupInfo();
+    }
+
+    /**
+     * Called when user clicks connect button.
+     * If user input is valid, main activity will be started.
+     */
+    public void onConnectClick(View view) {
+        String mRoomName = PreferenceUtils.readRoomName(this);
+
+        if (mRoomName.equals("")) {
+            EditText mEtRoomName = (EditText) findViewById(R.id.et_room_name);
+            mRoomName = mEtRoomName.getText().toString().trim();
+
+            if (mRoomName.equals("")) {
+                showUserMessage(getString(R.string.toast_roomname_invalid));
+                return;
+            } else {
+                PreferenceUtils.writeRoomName(this, mRoomName);
+            }
+        }
+        startMainActivity();
+        finish();
+    }
+
+    /**
+     * Check if there is any start up info, e.g. if the previous connection failed.
+     */
+    private void checkStartupInfo() {
+        String info = getIntent().getStringExtra(Network.MESSAGE);
+        if (info != null) {
+            switch (info) {
+                case Network.CONNECTION_FAILURE:
+                    showUserMessage(getString(R.string.toast_connection_failure));
+                    break;
+                case Network.DISCONNECTION_SUCCESS:
+                    showUserMessage(getString(R.string.toast_disconnection_success));
+                    break;
+                case Network.SOCKET_FAILURE:
+                    showUserMessage(getString(R.string.toast_socket_failure));
+                    break;
+            }
+        }
     }
 
     /**
      * Show room name input field only if user hasn't picked a name before.
      */
     private void initializeGUIElements() {
+        String mRoomName = PreferenceUtils.readRoomName(this);
         EditText mEtRoomName = (EditText) findViewById(R.id.et_room_name);
         mEtRoomName.setVisibility((mRoomName.equals("")) ? View.VISIBLE : View.GONE);
     }
 
     /**
-     * Save room name to persistent memory.
+     * Display message to user as Android Toast.
      */
-    private void saveRoomName() {
-        SharedPreferences prefs = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        Editor editor = prefs.edit();
-        editor.putString(SharedPrefs.ROOM_NAME, mRoomName);
-        editor.commit();
+    private void showUserMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     /**
-     *
+     * Start main activity (where user will be connected to network and discoverable).
      */
-    public void onConnectClick(View view) {
-        if (mRoomName.equals("")) {
-            EditText mEtRoomName = (EditText) findViewById(R.id.et_room_name);
-            mRoomName = mEtRoomName.getText().toString().trim();
-        }
-        if (mRoomName.equals("")) {
-            Toast.makeText(this, "Du glömde fylla i ett namn för ditt rum.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        saveRoomName();
-        BroadcastUtils.broadcast(Broadcast.DO_CONNECT, getApplicationContext());
-        finish();
+    private void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

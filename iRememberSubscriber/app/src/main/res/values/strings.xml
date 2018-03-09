@@ -6,4 +6,11 @@
     <string name="btn_settings">INSTÄLLNINGAR</string>
     <string name="status_connected">Här kommer det att visas påminnelser när maten är klar.</string>
     <string name="btn_reminder_stop">AVBRYT PÅMINNELSE</string>
+
+    <string name="toast_roomname_invalid">Du glömde fylla i ett namn för ditt rum.</string>
+    <string name="toast_connection_failure">Något gick fel när vi försökte ansluta till nätverket. Prova en gång till!</string>
+    <string name="toast_connection_success">Du är nu ansluten till iRemember</string>
+    <string name="toast_disconnection_failure">Något gick fel när vi försökte koppla ner från nätverket. Prova en gång till!</string>
+    <string name="toast_disconnection_success">Du är inte längre ansluten till iRemember</string>
+    <string name="toast_socket_failure">Något gick fel. Försök starta igen!</string>
 </resources>

@@ -9,10 +9,11 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Command;
-import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.Network;
 import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.NotificationUtils;
+import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -20,7 +21,6 @@ import java.net.SocketException;
 
 public class NetworkService extends Service {
 
-    private String mDeviceName;
     private NsdManager mNsdManager;
     private NsdManager.RegistrationListener mRegistrationListener;
     private CommandReceiver mCommandReceiver;
@@ -37,8 +37,6 @@ public class NetworkService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int port = mCommandReceiver.getPort();
-        mDeviceName = intent.getStringExtra("roomName");
-
         registerService(port);
         mCommandReceiver.start();
         return START_NOT_STICKY;
@@ -53,7 +51,7 @@ public class NetworkService extends Service {
 
     private void registerService(int port) {
         NsdServiceInfo serviceInfo = new NsdServiceInfo();
-        serviceInfo.setServiceName(Protocol.SERVICE_PREFIX + mDeviceName);
+        serviceInfo.setServiceName(Protocol.SERVICE_PREFIX + PreferenceUtils.readRoomName(this));
         serviceInfo.setServiceType(Protocol.SERVICE_TYPE);
         serviceInfo.setPort(port);
         mNsdManager = (NsdManager) getApplicationContext().getSystemService(Context.NSD_SERVICE);
@@ -68,16 +66,17 @@ public class NetworkService extends Service {
                 // Save the service name. Android may have changed it in order to
                 // resolve a conflict, so update the name you initially requested
                 // with the name Android actually used.
-                mDeviceName = NsdServiceInfo.getServiceName();
-                mNotificationManager.createNotification(Broadcast.CONNECTION_MESSAGE, getApplicationContext());
-                BroadcastUtils.broadcast(Broadcast.CONNECTION_SUCCESS,getApplicationContext());
+                String serviceName = NsdServiceInfo.getServiceName();
+                PreferenceUtils.writeRoomName(getApplicationContext(), serviceName);
+                BroadcastUtils.broadcast(Network.CONNECTION_SUCCESS,getApplicationContext());
+                mNotificationManager.createNotification(Network.CONNECTION_CONFIRMATION, getApplicationContext());
                 log("Service is registered to network");
             }
 
             @Override
             public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Registration failed! Put debugging code here to determine why.
-                BroadcastUtils.broadcast(Broadcast.CONNECTION_FAILURE, getApplicationContext());
+                BroadcastUtils.broadcast(Network.CONNECTION_FAILURE, getApplicationContext());
             }
 
             @Override
@@ -85,13 +84,13 @@ public class NetworkService extends Service {
                 // Service has been unregistered. This only happens when you call
                 // NsdManager.unregisterService() and pass in this listener.
                 mNotificationManager.clearNotifications();
-                BroadcastUtils.broadcast(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
+                BroadcastUtils.broadcast(Network.DISCONNECTION_SUCCESS, getApplicationContext());
             }
 
             @Override
             public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Unregistration failed. Put debugging code here to determine why.
-                BroadcastUtils.broadcast(Broadcast.DISCONNECTION_FAILURE, getApplicationContext());
+                BroadcastUtils.broadcast(Network.DISCONNECTION_FAILURE, getApplicationContext());
             }
         };
     }
@@ -124,7 +123,7 @@ public class NetworkService extends Service {
                 port = socket.getLocalPort();
             } catch (SocketException e) {
                 e.printStackTrace();
-                BroadcastUtils.broadcast(Broadcast.SOCKET_FAILURE, getApplicationContext());
+                BroadcastUtils.broadcast(Network.SOCKET_FAILURE, getApplicationContext());
             }
         }
 
@@ -146,7 +145,7 @@ public class NetworkService extends Service {
                     validateCommand(command);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    BroadcastUtils.broadcast(Broadcast.SOCKET_FAILURE, getApplicationContext());
+                    BroadcastUtils.broadcast(Network.SOCKET_FAILURE, getApplicationContext());
                 }
             }
         }
