@@ -6,9 +6,9 @@
     <dimen name="btn_padding">20dp</dimen>
     <dimen name="btn_margin">20dp</dimen>
 
-    <dimen name="tv_text_size">20sp</dimen>
-    <dimen name="tv_padding">20dp</dimen>
-    <dimen name="tv_margin">20dp</dimen>
+    <dimen name="tv_status_textsize">25sp</dimen>
+    <dimen name="tv_status_margin">25dp</dimen>
+    <dimen name="tv_status_width">250dp</dimen>
 
     <dimen name="et_text_size">20sp</dimen>
     <dimen name="et_padding">20dp</dimen>

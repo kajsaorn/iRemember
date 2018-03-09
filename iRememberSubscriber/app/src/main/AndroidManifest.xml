@@ -25,6 +25,7 @@
             android:exported="true" />
 
         <activity android:name=".ReminderActivity" />
+        <activity android:name=".StartActivity"></activity>
     </application>
 
 </manifest>

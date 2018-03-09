@@ -1,25 +1,25 @@
 package com.iremember.subscriber.iremembersubscriber;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.iremember.subscriber.iremembersubscriber.Constants.Network;
+import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.SharedPrefs;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String mRoomName;
     private TextView mTvStatus;
-    private EditText mEtRoomName;
     private Button mBtnConnect, mBtnDisconnect;
     private BroadcastReceiver mBroadcastReceiver;
 
@@ -27,9 +27,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initializeGUIElements();
-        showDisconnectedMode();
-        fetchRoomName();
+        getSharedPreferences(BuildConfig.APPLICATION_ID, 0).edit().clear().commit();    // Remove later
+
+        if (!isServiceRunning(NetworkService.class)) {
+            showStartActivity();
+        }
+        //initializeGUIElements();
     }
 
     @Override
@@ -49,50 +52,43 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private String fetchRoomName() {
+        SharedPreferences prefs = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        return prefs.getString(SharedPrefs.ROOM_NAME, "");
+    }
+
+    private void showStartActivity() {
+        Intent intent = new Intent(this, StartActivity.class);
+        intent.putExtra(SharedPrefs.ROOM_NAME, fetchRoomName());
+        startActivity(intent);
+    }
+
+
     private void initializeGUIElements() {
         mBtnConnect = (Button) findViewById(R.id.btn_connect);
         mBtnDisconnect = (Button) findViewById(R.id.btn_disconnect);
         mTvStatus = (TextView) findViewById(R.id.tv_status);
-        mEtRoomName = (EditText) findViewById(R.id.et_room_name);
     }
 
-    private void fetchRoomName() {
-        // Read room name from persistent memory.
-        // If there is no previous room name, set null.
-        mRoomName = null;
-    }
 
-    /**
-     * Called when connect button is clicked.
-     */
-    public void onConnectClick(View v) {
-        if (mRoomName == null) {
-            String input = ((EditText) findViewById(R.id.et_room_name)).getText().toString();
-
-            if (input != null && !input.trim().equals("")) {
-                mRoomName = input;
-                // Save room name to persistent(?) memory.
-            } else {
-                log("Ogiltigt rumsnummer");
-                return;
-            }
-        }
-        connectToNetwork(mRoomName);
+    public void onSettingsClick(View view) {
+        log("Settings click");
     }
 
     /**
      * Called when disconnect button is clicked.
      */
     public void onDisconnectClick(View v) {
+        log("Disconnect click");
         disconnectFromNetwork();
     }
 
     /**
      * Make this device discoverable on local network.
      */
-    private void connectToNetwork(String roomName) {
+    private void connectToNetwork() {
         Intent intent = new Intent(this, NetworkService.class);
-        intent.putExtra("roomName", roomName);
+        intent.putExtra(SharedPrefs.ROOM_NAME, fetchRoomName());
         startService(intent);
     }
 
@@ -101,20 +97,14 @@ public class MainActivity extends AppCompatActivity {
         stopService(intent);
     }
 
-    private void showConnectedMode() {
-        mTvStatus.setText(R.string.status_connected);
-        mBtnConnect.setVisibility(View.INVISIBLE);
-        mBtnDisconnect.setVisibility(View.VISIBLE);
-        mEtRoomName.setVisibility(View.INVISIBLE);
-    }
-
-    private void showDisconnectedMode() {
-        mTvStatus.setText(R.string.status_disconnected);
-        mBtnConnect.setVisibility(View.VISIBLE);
-        mBtnDisconnect.setVisibility(View.INVISIBLE);
-        if (mRoomName == null) {
-            mEtRoomName.setVisibility(View.VISIBLE);
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
         }
+        return false;
     }
 
     public void log(String msg) {
@@ -129,11 +119,12 @@ public class MainActivity extends AppCompatActivity {
 
         public MessageReceiver() {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Network.CONNECTION_SUCCESS);
-            intentFilter.addAction(Network.CONNECTION_FAILURE);
-            intentFilter.addAction(Network.DISCONNECTION_SUCCESS);
-            intentFilter.addAction(Network.DISCONNECTION_FAILURE);
-            intentFilter.addAction(Network.SOCKET_FAILURE);
+            intentFilter.addAction(Broadcast.CONNECTION_SUCCESS);
+            intentFilter.addAction(Broadcast.CONNECTION_FAILURE);
+            intentFilter.addAction(Broadcast.DISCONNECTION_SUCCESS);
+            intentFilter.addAction(Broadcast.DISCONNECTION_FAILURE);
+            intentFilter.addAction(Broadcast.SOCKET_FAILURE);
+            intentFilter.addAction(Broadcast.DO_CONNECT);
             registerReceiver(this, intentFilter);
         }
 
@@ -142,20 +133,23 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
 
             switch (action) {
-                case Network.CONNECTION_SUCCESS:
-                    showConnectedMode();
-                    break;
-                case Network.DISCONNECTION_SUCCESS:
-                    showDisconnectedMode();
-                    break;
-                case Network.CONNECTION_FAILURE:
+                case Broadcast.CONNECTION_SUCCESS:
                     // ...
                     break;
-                case Network.DISCONNECTION_FAILURE:
+                case Broadcast.DISCONNECTION_SUCCESS:
+                    showStartActivity();
+                    break;
+                case Broadcast.CONNECTION_FAILURE:
+                    //showStartActivity(); but tell them the last connection try failed
+                    break;
+                case Broadcast.DISCONNECTION_FAILURE:
                     // ...
                     break;
-                case Network.SOCKET_FAILURE:
+                case Broadcast.SOCKET_FAILURE:
                     // ...
+                    break;
+                case Broadcast.DO_CONNECT:
+                    connectToNetwork();
                     break;
             }
         }

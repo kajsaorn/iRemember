@@ -9,7 +9,10 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Command;
-import com.iremember.subscriber.iremembersubscriber.Constants.Network;
+import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
+import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
+import com.iremember.subscriber.iremembersubscriber.Utils.NotificationUtils;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -50,8 +53,8 @@ public class NetworkService extends Service {
 
     private void registerService(int port) {
         NsdServiceInfo serviceInfo = new NsdServiceInfo();
-        serviceInfo.setServiceName(Network.SERVICE_PREFIX + mDeviceName);
-        serviceInfo.setServiceType(Network.SERVICE_TYPE);
+        serviceInfo.setServiceName(Protocol.SERVICE_PREFIX + mDeviceName);
+        serviceInfo.setServiceType(Protocol.SERVICE_TYPE);
         serviceInfo.setPort(port);
         mNsdManager = (NsdManager) getApplicationContext().getSystemService(Context.NSD_SERVICE);
         mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
@@ -66,14 +69,15 @@ public class NetworkService extends Service {
                 // resolve a conflict, so update the name you initially requested
                 // with the name Android actually used.
                 mDeviceName = NsdServiceInfo.getServiceName();
-                mNotificationManager.createNotification(Network.CONNECTION_MESSAGE, getApplicationContext());
-                broadcast(Network.CONNECTION_SUCCESS);
+                mNotificationManager.createNotification(Broadcast.CONNECTION_MESSAGE, getApplicationContext());
+                BroadcastUtils.broadcast(Broadcast.CONNECTION_SUCCESS,getApplicationContext());
+                log("Service is registered to network");
             }
 
             @Override
             public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Registration failed! Put debugging code here to determine why.
-                broadcast(Network.CONNECTION_FAILURE);
+                BroadcastUtils.broadcast(Broadcast.CONNECTION_FAILURE, getApplicationContext());
             }
 
             @Override
@@ -81,13 +85,13 @@ public class NetworkService extends Service {
                 // Service has been unregistered. This only happens when you call
                 // NsdManager.unregisterService() and pass in this listener.
                 mNotificationManager.clearNotifications();
-                broadcast(Network.DISCONNECTION_SUCCESS);
+                BroadcastUtils.broadcast(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
             }
 
             @Override
             public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Unregistration failed. Put debugging code here to determine why.
-                broadcast(Network.DISCONNECTION_FAILURE);
+                BroadcastUtils.broadcast(Broadcast.DISCONNECTION_FAILURE, getApplicationContext());
             }
         };
     }
@@ -99,12 +103,6 @@ public class NetworkService extends Service {
 
     private void unregisterService(){
         mNsdManager.unregisterService(mRegistrationListener);
-    }
-
-    private void broadcast(String action) {
-        Intent intent = new Intent();
-        intent.setAction(action);
-        sendBroadcast(intent);
     }
 
     @Override
@@ -126,7 +124,7 @@ public class NetworkService extends Service {
                 port = socket.getLocalPort();
             } catch (SocketException e) {
                 e.printStackTrace();
-                broadcast(Network.SOCKET_FAILURE);
+                BroadcastUtils.broadcast(Broadcast.SOCKET_FAILURE, getApplicationContext());
             }
         }
 
@@ -148,7 +146,7 @@ public class NetworkService extends Service {
                     validateCommand(command);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    broadcast(Network.SOCKET_FAILURE);
+                    BroadcastUtils.broadcast(Broadcast.SOCKET_FAILURE, getApplicationContext());
                 }
             }
         }

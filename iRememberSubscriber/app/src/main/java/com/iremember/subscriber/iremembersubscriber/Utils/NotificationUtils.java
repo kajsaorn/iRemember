@@ -1,10 +1,12 @@
-package com.iremember.subscriber.iremembersubscriber;
+package com.iremember.subscriber.iremembersubscriber.Utils;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+
+import com.iremember.subscriber.iremembersubscriber.R;
 
 public class NotificationUtils {
 

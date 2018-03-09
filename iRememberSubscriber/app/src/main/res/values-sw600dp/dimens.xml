@@ -6,10 +6,9 @@
     <dimen name="btn_padding">40dp</dimen>
     <dimen name="btn_margin">40dp</dimen>
 
-    <dimen name="tv_text_size">40sp</dimen>
-    <dimen name="tv_padding">40dp</dimen>
-    <dimen name="tv_margin">40dp</dimen>
-
+    <dimen name="tv_status_textsize">50sp</dimen>
+    <dimen name="tv_status_margin">50dp</dimen>
+    <dimen name="tv_status_width">500dp</dimen>
 
     <dimen name="et_text_size">40sp</dimen>
     <dimen name="et_padding">40dp</dimen>

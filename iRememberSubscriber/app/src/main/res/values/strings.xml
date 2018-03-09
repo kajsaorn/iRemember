@@ -2,8 +2,8 @@
     <string name="app_name">iRememberSubscriber</string>
     <string name="btn_connect">STARTA</string>
     <string name="et_room_name_hint">ANGE RUMSNUMMER</string>
-    <string name="btn_disconnect">STÄNG AV NOTIFIERINGAR</string>
-    <string name="status_connected">NOTIFIERINGAR ÄR PÅ</string>
-    <string name="status_disconnected">NOTIFIERINGAR ÄR AVSTÄNGT</string>
+    <string name="btn_disconnect">STÄNG AV</string>
+    <string name="btn_settings">INSTÄLLNINGAR</string>
+    <string name="status_connected">Här kommer det att visas påminnelser när maten är klar.</string>
     <string name="btn_reminder_stop">AVBRYT PÅMINNELSE</string>
 </resources>
