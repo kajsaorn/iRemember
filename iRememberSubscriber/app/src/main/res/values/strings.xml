@@ -1,4 +1,5 @@
 <resources>
+    <!-- General -->
     <string name="app_name">iRememberSubscriber</string>
     <string name="btn_connect">STARTA</string>
     <string name="et_room_name_hint">ANGE RUMSNUMMER</string>
@@ -7,6 +8,13 @@
     <string name="status_connected">Här kommer det att visas påminnelser när maten är klar.</string>
     <string name="btn_reminder_stop">AVBRYT PÅMINNELSE</string>
 
+    <!-- Settings -->
+    <string name="btn_info">Info</string>
+    <string name="btn_bg_color">Bakgrundsfärg</string>
+    <string name="btn_txt_color">Textfärg</string>
+    <string name="btn_music">Musik</string>
+
+    <!-- Toast messages -->
     <string name="toast_roomname_invalid">Du glömde fylla i ett namn för ditt rum.</string>
     <string name="toast_connection_failure">Något gick fel när vi försökte ansluta till nätverket. Prova en gång till!</string>
     <string name="toast_connection_success">Du är nu ansluten till iRemember</string>

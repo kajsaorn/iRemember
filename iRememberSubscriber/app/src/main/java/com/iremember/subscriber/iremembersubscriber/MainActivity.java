@@ -46,18 +46,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Make this device discoverable on local network.
-     */
-    private void connectToNetwork() {
-        Intent intent = new Intent(this, NetworkService.class);
-        startService(intent);
-    }
-
-    /**
      * Called when settings button is clicked.
      */
     public void onSettingsClick(View view) {
-        log("Settings click");
+        showSettingsActivity();
     }
 
     /**
@@ -65,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onDisconnectClick(View v) {
         disconnectFromNetwork();
+    }
+
+    /**
+     * Make this device discoverable on local network.
+     */
+    private void connectToNetwork() {
+        Intent intent = new Intent(this, NetworkService.class);
+        startService(intent);
     }
 
     /**
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
      * Show settings activity.
      */
     private void showSettingsActivity() {
-        Intent intent = new Intent();
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 

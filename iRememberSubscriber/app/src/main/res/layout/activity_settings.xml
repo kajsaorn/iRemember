@@ -1,9 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.iremember.subscriber.iremembersubscriber.SettingsActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onInfoClick"
+            android:padding="@dimen/btn_padding_medium"
+            android:text="@string/btn_info"
+            android:textSize="@dimen/btn_textsize_medium"
+            android:background="@drawable/tab_selected"/>
+
+
+        <Button
+            android:id="@+id/btn_bg_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onBgColorClick"
+            android:padding="@dimen/btn_padding_medium"
+            android:text="@string/btn_bg_color"
+            android:textSize="@dimen/btn_textsize_medium"
+            android:background="@drawable/tab_unselected"  />
+
+
+        <Button
+            android:id="@+id/btn_txt_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onTextColorClick"
+            android:padding="@dimen/btn_padding_medium"
+            android:text="@string/btn_txt_color"
+            android:textSize="@dimen/btn_textsize_medium"
+            android:background="@drawable/tab_unselected"  />
+
+
+        <Button
+            android:id="@+id/btn_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onMusicClick"
+            android:padding="@dimen/btn_padding_medium"
+            android:text="@string/btn_music"
+            android:textSize="@dimen/btn_textsize_medium"
+            android:background="@drawable/tab_unselected" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

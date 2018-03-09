@@ -31,12 +31,11 @@
             android:layout_height="wrap_content"
             android:background="@android:color/holo_blue_light"
             android:onClick="onSettingsClick"
-            android:padding="@dimen/btn_padding"
+            android:padding="@dimen/btn_padding_large"
             android:text="@string/btn_settings"
             android:textColor="@android:color/background_light"
-            android:textSize="@dimen/btn_text_size"
-            android:textStyle="bold"
-            android:visibility="visible" />
+            android:textSize="@dimen/btn_textsize_large"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btn_disconnect"
@@ -44,13 +43,11 @@
             android:layout_height="wrap_content"
             android:background="@android:color/holo_red_light"
             android:onClick="onDisconnectClick"
-            android:padding="@dimen/btn_padding"
+            android:padding="@dimen/btn_padding_large"
             android:text="@string/btn_disconnect"
             android:textColor="@android:color/background_light"
-            android:textSize="@dimen/btn_text_size"
-            android:textStyle="bold"
-            android:visibility="visible" />
+            android:textSize="@dimen/btn_textsize_large"
+            android:textStyle="bold" />
 
     </LinearLayout>
-
 </LinearLayout>
