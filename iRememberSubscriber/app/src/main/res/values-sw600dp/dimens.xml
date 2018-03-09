@@ -10,7 +10,6 @@
     <dimen name="btn_padding_large">40dp</dimen>
     <dimen name="btn_padding_medium">30dp</dimen>
     <dimen name="btn_margin_small">20dp</dimen>
-    <dimen name="btn_width_tab">300dp</dimen>
 
     <!-- Text Views -->
     <dimen name="tv_status_textsize">50sp</dimen>
@@ -21,4 +20,5 @@
     <dimen name="et_text_size">40sp</dimen>
     <dimen name="et_padding">40dp</dimen>
     <dimen name="et_margin">40dp</dimen>
+
 </resources>

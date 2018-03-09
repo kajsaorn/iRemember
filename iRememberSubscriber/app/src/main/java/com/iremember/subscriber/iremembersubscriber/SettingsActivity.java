@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
     public void onMusicClick(View view) {
         showUserMessage("Music");
     }
-    
+
     /**
      * Display message to user as Android Toast.
      */

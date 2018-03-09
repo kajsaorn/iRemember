@@ -10,8 +10,8 @@
 
     <!-- Settings -->
     <string name="btn_info">Info</string>
-    <string name="btn_bg_color">Bakgrundsfärg</string>
-    <string name="btn_txt_color">Textfärg</string>
+    <string name="btn_bg_color">Bakgrund</string>
+    <string name="btn_txt_color">Text</string>
     <string name="btn_music">Musik</string>
 
     <!-- Toast messages -->

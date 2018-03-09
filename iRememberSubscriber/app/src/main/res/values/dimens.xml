@@ -2,17 +2,23 @@
 <resources>
     <dimen name="layout_padding">40dp</dimen>
 
+    <!-- Buttons -->
     <dimen name="btn_textsize_large">20sp</dimen>
-    <dimen name="btn_padding_large">20dp</dimen>
-    <dimen name="btn_margin">20dp</dimen>
+    <dimen name="btn_textsize_medium">15sp</dimen>
+    <dimen name="btn_textsize_small">10sp</dimen>
 
+    <dimen name="btn_padding_large">20dp</dimen>
+    <dimen name="btn_padding_medium">15dp</dimen>
+    <dimen name="btn_margin_small">10dp</dimen>
+
+    <!-- Text Views -->
     <dimen name="tv_status_textsize">25sp</dimen>
     <dimen name="tv_status_margin">25dp</dimen>
     <dimen name="tv_status_width">250dp</dimen>
 
+    <!-- Edit Views -->
     <dimen name="et_text_size">20sp</dimen>
     <dimen name="et_padding">20dp</dimen>
     <dimen name="et_margin">20dp</dimen>
-
 
 </resources>

@@ -17,10 +17,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onInfoClick"
-            android:padding="@dimen/btn_padding_medium"
+            android:paddingTop="@dimen/btn_padding_medium"
+            android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/btn_info"
             android:textSize="@dimen/btn_textsize_medium"
-            android:background="@drawable/tab_selected"/>
+            android:background="@drawable/tab_selected" />
 
 
         <Button
@@ -29,7 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onBgColorClick"
-            android:padding="@dimen/btn_padding_medium"
+            android:paddingTop="@dimen/btn_padding_medium"
+            android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/btn_bg_color"
             android:textSize="@dimen/btn_textsize_medium"
             android:background="@drawable/tab_unselected"  />
@@ -41,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onTextColorClick"
-            android:padding="@dimen/btn_padding_medium"
+            android:paddingTop="@dimen/btn_padding_medium"
+            android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/btn_txt_color"
             android:textSize="@dimen/btn_textsize_medium"
             android:background="@drawable/tab_unselected"  />
@@ -53,7 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onMusicClick"
-            android:padding="@dimen/btn_padding_medium"
+            android:paddingTop="@dimen/btn_padding_medium"
+            android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/btn_music"
             android:textSize="@dimen/btn_textsize_medium"
             android:background="@drawable/tab_unselected" />
