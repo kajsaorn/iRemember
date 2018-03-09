@@ -68,8 +68,8 @@ public class CommandHandler extends Thread {
 
         // Kolla hur många svar som kommit och jämför med hur många enheter som borde svarat.
         log("Kolla hur många svar som inkommit...");
-
     }
+
 
     private void setDeviceDiscoveryTimer() {
         TimerTask task = new TimerTask() {
@@ -79,6 +79,7 @@ public class CommandHandler extends Thread {
         };
         new Timer().schedule(task, Command.DURATION);
     }
+
 
     public void log(String msg) {
         Log.d("CommandHandler", msg);

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/layout_padding"
+    tools:context="com.iremember.subscriber.iremembersubscriber.StartActivity">
+
+
+    <EditText
+        android:id="@+id/et_room_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/et_room_name_hint"
+        android:padding="@dimen/et_padding"
+        android:textAlignment="center"
+        android:textSize="@dimen/et_text_size"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/btn_connect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_light"
+        android:onClick="onConnectClick"
+        android:padding="@dimen/btn_padding_large"
+        android:text="@string/btn_connect"
+        android:textColor="@android:color/background_light"
+        android:textSize="@dimen/btn_textsize_large"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+
+</LinearLayout>
