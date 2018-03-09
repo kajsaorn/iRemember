@@ -88,11 +88,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Show start activity (where user may choose to connect to the network).
+     * Show start activity.
      */
     private void showStartActivity(String message) {
         Intent intent = new Intent(this, StartActivity.class);
         intent.putExtra(Network.MESSAGE, message);
+        startActivity(intent);
+    }
+
+    /**
+     * Show settings activity.
+     */
+    private void showSettingsActivity() {
+        Intent intent = new Intent();
         startActivity(intent);
     }
 
