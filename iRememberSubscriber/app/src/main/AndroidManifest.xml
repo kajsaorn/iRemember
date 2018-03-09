@@ -14,7 +14,7 @@
         <activity android:name=".MainActivity" />
 
         <service
-            android:name=".NetworkService"
+            android:name=".Services.NetworkService"
             android:enabled="true"
             android:exported="true" />
 

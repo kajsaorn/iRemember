@@ -1,4 +1,4 @@
-package com.iremember.subscriber.iremembersubscriber;
+package com.iremember.subscriber.iremembersubscriber.Services;
 
 import android.app.Service;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.util.Log;
 import com.iremember.subscriber.iremembersubscriber.Constants.Command;
 import com.iremember.subscriber.iremembersubscriber.Constants.Network;
 import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
+import com.iremember.subscriber.iremembersubscriber.ReminderActivity;
 import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.NotificationUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
