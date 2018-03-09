@@ -12,7 +12,10 @@
     <dimen name="btn_margin_small">20dp</dimen>
 
     <!-- Text Views -->
-    <dimen name="tv_status_textsize">50sp</dimen>
+    <dimen name="tv_textsize_large">50sp</dimen>
+    <dimen name="tv_textsize_medium">35sp</dimen>
+    <dimen name="tv_textsize_small">20sp</dimen>
+
     <dimen name="tv_status_margin">50dp</dimen>
     <dimen name="tv_status_width">500dp</dimen>
 

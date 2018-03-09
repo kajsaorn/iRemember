@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/bg_settings"
     tools:context="com.iremember.subscriber.iremembersubscriber.SettingsActivity">
 
     <LinearLayout
@@ -21,7 +22,7 @@
             android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/btn_info"
             android:textSize="@dimen/btn_textsize_medium"
-            android:background="@drawable/tab_selected" />
+            android:background="@drawable/tab_unselected" />
 
 
         <Button
@@ -64,5 +65,9 @@
 
     </LinearLayout>
 
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
