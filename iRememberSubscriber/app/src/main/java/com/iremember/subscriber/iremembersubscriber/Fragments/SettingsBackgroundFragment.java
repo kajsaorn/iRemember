@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
-public class SettingsBackgroundFragment extends Fragment implements View.OnClickListener{
+public class SettingsBackgroundFragment extends Fragment implements View.OnClickListener {
 
     View mColorPalette;
     String mColorPaletteLabel;

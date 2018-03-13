@@ -3,14 +3,22 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="settings_border">#000000</color>
-    <color name="settings_bg">#FFFFFF</color>
-    <color name="transparent">#00000000</color>
 
+    <color name="transparent">#00000000</color>
+    <color name="light">#FDFDFD</color>
+    <color name="dark">@color/c49</color>
+    <color name="green">@color/c43</color>
+    <color name="orange">@color/c4</color>
+
+    <!-- Default Colors for Reminder Activity -->
     <color name="default_reminder_bg_color">@color/c43</color>
     <color name="default_reminder_text_color">@color/c46</color>
 
+    <!-- Button Colors -->
+    <color name="stop">@color/c7</color>
+    <color name="start">@color/c43</color>
 
+    <!-- Color Palette -->
     <color name="c1">#FFF9C4</color>
     <color name="c2">#FFF176</color>
     <color name="c3">#FFEB3B</color>
@@ -70,11 +78,5 @@
     <color name="c48">#9E9E9E</color>
     <color name="c49">#616161</color>
     <color name="c50">#212121</color>
-
-
-
-
-
-
 
 </resources>

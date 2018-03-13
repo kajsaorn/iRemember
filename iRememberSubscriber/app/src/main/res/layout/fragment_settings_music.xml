@@ -1,13 +1,51 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.iremember.subscriber.iremembersubscriber.Fragments.SettingsMusicFragment">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="This is the Music Fragment"
-        android:textSize="@dimen/tv_textsize_medium" />
+        android:orientation="vertical"
+        android:padding="@dimen/padding_layout">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/margin_large">
+
+            <TextView
+                android:id="@+id/settings_music_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/tv_textsize_large"
+                android:text="@string/settings_music_label" />
+
+            <TextView
+                android:id="@+id/selected_song"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/tv_textsize_xlarge"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <TableLayout
+            android:id="@+id/song_table"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="*">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/dark"
+                />
+
+        </TableLayout>
+
+    </LinearLayout>
+
+</ScrollView>

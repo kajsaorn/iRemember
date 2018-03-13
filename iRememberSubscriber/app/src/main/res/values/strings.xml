@@ -7,6 +7,7 @@
     <string name="btn_settings">INSTÄLLNINGAR</string>
     <string name="status_connected">Här kommer det att visas påminnelser när maten är klar.</string>
     <string name="btn_reminder_stop">AVBRYT PÅMINNELSE</string>
+    <string name="err_mediaplayer">Ops, något gick fel när vi försökte spela låten.</string>
 
     <!-- Settings -->
     <string name="settings_info_tab">Info</string>
@@ -15,7 +16,7 @@
     <string name="settings_music_tab">Musik</string>
     <string name="settings_background_label">Din nuvarande bakgrundsfärg</string>
     <string name="settings_text_label">Din nuvarande textfärg</string>
-
+    <string name="settings_music_label">Din nuvarande låt</string>
 
     <!-- Toast messages -->
     <string name="toast_roomname_invalid">Du glömde fylla i ett namn för ditt rum.</string>

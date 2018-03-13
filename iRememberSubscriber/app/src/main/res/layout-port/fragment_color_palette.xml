@@ -116,10 +116,6 @@
             <TextView android:background="@color/c50" android:layout_height="match_parent"/>
         </TableRow>
 
-        <TableRow android:layout_weight="1">
-            <TextView android:id="@+id/test" android:background="@android:color/white" android:layout_height="match_parent"/>
-        </TableRow>
-
     </TableLayout>
 
 </LinearLayout>

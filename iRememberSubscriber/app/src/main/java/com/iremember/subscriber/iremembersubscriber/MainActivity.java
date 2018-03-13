@@ -112,10 +112,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    public void log(String msg) {
-        Log.d("MainActivity", msg);
-    }
-
     /**
      * BroadcastReceiver class that enables services to broadcast messages to this activity.
      */

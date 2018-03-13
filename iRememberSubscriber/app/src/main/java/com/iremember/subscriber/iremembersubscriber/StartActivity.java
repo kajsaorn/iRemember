@@ -3,6 +3,7 @@ package com.iremember.subscriber.iremembersubscriber;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -33,7 +34,7 @@ public class StartActivity extends AppCompatActivity {
     public void onConnectClick(View view) {
         String mRoomName = PreferenceUtils.readRoomName(this);
 
-        if (mRoomName.equals("")) {
+        if (mRoomName == null || mRoomName.equals("")) {
             EditText mEtRoomName = (EditText) findViewById(R.id.et_room_name);
             mRoomName = mEtRoomName.getText().toString().trim();
 
@@ -74,7 +75,7 @@ public class StartActivity extends AppCompatActivity {
     private void initializeGUIElements() {
         String mRoomName = PreferenceUtils.readRoomName(this);
         EditText mEtRoomName = (EditText) findViewById(R.id.et_room_name);
-        mEtRoomName.setVisibility((mRoomName.equals("")) ? View.VISIBLE : View.GONE);
+        mEtRoomName.setVisibility((mRoomName == null) ? View.VISIBLE : View.GONE);
     }
 
     /**

@@ -7,7 +7,7 @@
     <dimen name="margin_large">30dp</dimen>
 
     <!-- Padding -->
-    <dimen name="layout_padding">40dp</dimen>
+    <dimen name="padding_layout">40dp</dimen>
     <dimen name="padding_small">10dp</dimen>
     <dimen name="padding_medium">20dp</dimen>
     <dimen name="padding_large">30dp</dimen>
@@ -16,16 +16,20 @@
     <dimen name="btn_textsize_large">20sp</dimen>
     <dimen name="btn_textsize_medium">15sp</dimen>
     <dimen name="btn_textsize_small">10sp</dimen>
+    <dimen name="btn_textsize_xsmall">5sp</dimen>
 
     <dimen name="btn_padding_large">20dp</dimen>
     <dimen name="btn_padding_medium">15dp</dimen>
-    <dimen name="btn_margin_small">10dp</dimen>
+    <dimen name="btn_padding_small">10dp</dimen>
+    <dimen name="btn_padding_xsmall">5dp</dimen>
 
     <!-- Text Views -->
+    <dimen name="tv_textsize_xlarge">35sp</dimen>
     <dimen name="tv_textsize_large">25sp</dimen>
     <dimen name="tv_textsize_medium">15sp</dimen>
     <dimen name="tv_textsize_small">10sp</dimen>
 
+    <dimen name="tv_reminder">50sp</dimen>
     <dimen name="tv_status_margin">25dp</dimen>
     <dimen name="tv_status_width">250dp</dimen>
 
@@ -36,6 +40,7 @@
 
     <!-- Shapes -->
     <dimen name="setting_circle_diameter">100dp</dimen>
-
+    <dimen name="border_size_half">1dp</dimen>
+    <dimen name="border_size">2dp</dimen>
 
 </resources>
