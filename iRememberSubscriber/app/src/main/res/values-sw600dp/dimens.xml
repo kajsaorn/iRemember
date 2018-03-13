@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Margin -->
+    <dimen name="margin_small">20dp</dimen>
+    <dimen name="margin_medium">40dp</dimen>
+    <dimen name="margin_large">60dp</dimen>
+
+    <!-- Padding -->
     <dimen name="layout_padding">80dp</dimen>
+    <dimen name="padding_small">20dp</dimen>
+    <dimen name="padding_medium">40dp</dimen>
+    <dimen name="padding_large">60dp</dimen>
 
     <!-- Buttons -->
     <dimen name="btn_textsize_large">40sp</dimen>
@@ -23,5 +33,9 @@
     <dimen name="et_text_size">40sp</dimen>
     <dimen name="et_padding">40dp</dimen>
     <dimen name="et_margin">40dp</dimen>
+
+    <!-- Shapes -->
+    <dimen name="setting_circle_diameter">100dp</dimen>
+
 
 </resources>

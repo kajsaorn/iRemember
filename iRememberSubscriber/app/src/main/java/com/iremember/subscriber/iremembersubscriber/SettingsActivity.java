@@ -16,11 +16,20 @@ import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsTextFragme
 public class SettingsActivity extends AppCompatActivity {
 
     private int mCurrentSetting;
+    private Fragment mInfoSettingsFragment;
+    private Fragment mBackgroundSettingsFragment;
+    private Fragment mTextSettingsFragment;
+    private Fragment mMusicSettingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        mInfoSettingsFragment = new SettingsInfoFragment();
+        mBackgroundSettingsFragment = new SettingsBackgroundFragment();
+        mTextSettingsFragment = new SettingsTextFragment();
+        mMusicSettingsFragment = new SettingsMusicFragment();
 
         mCurrentSetting = (savedInstanceState != null) ? savedInstanceState.getInt("mCurrentSetting") : R.id.btn_info;
         showCurrentSettingFragment();
@@ -120,4 +129,5 @@ public class SettingsActivity extends AppCompatActivity {
     public void log(String msg) {
         Log.d("SettingsActivity", msg);
     }
+
 }

@@ -1,13 +1,14 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/layout_padding"
     tools:context="com.iremember.subscriber.iremembersubscriber.Fragments.SettingsBackgroundFragment">
 
-    <TextView
+    <fragment android:name="com.iremember.subscriber.iremembersubscriber.Fragments.ColorPaletteFragment"
+        android:id="@+id/color_palette"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="This is the Background Fragment"
-        android:textSize="@dimen/tv_textsize_medium" />
+        android:layout_height="match_parent" />
 
-</FrameLayout>
+</LinearLayout>

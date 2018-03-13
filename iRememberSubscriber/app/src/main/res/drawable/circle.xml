@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <size
+        android:height="@dimen/setting_circle_diameter"
+        android:width="@dimen/setting_circle_diameter" />
+
+</shape>

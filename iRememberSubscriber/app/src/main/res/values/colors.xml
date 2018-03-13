@@ -5,4 +5,76 @@
     <color name="colorAccent">#FF4081</color>
     <color name="settings_border">#000000</color>
     <color name="settings_bg">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="default_reminder_bg_color">@color/c43</color>
+    <color name="default_reminder_text_color">@color/c46</color>
+
+
+    <color name="c1">#FFF9C4</color>
+    <color name="c2">#FFF176</color>
+    <color name="c3">#FFEB3B</color>
+    <color name="c4">#FBC02D</color>
+    <color name="c5">#F57F17</color>
+
+    <color name="c6">#ffcdd2</color>
+    <color name="c7">#e57373</color>
+    <color name="c8">#f44336</color>
+    <color name="c9">#d32f2f</color>
+    <color name="c10">#b71c1c</color>
+
+    <color name="c11">#F8BBD0</color>
+    <color name="c12">#F06292</color>
+    <color name="c13">#E91E63</color>
+    <color name="c14">#C2185B</color>
+    <color name="c15">#880E4F</color>
+
+    <color name="c16">#E1BEE7</color>
+    <color name="c17">#BA68C8</color>
+    <color name="c18">#9C27B0</color>
+    <color name="c19">#7B1FA2</color>
+    <color name="c20">#4A148C</color>
+
+    <color name="c21">#C5CAE9</color>
+    <color name="c22">#7986CB</color>
+    <color name="c23">#3F51B5</color>
+    <color name="c24">#303F9F</color>
+    <color name="c25">#1A237E</color>
+
+    <color name="c26">#BBDEFB</color>
+    <color name="c27">#64B5F6</color>
+    <color name="c28">#2196F3</color>
+    <color name="c29">#1976D2</color>
+    <color name="c30">#0D47A1</color>
+
+    <color name="c31">#B2EBF2</color>
+    <color name="c32">#4DD0E1</color>
+    <color name="c33">#00BCD4</color>
+    <color name="c34">#0097A7</color>
+    <color name="c35">#006064</color>
+
+    <color name="c36">#B2DFDB</color>
+    <color name="c37">#4DB6AC</color>
+    <color name="c38">#009688</color>
+    <color name="c39">#00796B</color>
+    <color name="c40">#004D40</color>
+
+    <color name="c41">#C8E6C9</color>
+    <color name="c42">#81C784</color>
+    <color name="c43">#4CAF50</color>
+    <color name="c44">#388E3C</color>
+    <color name="c45">#1B5E20</color>
+
+    <color name="c46">#F5F5F5</color>
+    <color name="c47">#E0E0E0</color>
+    <color name="c48">#9E9E9E</color>
+    <color name="c49">#616161</color>
+    <color name="c50">#212121</color>
+
+
+
+
+
+
+
 </resources>

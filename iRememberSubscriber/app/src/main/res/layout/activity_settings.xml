@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bg_settings"
+    android:background="@drawable/settings_bg"
     tools:context="com.iremember.subscriber.iremembersubscriber.SettingsActivity">
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:onClick="onInfoClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/btn_info"
+            android:text="@string/settings_info_tab"
             android:textSize="@dimen/btn_textsize_medium"
             android:background="@drawable/tab_unselected" />
 
@@ -33,7 +33,7 @@
             android:onClick="onBgColorClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/btn_bg_color"
+            android:text="@string/settings_background_tab"
             android:textSize="@dimen/btn_textsize_medium"
             android:background="@drawable/tab_unselected"  />
 
@@ -46,7 +46,7 @@
             android:onClick="onTextColorClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/btn_txt_color"
+            android:text="@string/settings_text_tab"
             android:textSize="@dimen/btn_textsize_medium"
             android:background="@drawable/tab_unselected"  />
 
@@ -59,7 +59,7 @@
             android:onClick="onMusicClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/btn_music"
+            android:text="@string/settings_music_tab"
             android:textSize="@dimen/btn_textsize_medium"
             android:background="@drawable/tab_unselected" />
 
