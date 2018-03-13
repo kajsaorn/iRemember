@@ -8,6 +8,7 @@
     <color name="light">#FDFDFD</color>
     <color name="dark">@color/c49</color>
     <color name="green">@color/c43</color>
+    <color name="green_light">@color/c41</color>
     <color name="orange">@color/c4</color>
 
     <!-- Default Colors for Reminder Activity -->

@@ -25,8 +25,12 @@ public class ReminderActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         String reminderText = getTextFromIntent();
+        boolean isMusicAllowed = PreferenceUtils.readMusicAllowed(this);
+
+        if (isMusicAllowed) {
+            startMediaPlayer();
+        }
         displayText(reminderText);
-        startMediaPlayer();
     }
 
     @Override

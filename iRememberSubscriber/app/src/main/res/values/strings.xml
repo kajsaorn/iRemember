@@ -1,5 +1,7 @@
 <resources>
+
     <!-- General -->
+
     <string name="app_name">iRememberSubscriber</string>
     <string name="btn_connect">STARTA</string>
     <string name="et_room_name_hint">ANGE RUMSNUMMER</string>
@@ -9,16 +11,38 @@
     <string name="btn_reminder_stop">AVBRYT PÅMINNELSE</string>
     <string name="err_mediaplayer">Ops, något gick fel när vi försökte spela låten.</string>
 
-    <!-- Settings -->
+    <!-- Settings Tabs -->
+
     <string name="settings_info_tab">Info</string>
     <string name="settings_background_tab">Bakgrund</string>
     <string name="settings_text_tab">Text</string>
     <string name="settings_music_tab">Musik</string>
-    <string name="settings_background_label">Din nuvarande bakgrundsfärg</string>
-    <string name="settings_text_label">Din nuvarande textfärg</string>
-    <string name="settings_music_label">Din nuvarande låt</string>
+
+    <!-- Settings Labels -->
+
+    <string name="settings_background_label">Din nuvarande bakgrundsfärg på meddelanden</string>
+    <string name="settings_text_label">Din nuvarande textfärg på meddelanden</string>
+    <string name="settings_music_label">Din nuvarande låt för meddelanden</string>
+
+    <string name="settings_info_label_1">
+        iRemember är en applikation som hjälper köket att skicka
+        ett meddelande till dig när maten är klar.
+    </string>
+
+    <string name="settings_info_label_2">
+        Här kan du ändra hur meddelanden ser ut och låter. Du kan till
+        exempel välja mellan olika låtar och färger.
+    </string>
+
+    <string name="settings_info_roomname_label">Vill du ändra ditt rumsnamn?</string>
+    <string name="settings_info_music_label">Får musik spelas när meddelande visas?</string>
+    <string name="settings_info_reminder_label">Får köket skicka meddelanden?</string>
+    <string name="settings_option_yes">Ja</string>
+    <string name="settings_option_no">Nej</string>
+    <string name="settings_btn_save_roomname">Spara namnet</string>
 
     <!-- Toast messages -->
+
     <string name="toast_roomname_invalid">Du glömde fylla i ett namn för ditt rum.</string>
     <string name="toast_connection_failure">Något gick fel när vi försökte ansluta till nätverket. Prova en gång till!</string>
     <string name="toast_connection_success">Du är nu ansluten till iRemember</string>

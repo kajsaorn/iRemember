@@ -39,7 +39,7 @@
     <dimen name="et_margin">20dp</dimen>
 
     <!-- Shapes -->
-    <dimen name="setting_circle_diameter">100dp</dimen>
+    <dimen name="setting_circle_diameter">80dp</dimen>
     <dimen name="border_size_half">1dp</dimen>
     <dimen name="border_size">2dp</dimen>
 

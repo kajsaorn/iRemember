@@ -18,6 +18,7 @@
         android:padding="@dimen/et_padding"
         android:textAlignment="center"
         android:textSize="@dimen/et_text_size"
+        android:singleLine="true"
         android:visibility="invisible" />
 
     <Button
