@@ -26,7 +26,7 @@
         android:id="@+id/btn_connect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_green_light"
+        android:background="@color/androidGreen"
         android:onClick="onConnectClick"
         android:padding="@dimen/btn_padding_large"
         android:text="@string/btn_connect"
