@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,8 +64,15 @@ public class MainActivity extends AppCompatActivity {
      * Make this device discoverable on local network.
      */
     private void connectToNetwork() {
+        log("connectToNetwork()");
         Intent intent = new Intent(this, NetworkService.class);
-        startService(intent);
+//        startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            log("before startService");
+            startService(intent);
+        }
     }
 
     /**
@@ -125,10 +133,12 @@ public class MainActivity extends AppCompatActivity {
             intentFilter.addAction(Network.DISCONNECTION_FAILURE);
             intentFilter.addAction(Network.SOCKET_FAILURE);
             registerReceiver(this, intentFilter);
+            log("MessageReceiver()");
         }
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            log("onReceive()");
             String action = intent.getAction();
 
             switch (action) {

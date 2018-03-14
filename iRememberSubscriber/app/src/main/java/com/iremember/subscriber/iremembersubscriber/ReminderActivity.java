@@ -43,7 +43,6 @@ public class ReminderActivity extends AppCompatActivity {
         finish();
     }
 
-
     private void setBackgroundColor() {
         int backgroundColor = PreferenceUtils.readBackgroundColor(this);
         findViewById(R.id.reminder_container).setBackgroundColor(backgroundColor);
