@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,7 @@ public class ReminderActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        mMusicPlayer.stop();
         mMusicPlayer.release();
         mMusicPlayer = null;
     }
@@ -46,4 +49,5 @@ public class ReminderActivity extends AppCompatActivity {
     public void onStopClick(View view) {
         finish();
     }
+
 }
