@@ -63,14 +63,16 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/padding_small"
                     android:text="@string/settings_option_yes"
-                    android:textSize="@dimen/tv_textsize_medium"/>
+                    android:textSize="@dimen/tv_textsize_medium"
+                    android:textColor="@color/dark" />
                 <RadioButton
                     android:id="@+id/rb_allow_reminders_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/padding_small"
                     android:text="@string/settings_option_no"
-                    android:textSize="@dimen/tv_textsize_medium"/>
+                    android:textSize="@dimen/tv_textsize_medium"
+                    android:textColor="@color/dark" />
             </RadioGroup>
 
             <TextView
@@ -91,14 +93,16 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/padding_small"
                     android:text="@string/settings_option_yes"
-                    android:textSize="@dimen/tv_textsize_medium"/>
+                    android:textSize="@dimen/tv_textsize_medium"
+                    android:textColor="@color/dark" />
                 <RadioButton
                     android:id="@+id/rb_allow_music_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/padding_small"
                     android:text="@string/settings_option_no"
-                    android:textSize="@dimen/tv_textsize_medium"/>
+                    android:textSize="@dimen/tv_textsize_medium"
+                    android:textColor="@color/dark" />
             </RadioGroup>
 
             <TextView
@@ -131,7 +135,7 @@
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium"
                 android:text="@string/settings_btn_save_roomname"
-                android:textSize="@dimen/btn_textsize_small"
+                android:textSize="@dimen/btn_textsize_medium"
                 />
         </LinearLayout>
     </LinearLayout>

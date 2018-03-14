@@ -17,7 +17,7 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        //getSharedPreferences(BuildConfig.APPLICATION_ID, 0).edit().clear().commit();    // Remove later
+        getSharedPreferences(BuildConfig.APPLICATION_ID, 0).edit().clear().commit();    // Remove later
         initializeGUIElements();
     }
 

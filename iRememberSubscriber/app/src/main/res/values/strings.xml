@@ -7,7 +7,7 @@
     <string name="et_room_name_hint">ANGE RUMSNUMMER</string>
     <string name="btn_disconnect">STÄNG AV</string>
     <string name="btn_settings">INSTÄLLNINGAR</string>
-    <string name="status_connected">Här kommer det att visas påminnelser när maten är klar.</string>
+    <string name="status_connected">Här kommer det att visas ett meddelande när maten är klar.</string>
     <string name="btn_reminder_stop">AVBRYT PÅMINNELSE</string>
     <string name="err_mediaplayer">Ops, något gick fel när vi försökte spela låten.</string>
 
