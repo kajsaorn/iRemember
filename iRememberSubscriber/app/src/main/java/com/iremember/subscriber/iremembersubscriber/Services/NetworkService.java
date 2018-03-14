@@ -1,17 +1,12 @@
 package com.iremember.subscriber.iremembersubscriber.Services;
 
 import android.app.Service;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.WindowManager;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Command;
 import com.iremember.subscriber.iremembersubscriber.Constants.Network;
@@ -25,7 +20,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -74,9 +68,6 @@ public class NetworkService extends Service {
     private class CommandReceiver extends Thread {
 
         private DatagramSocket socket;
-        /* For MulticastSocket;
-        private MulticastSocket multicastSocket;
-        */
         private int port = 12345;
         private boolean recentlyReceived = false;
 
@@ -87,13 +78,6 @@ public class NetworkService extends Service {
                 /* For DatagramSocket */
                 socket = new DatagramSocket(port);
 
-
-                /* For MulticastSocket
-                multicastSocket = new MulticastSocket(port);
-                InetAddress inetAddressGroup = InetAddress.getByName("224.2.2.2");
-                multicastSocket.joinGroup(inetAddressGroup);
-                End MulticastSocket */
-
             } catch (SocketException e) {
                 e.printStackTrace();
                 BroadcastUtils.broadcast(Network.SOCKET_FAILURE, getApplicationContext());
@@ -103,7 +87,6 @@ public class NetworkService extends Service {
         }
 
         public void closeSocket(){
-           // Try with MulticastSocket multicastSocket.close();
             socket.close();
         }
 
@@ -117,9 +100,7 @@ public class NetworkService extends Service {
             byte[] sendBuffer;
 
             acquireWiFiLock();
-            acquireMultiCastLock();
-//            setBrightness(10);
-
+            //acquireMultiCastLock();
 
             while (true) {
                 try {
@@ -128,17 +109,9 @@ public class NetworkService extends Service {
                     /* For DatagramSocket */
                     socket.receive(packetReceived);
 
-
-                    /* For MulticastSocket
-                    log("Before multicastSocket.receive()");
-                    multicastSocket.receive(packetReceived);
-                    log("After multicastSocket.receive()");
-                     End MulticastSocket*/
-
-                   // turnScreenOn();
-
                     // If a command is not recently received, then do the command and answer
                     if (!recentlyReceived) {
+                        turnScreenOn();
                         setRecentlyReceived(true);
                         setRecentlyReceivedTimer();
                         command = new String(packetReceived.getData(), 0,
@@ -200,7 +173,6 @@ public class NetworkService extends Service {
         wl.acquire();
     }
 
-
     private void acquireWiFiLock() {
         WifiManager.WifiLock _wifiLock = null;
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -213,35 +185,10 @@ public class NetworkService extends Service {
         }
     }
 
-    private void acquireMultiCastLock(){
+/*    private void acquireMultiCastLock(){
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiManager.MulticastLock multicastLock = wifiManager.createMulticastLock("lock");
         multicastLock.acquire();
-    }
-
-/*    private void setBrightness(int brightness){
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (Settings.System.canWrite(getApplicationContext())) {
-                // Do stuff here
-            }
-    else {
-                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                intent.setData(Uri.parse(“package:” + getActivity().getPackageName()));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        }
-        //constrain the value of brightness
-        if(brightness < 0)
-            brightness = 0;
-        else if(brightness > 255)
-            brightness = 255;
-
-
-        ContentResolver cResolver = this.getApplicationContext().getContentResolver();
-        Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, brightness);
-
     }
 */
     public void log(String msg) {
