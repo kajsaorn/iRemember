@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Network;
+import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 
 public class MainActivity extends AppCompatActivity {
@@ -111,6 +112,14 @@ public class MainActivity extends AppCompatActivity {
     private void showSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Display message to user as Android Toast.
+     */
+    private void log(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Log.d("MainActivity", message);
     }
 
     /**
