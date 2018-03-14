@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.BuildConfig;
 import com.iremember.subscriber.iremembersubscriber.Constants.SharedPrefs;
+import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.R;
 
 import java.lang.reflect.Field;
@@ -84,5 +86,12 @@ public class PreferenceUtils {
     public static String defaultSongTitle() {
         Field[] songs = R.raw.class.getFields();
         return (songs.length > 0) ? songs[0].getName() : null;
+    }
+
+    /**
+     * Display message to user as Android Toast.
+     */
+    public static void showUserConfirmation(Context context) {
+        Toast.makeText(context, UserMessage.SAVED_SETTINGS, Toast.LENGTH_SHORT).show();
     }
 }

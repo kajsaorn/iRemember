@@ -4,11 +4,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsBackgroundFragment;
+import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsGeneralFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsInfoFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsMusicFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsTextFragment;
@@ -20,6 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Fragment mBackgroundSettingsFragment;
     private Fragment mTextSettingsFragment;
     private Fragment mMusicSettingsFragment;
+    private Fragment mGeneralSettingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +31,9 @@ public class SettingsActivity extends AppCompatActivity {
         mBackgroundSettingsFragment = new SettingsBackgroundFragment();
         mTextSettingsFragment = new SettingsTextFragment();
         mMusicSettingsFragment = new SettingsMusicFragment();
+        mGeneralSettingsFragment = new SettingsGeneralFragment();
 
-        mCurrentSetting = (savedInstanceState != null) ? savedInstanceState.getInt("mCurrentSetting") : R.id.btn_info;
+        mCurrentSetting = (savedInstanceState != null) ? savedInstanceState.getInt("mCurrentSetting") : R.id.tab_info;
         showCurrentSettingFragment();
         markCurrentSettingTab();
     }
@@ -46,7 +48,16 @@ public class SettingsActivity extends AppCompatActivity {
      * Called when info tab is clicked.
      */
     public void onInfoClick(View view) {
-        mCurrentSetting = R.id.btn_info;
+        mCurrentSetting = R.id.tab_info;
+        showCurrentSettingFragment();
+        markCurrentSettingTab();
+    }
+
+    /**
+     * Called when general tab is clicked.
+     */
+    public void onGeneralClick(View view) {
+        mCurrentSetting = R.id.tab_general;
         showCurrentSettingFragment();
         markCurrentSettingTab();
     }
@@ -55,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
      * Called when background tab is clicked.
      */
     public void onBgColorClick(View view) {
-        mCurrentSetting = R.id.btn_bg_color;
+        mCurrentSetting = R.id.tab_background;
         showCurrentSettingFragment();
         markCurrentSettingTab();
     }
@@ -64,7 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
      * Called when text tab is clicked.
      */
     public void onTextColorClick(View view) {
-        mCurrentSetting = R.id.btn_txt_color;
+        mCurrentSetting = R.id.tab_text;
         showCurrentSettingFragment();
         markCurrentSettingTab();
     }
@@ -73,7 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
      * Called when music tab is clicked.
      */
     public void onMusicClick(View view) {
-        mCurrentSetting = R.id.btn_music;
+        mCurrentSetting = R.id.tab_music;
         showCurrentSettingFragment();
         markCurrentSettingTab();
     }
@@ -85,17 +96,20 @@ public class SettingsActivity extends AppCompatActivity {
         Fragment fragment;
 
         switch (mCurrentSetting) {
-            case R.id.btn_info:
-                fragment = new SettingsInfoFragment();
+            case R.id.tab_info:
+                fragment = mInfoSettingsFragment;
                 break;
-            case R.id.btn_bg_color:
-                fragment = new SettingsBackgroundFragment();
+            case R.id.tab_background:
+                fragment = mBackgroundSettingsFragment;
                 break;
-            case R.id.btn_txt_color:
-                fragment = new SettingsTextFragment();
+            case R.id.tab_text:
+                fragment = mTextSettingsFragment;
                 break;
-            case R.id.btn_music:
-                fragment = new SettingsMusicFragment();
+            case R.id.tab_music:
+                fragment = mMusicSettingsFragment;
+                break;
+            case R.id.tab_general:
+                fragment = mGeneralSettingsFragment;
                 break;
             default:
                 return;
@@ -109,25 +123,11 @@ public class SettingsActivity extends AppCompatActivity {
      * Display a certain tab as selected to user.
      */
     private void markCurrentSettingTab() {
-        findViewById(R.id.btn_info).setBackgroundResource(R.drawable.tab_unselected);
-        findViewById(R.id.btn_bg_color).setBackgroundResource(R.drawable.tab_unselected);
-        findViewById(R.id.btn_txt_color).setBackgroundResource(R.drawable.tab_unselected);
-        findViewById(R.id.btn_music).setBackgroundResource(R.drawable.tab_unselected);
+        findViewById(R.id.tab_info).setBackgroundResource(R.drawable.tab_unselected);
+        findViewById(R.id.tab_general).setBackgroundResource(R.drawable.tab_unselected);
+        findViewById(R.id.tab_background).setBackgroundResource(R.drawable.tab_unselected);
+        findViewById(R.id.tab_text).setBackgroundResource(R.drawable.tab_unselected);
+        findViewById(R.id.tab_music).setBackgroundResource(R.drawable.tab_unselected);
         findViewById(mCurrentSetting).setBackgroundResource(R.drawable.tab_selected);
     }
-
-    /**
-     * Display message to user as Android Toast.
-     */
-    private void showUserMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * Debug.
-     */
-    public void log(String msg) {
-        Log.d("SettingsActivity", msg);
-    }
-
 }

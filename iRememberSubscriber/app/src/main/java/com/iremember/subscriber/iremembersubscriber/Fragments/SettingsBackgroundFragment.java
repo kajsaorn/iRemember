@@ -1,5 +1,6 @@
 package com.iremember.subscriber.iremembersubscriber.Fragments;
 
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -12,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
@@ -20,11 +23,13 @@ public class SettingsBackgroundFragment extends Fragment implements View.OnClick
 
     View mColorPalette;
     String mColorPaletteLabel;
+    Context mContext;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View thisFragment = inflater.inflate(R.layout.fragment_settings_background, container, false);
+        mContext = thisFragment.getContext();
         mColorPalette = thisFragment.findViewById(R.id.color_palette);
         mColorPaletteLabel = getString(R.string.settings_background_label);
 
@@ -78,7 +83,7 @@ public class SettingsBackgroundFragment extends Fragment implements View.OnClick
     public void onClick(View view) {
         int color = ((ColorDrawable)view.getBackground()).getColor();
         PreferenceUtils.writeBackgroundColor(this.getContext(), color);
-        Log.d("SettingsBackground", "Write new color: " + color);
         setCurrentColor();
+        PreferenceUtils.showUserConfirmation(mContext);
     }
 }

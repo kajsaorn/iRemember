@@ -76,6 +76,7 @@ public class SettingsTextFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         int color = ((ColorDrawable)view.getBackground()).getColor();
         PreferenceUtils.writeTextColor(this.getContext(), color);
+        PreferenceUtils.showUserConfirmation(this.getContext());
         setCurrentColor();
     }
 }

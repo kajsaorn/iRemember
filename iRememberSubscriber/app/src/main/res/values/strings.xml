@@ -17,6 +17,7 @@
     <string name="settings_background_tab">Bakgrund</string>
     <string name="settings_text_tab">Text</string>
     <string name="settings_music_tab">Musik</string>
+    <string name="settings_general_tab">Allmänt</string>
 
     <!-- Settings Labels -->
 
@@ -25,8 +26,7 @@
     <string name="settings_music_label">Din nuvarande låt för meddelanden</string>
 
     <string name="settings_info_label_1">
-        iRemember är en applikation som hjälper köket att skicka
-        ett meddelande till dig när maten är klar.
+        iRemember är en applikation som hjälper köket att skicka meddelanden till dig när maten är klar.
     </string>
 
     <string name="settings_info_label_2">
@@ -34,12 +34,12 @@
         exempel välja mellan olika låtar och färger.
     </string>
 
-    <string name="settings_info_roomname_label">Vill du ändra ditt rumsnamn?</string>
-    <string name="settings_info_music_label">Får musik spelas när meddelande visas?</string>
-    <string name="settings_info_reminder_label">Får köket skicka meddelanden?</string>
+    <string name="settings_general_roomname_label">Vill du ändra ditt rumsnamn?</string>
+    <string name="settings_info_music_label">Får musik spelas när meddelanden visas?</string>
+    <string name="settings_general_reminder_label">Får köket skicka meddelanden till dig när maten är klar?</string>
     <string name="settings_option_yes">Ja</string>
     <string name="settings_option_no">Nej</string>
-    <string name="settings_btn_save_roomname">Spara namnet</string>
+    <string name="settings_btn_save_roomname">Spara</string>
 
     <!-- Toast messages -->
 

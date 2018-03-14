@@ -1,142 +1,35 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_layout"
+    android:gravity="center"
     tools:context="com.iremember.subscriber.iremembersubscriber.Fragments.SettingsInfoFragment">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_layout"
-        >
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/settings_info_label_1"
+        android:textSize="@dimen/textsize_large"
+        android:textStyle="bold"
+        />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/settings_info_label_1"
-            android:textSize="@dimen/tv_textsize_large"
-            android:textStyle="bold"
-            android:layout_marginBottom="@dimen/margin_medium"
-            />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_size_half"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:background="@color/dark"
+        />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/settings_info_label_2"
-            android:textSize="@dimen/tv_textsize_large"
-            android:textStyle="bold"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/border_size_half"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:background="@color/dark"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/padding_large"
-            android:paddingRight="@dimen/padding_large">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/tv_textsize_medium"
-                android:text="@string/settings_info_reminder_label"
-                />
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginBottom="@dimen/margin_large">
-                <RadioButton
-                    android:id="@+id/rb_allow_reminders_yes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/padding_small"
-                    android:text="@string/settings_option_yes"
-                    android:textSize="@dimen/tv_textsize_medium"
-                    android:textColor="@color/dark" />
-                <RadioButton
-                    android:id="@+id/rb_allow_reminders_no"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/padding_small"
-                    android:text="@string/settings_option_no"
-                    android:textSize="@dimen/tv_textsize_medium"
-                    android:textColor="@color/dark" />
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/tv_textsize_medium"
-                android:text="@string/settings_info_music_label"
-                />
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginBottom="@dimen/margin_large">
-                <RadioButton
-                    android:id="@+id/rb_allow_music_yes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/padding_small"
-                    android:text="@string/settings_option_yes"
-                    android:textSize="@dimen/tv_textsize_medium"
-                    android:textColor="@color/dark" />
-                <RadioButton
-                    android:id="@+id/rb_allow_music_no"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/padding_small"
-                    android:text="@string/settings_option_no"
-                    android:textSize="@dimen/tv_textsize_medium"
-                    android:textColor="@color/dark" />
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/tv_textsize_medium"
-                android:text="@string/settings_info_roomname_label"
-                />
-
-            <EditText
-                android:id="@+id/et_room_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:inputType="text"
-                android:textSize="@dimen/et_text_size"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginBottom="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:gravity="center_horizontal"
-                />
-
-            <Button
-                android:id="@+id/btn_save_room_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/green_light"
-                android:padding="@dimen/btn_padding_small"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:text="@string/settings_btn_save_roomname"
-                android:textSize="@dimen/btn_textsize_medium"
-                />
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/settings_info_label_2"
+        android:textSize="@dimen/textsize_large"
+        android:textStyle="bold"
+        />
+</LinearLayout>

@@ -68,14 +68,14 @@ public class SettingsMusicFragment extends Fragment {
                                 View.OnClickListener selectListener) {
 
         TextView vTitle = new TextView(mContext);
-        vTitle.setTextSize(mContext.getResources().getDimension(R.dimen.tv_textsize_small));
+        vTitle.setTextSize(mContext.getResources().getDimension(R.dimen.textsize_small));
         vTitle.setText(songTitle);
 
         TextView vPlay = new TextView(mContext);
         vPlay.setOnClickListener(playListener);
         vPlay.setGravity(Gravity.CENTER);
         vPlay.setTextColor(mContext.getResources().getColor(R.color.orange));
-        vPlay.setTextSize(mContext.getResources().getDimension(R.dimen.tv_textsize_small));
+        vPlay.setTextSize(mContext.getResources().getDimension(R.dimen.textsize_small));
         vPlay.setText("Spela");
         vPlay.setTag(songTitle);
 
@@ -83,7 +83,7 @@ public class SettingsMusicFragment extends Fragment {
         vStop.setOnClickListener(stopListener);
         vStop.setGravity(Gravity.CENTER);
         vStop.setTextColor(mContext.getResources().getColor(R.color.stop));
-        vStop.setTextSize(mContext.getResources().getDimension(R.dimen.tv_textsize_small));
+        vStop.setTextSize(mContext.getResources().getDimension(R.dimen.textsize_small));
         vStop.setText("Stop");
         vStop.setTag(songTitle);
 
@@ -91,7 +91,7 @@ public class SettingsMusicFragment extends Fragment {
         vSelect.setOnClickListener(selectListener);
         vSelect.setGravity(Gravity.CENTER);
         vSelect.setTextColor(mContext.getResources().getColor(R.color.start));
-        vSelect.setTextSize(mContext.getResources().getDimension(R.dimen.tv_textsize_small));
+        vSelect.setTextSize(mContext.getResources().getDimension(R.dimen.textsize_small));
         vSelect.setText("Välj");
         vSelect.setTag(songTitle);
 
@@ -145,6 +145,7 @@ public class SettingsMusicFragment extends Fragment {
         @Override
         public void onClick(View view) {
             PreferenceUtils.writeSongTitle(mContext, view.getTag().toString());
+            PreferenceUtils.showUserConfirmation(mContext);
             setCurrentSong();
         }
     }

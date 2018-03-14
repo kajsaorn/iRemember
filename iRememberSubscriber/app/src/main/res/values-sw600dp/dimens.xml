@@ -25,23 +25,22 @@
     <dimen name="btn_padding_xsmall">10dp</dimen>
 
     <!-- Text Views -->
-    <dimen name="tv_textsize_xlarge">65sp</dimen>
-    <dimen name="tv_textsize_large">50sp</dimen>
-    <dimen name="tv_textsize_medium">35sp</dimen>
-    <dimen name="tv_textsize_small">20sp</dimen>
+    <dimen name="textsize_xlarge">65sp</dimen>
+    <dimen name="textsize_large">50sp</dimen>
+    <dimen name="textsize_medium">35sp</dimen>
+    <dimen name="textsize_small">20sp</dimen>
 
     <dimen name="tv_reminder">100sp</dimen>
     <dimen name="tv_status_margin">50dp</dimen>
     <dimen name="tv_status_width">500dp</dimen>
 
-    <!-- Edit Views -->
-    <dimen name="et_text_size">40sp</dimen>
-    <dimen name="et_padding">40dp</dimen>
-    <dimen name="et_margin">40dp</dimen>
-
     <!-- Shapes -->
     <dimen name="setting_circle_diameter">100dp</dimen>
     <dimen name="border_size_half">1dp</dimen>
     <dimen name="border_size">2dp</dimen>
+
+
+    <!-- Settings -->
+    <dimen name="tab_textsize">25sp</dimen>
 
 </resources>

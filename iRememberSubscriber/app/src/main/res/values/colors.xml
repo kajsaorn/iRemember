@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">@color/turquoise</color>
 
     <color name="transparent">#00000000</color>
     <color name="light">#FDFDFD</color>
@@ -10,6 +10,7 @@
     <color name="green">@color/c43</color>
     <color name="green_light">@color/c41</color>
     <color name="orange">@color/c4</color>
+    <color name="turquoise">#009688</color>
 
     <!-- Default Colors for Reminder Activity -->
     <color name="default_reminder_bg_color">@color/c43</color>

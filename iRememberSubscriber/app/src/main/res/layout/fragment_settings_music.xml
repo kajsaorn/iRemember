@@ -20,14 +20,14 @@
                 android:id="@+id/settings_music_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/tv_textsize_large"
+                android:textSize="@dimen/textsize_large"
                 android:text="@string/settings_music_label" />
 
             <TextView
                 android:id="@+id/selected_song"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/tv_textsize_xlarge"
+                android:textSize="@dimen/textsize_xlarge"
                 android:textStyle="bold" />
 
         </LinearLayout>
