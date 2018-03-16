@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.iremember.subscriber.iremembersubscriber.Constants.Network;
+import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (mBroadcastReceiver == null) {
-            mBroadcastReceiver = new MessageReceiver();
+            mBroadcastReceiver = new ConnectionMessageReceiver();
         }
     }
 
@@ -100,9 +100,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Show start activity.
      */
-    private void showStartActivity(String message) {
+    private void showStartActivity() {
         Intent intent = new Intent(this, StartActivity.class);
-        intent.putExtra(Network.MESSAGE, message);
         startActivity(intent);
     }
 
@@ -130,43 +129,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * BroadcastReceiver class that enables services to broadcast messages to this activity.
+     * BroadcastReceiver class that enables services to broadcastAction messages to this activity.
      */
-    private class MessageReceiver extends BroadcastReceiver {
+    private class ConnectionMessageReceiver extends BroadcastReceiver {
 
-        public MessageReceiver() {
+        public ConnectionMessageReceiver() {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Network.CONNECTION_SUCCESS);
-            intentFilter.addAction(Network.CONNECTION_FAILURE);
-            intentFilter.addAction(Network.DISCONNECTION_SUCCESS);
-            intentFilter.addAction(Network.DISCONNECTION_FAILURE);
-            intentFilter.addAction(Network.SOCKET_FAILURE);
+            intentFilter.addAction(Broadcast.DISCONNECTION_SUCCESS);
+            intentFilter.addAction(Broadcast.DISCONNECTION_FAILURE);
+            intentFilter.addAction(Broadcast.SOCKET_FAILURE);
             registerReceiver(this, intentFilter);
-            log("MessageReceiver()");
         }
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            log("onReceive()");
             String action = intent.getAction();
 
             switch (action) {
-                case Network.CONNECTION_SUCCESS:
-                    showUserMessage(getString(R.string.toast_connection_success));
-                    break;
-                case Network.DISCONNECTION_SUCCESS:
-                    showStartActivity(Network.DISCONNECTION_SUCCESS);
+                case Broadcast.DISCONNECTION_SUCCESS:
+                    showUserMessage(UserMessage.DISCONNECTION_SUCCESS);
+                    showStartActivity();
                     finish();
                     break;
-                case Network.CONNECTION_FAILURE:
-                    showStartActivity(Network.DISCONNECTION_FAILURE);
-                    finish();
+                case Broadcast.DISCONNECTION_FAILURE:
+                    showUserMessage(Broadcast.DISCONNECTION_FAILURE);
                     break;
-                case Network.DISCONNECTION_FAILURE:
-                    showUserMessage(getString(R.string.toast_disconnection_failure));
-                    break;
-                case Network.SOCKET_FAILURE:
-                    showStartActivity(Network.SOCKET_FAILURE);
+                case Broadcast.SOCKET_FAILURE:
+                    showUserMessage(UserMessage.SOCKET_FAILURE);
+                    showStartActivity();
                     finish();
                     break;
             }

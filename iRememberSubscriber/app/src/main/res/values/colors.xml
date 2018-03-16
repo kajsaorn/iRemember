@@ -12,6 +12,7 @@
     <color name="green_light">@color/c41</color>
     <color name="orange">@color/c4</color>
     <color name="turquoise">#009688</color>
+    <color name="hint">@color/c48</color>
 
     <!-- Default Colors for Reminder Activity -->
     <color name="default_reminder_bg_color">@color/c43</color>

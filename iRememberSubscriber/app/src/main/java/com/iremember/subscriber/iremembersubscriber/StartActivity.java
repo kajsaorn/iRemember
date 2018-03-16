@@ -1,88 +1,75 @@
 package com.iremember.subscriber.iremembersubscriber;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.iremember.subscriber.iremembersubscriber.Constants.Network;
+import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
+import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
 public class StartActivity extends AppCompatActivity {
+
+    private BroadcastReceiver mBroadcastReceiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         getSharedPreferences(BuildConfig.APPLICATION_ID, 0).edit().clear().commit();    // Remove later
-        initializeGUIElements();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkStartupInfo();
-    }
-
-    /**
-     * Called when user clicks connect button.
-     * If user input is valid, main activity will be started.
-     */
-    public void onConnectClick(View view) {
-        String mRoomName = PreferenceUtils.readRoomName(this);
-
-        if (mRoomName == null || mRoomName.equals("")) {
-            EditText mEtRoomName = (EditText) findViewById(R.id.et_room_name);
-            mRoomName = mEtRoomName.getText().toString().trim();
-
-            if (mRoomName.equals("")) {
-                showUserMessage(getString(R.string.toast_roomname_invalid));
-                return;
-            } else {
-                PreferenceUtils.writeRoomName(this, mRoomName);
-            }
+        if (mBroadcastReceiver == null) {
+            mBroadcastReceiver = new StartActivity.StartupMessageReceivier();
         }
-        startMainActivity();
-        finish();
     }
 
-    /**
-     * Check if there is any start up info, e.g. if the previous connection failed.
-     */
-    private void checkStartupInfo() {
-        String info = getIntent().getStringExtra(Network.MESSAGE);
-        if (info != null) {
-            switch (info) {
-                case Network.CONNECTION_FAILURE:
-                    showUserMessage(getString(R.string.toast_connection_failure));
-                    break;
-                case Network.DISCONNECTION_SUCCESS:
-                    showUserMessage(getString(R.string.toast_disconnection_success));
-                    break;
-                case Network.SOCKET_FAILURE:
-                    showUserMessage(getString(R.string.toast_socket_failure));
-                    break;
-            }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mBroadcastReceiver != null) {
+            unregisterReceiver(mBroadcastReceiver);
+            mBroadcastReceiver = null;
         }
     }
 
     /**
-     * Show room name input field only if user hasn't picked a name before.
+     * Called when user clicks start button.
      */
-    private void initializeGUIElements() {
+    public void onStartClick(View view) {
         String mRoomName = PreferenceUtils.readRoomName(this);
-        EditText mEtRoomName = (EditText) findViewById(R.id.et_room_name);
-        mEtRoomName.setVisibility((mRoomName == null) ? View.VISIBLE : View.GONE);
+        String mServiceName = PreferenceUtils.readMasterServiceName(this);
+
+        if (mRoomName == null && mServiceName == null) {
+            showUserMessage(UserMessage.MISSING_ROOM_AND_SERVICE_NAME);
+        } else if (mRoomName == null) {
+            showUserMessage(UserMessage.MISSING_ROOM_NAME);
+        } else if (mServiceName == null) {
+            showUserMessage(UserMessage.MISSING_SERVICE_NAME);
+        } else {
+            Intent intent = new Intent(this, NetworkService.class);
+            intent.putExtra(Broadcast.SERVICE_NAME, mServiceName);
+            intent.putExtra(Broadcast.ROOM_NAME, mRoomName);
+            startService(intent);
+        }
     }
 
     /**
      * Display message to user as Android Toast.
      */
     private void showUserMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -93,4 +80,35 @@ public class StartActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onSettingsClick(View view) {
+        Log.d("Settings", "Clicked Button");
+        Intent intent = new Intent(this, DiscoveryActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * BroadcastReceiver class that enables services to broadcastAction messages to this activity.
+     */
+    private class StartupMessageReceivier extends BroadcastReceiver {
+
+        public StartupMessageReceivier() {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(Broadcast.DISCOVERY_FAILURE);
+            intentFilter.addAction(Broadcast.CONNECTION_FAILURE);
+            intentFilter.addAction(Broadcast.MISSING_ROOM_NAME);
+            intentFilter.addAction(Broadcast.MISSING_SERVICE_NAME);
+            registerReceiver(this, intentFilter);
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            switch (action) {
+                case Broadcast.CONNECTION_FAILURE:
+                    showUserMessage(UserMessage.CONNECTION_FAILURE);
+                    break;
+            }
+        }
+    }
 }
