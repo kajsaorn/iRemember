@@ -3,7 +3,8 @@ package com.iremember.subscriber.iremembersubscriber.Constants;
 public class UserMessage {
     public static final String SAVED_SETTINGS = "Dina nya inställningar är sparade.";
     public static final String CONNECTION_SUCCESS = "Du är ansluten till köksenheten.";
-    public static final String CONNECTION_FAILURE = "Det gick inte att ansluta till köksenheten.";
+    public static final String CONNECTION_FAILURE = "Något gick fel när vi försökte ansluta till köksenheten.";
+    public static final String DISCOVERY_FAILURE = "Något gick fel när vi försökte hitta köksenheten.";
     public static final String DISCONNECTION_SUCCESS = "Du är inte längre ansluten till köksenheten.";
     public static final String DISCONNECTION_FAILURE = "Något gick fel när vi försökte koppla bort dig från köksenheten.";
     public static final String SOCKET_FAILURE = "Något fick fel.. Försök starta igen.";

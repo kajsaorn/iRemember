@@ -75,6 +75,7 @@ public class NetworkService extends Service {
                 BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_FAILURE, getApplicationContext());
             }
         }
+        BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
         super.onDestroy();
     }
 

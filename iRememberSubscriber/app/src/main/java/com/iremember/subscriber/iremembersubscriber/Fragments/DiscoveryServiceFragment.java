@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -94,11 +95,23 @@ public class DiscoveryServiceFragment extends Fragment {
         layoutServices.removeAllViews();
     }
 
+    /**
+     * Start network service which, among other things, will look for available
+     * remote iRemember Master Services. If one is found, this fragment will receive
+     * a broadcast message and display the available service.
+     */
     private void startNetworkService() {
         Intent intent = new Intent(getContext(), NetworkService.class);
-        getContext().startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getContext().startForegroundService(intent);
+        } else {
+            getContext().startService(intent);
+        }
     }
 
+    /**
+     * Stop network service.
+     */
     private void stopNetworkService() {
         Intent intent = new Intent(getContext(), NetworkService.class);
         getContext().stopService(intent);
@@ -132,7 +145,6 @@ public class DiscoveryServiceFragment extends Fragment {
         vService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopNetworkService();
                 PreferenceUtils.writeMasterServiceName(getContext(), service);
                 mListener.onServiceSaved();
             }
@@ -161,7 +173,7 @@ public class DiscoveryServiceFragment extends Fragment {
     }
 
     /**
-     * BroadcastReceiver class that enables services to broadcastAction messages to this activity.
+     * BroadcastReceiver class that enables services to broadcast messages to this fragment.
      */
     private class DiscoveryMessageReceiver extends BroadcastReceiver {
 

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
+import com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryServiceFragment;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
@@ -24,28 +26,25 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        getSharedPreferences(BuildConfig.APPLICATION_ID, 0).edit().clear().commit();    // Remove later
+
+        //getSharedPreferences(BuildConfig.APPLICATION_ID, 0).edit().clear().commit();    // TODO: Remove later
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mBroadcastReceiver == null) {
-            mBroadcastReceiver = new StartActivity.StartupMessageReceivier();
-        }
+        registerBroadcastReceiver();
     }
 
     @Override
     protected void onStop() {
+        unregisterBroadcastReceiver();
         super.onStop();
-        if (mBroadcastReceiver != null) {
-            unregisterReceiver(mBroadcastReceiver);
-            mBroadcastReceiver = null;
-        }
     }
 
     /**
-     * Called when user clicks start button.
+     * Called when user clicks start button. If user has previously provided a
+     * room name and an iRemember Master Service name, the network service is started.
      */
     public void onStartClick(View view) {
         String mRoomName = PreferenceUtils.readRoomName(this);
@@ -58,9 +57,45 @@ public class StartActivity extends AppCompatActivity {
         } else if (mServiceName == null) {
             showUserMessage(UserMessage.MISSING_SERVICE_NAME);
         } else {
-            Intent intent = new Intent(this, NetworkService.class);
-            intent.putExtra(Broadcast.SERVICE_NAME, mServiceName);
-            intent.putExtra(Broadcast.ROOM_NAME, mRoomName);
+            startNetworkService();
+        }
+    }
+
+    /**
+     * Register broadcast receiver so that this activity listens
+     * to broadcast messages from other activities or services.
+     */
+    private void registerBroadcastReceiver() {
+        if (mBroadcastReceiver == null) {
+            mBroadcastReceiver = new StartActivity.StartupMessageReceivier();
+        }
+    }
+
+    /**
+     * Unregister broadcast receiver so that this activity stop
+     * listening to broadcast messages from other activities or services.
+     */
+    private void unregisterBroadcastReceiver() {
+        if (mBroadcastReceiver != null) {
+            unregisterReceiver(mBroadcastReceiver);
+            mBroadcastReceiver = null;
+        }
+    }
+
+    /**
+     * Start network service which, among other things, will try to connect to a
+     * previously defined remote iRemember Master Service. If the connection succeeds
+     * this activity will receive a broadcast message and the main activity is shown,
+     * otherwise an error message.
+     */
+    private void startNetworkService() {
+        Intent intent = new Intent(this, NetworkService.class);
+        intent.putExtra(Broadcast.SERVICE_NAME, PreferenceUtils.readMasterServiceName(this));
+        intent.putExtra(Broadcast.ROOM_NAME, PreferenceUtils.readRoomName(this));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
             startService(intent);
         }
     }
@@ -73,30 +108,34 @@ public class StartActivity extends AppCompatActivity {
     }
 
     /**
-     * Start main activity (where user will be connected to network and discoverable).
+     * Start main activity.
      */
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-    public void onSettingsClick(View view) {
-        Log.d("Settings", "Clicked Button");
+    /**
+     * Called when discovery button is clicked. Starts the settings activity, where
+     * user may define a room name and discover available iRemember Master Services.
+     */
+    public void onDiscoveryClick(View view) {
         Intent intent = new Intent(this, DiscoveryActivity.class);
         startActivity(intent);
     }
 
     /**
-     * BroadcastReceiver class that enables services to broadcastAction messages to this activity.
+     * BroadcastReceiver class that enables services to broadcast messages to this activity.
      */
     private class StartupMessageReceivier extends BroadcastReceiver {
 
         public StartupMessageReceivier() {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Broadcast.DISCOVERY_FAILURE);
-            intentFilter.addAction(Broadcast.CONNECTION_FAILURE);
             intentFilter.addAction(Broadcast.MISSING_ROOM_NAME);
             intentFilter.addAction(Broadcast.MISSING_SERVICE_NAME);
+            intentFilter.addAction(Broadcast.DISCOVERY_FAILURE);
+            intentFilter.addAction(Broadcast.CONNECTION_FAILURE);
+            intentFilter.addAction(Broadcast.CONNECTION_SUCCESS);
             registerReceiver(this, intentFilter);
         }
 
@@ -105,8 +144,21 @@ public class StartActivity extends AppCompatActivity {
             String action = intent.getAction();
 
             switch (action) {
+                case Broadcast.MISSING_ROOM_NAME:
+                    showUserMessage(UserMessage.MISSING_ROOM_NAME);
+                    break;
+                case Broadcast.MISSING_SERVICE_NAME:
+                    showUserMessage(UserMessage.MISSING_SERVICE_NAME);
+                    break;
+                case Broadcast.DISCOVERY_FAILURE:
+                    showUserMessage(UserMessage.DISCOVERY_FAILURE);
+                    break;
                 case Broadcast.CONNECTION_FAILURE:
                     showUserMessage(UserMessage.CONNECTION_FAILURE);
+                    break;
+                case Broadcast.CONNECTION_SUCCESS:
+                    startMainActivity();
+                    finish();
                     break;
             }
         }
