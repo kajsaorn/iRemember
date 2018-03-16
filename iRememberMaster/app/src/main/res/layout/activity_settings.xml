@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_layout"
+    tools:context="com.iremember.master.iremembermaster.SettingsActivity">
+
+    <EditText
+        android:id="@+id/et_master_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_master_name"
+        android:padding="@dimen/padding_medium"
+        android:textAlignment="center"
+        android:textSize="@dimen/et_text_size"
+        android:singleLine="true"
+        android:maxLength="10"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_store_master_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/androidGreen"
+        android:onClick="onStoreClick"
+        android:padding="@dimen/btn_padding_large"
+        android:text="@string/btn_store_master_name"
+        android:textColor="@android:color/background_light"
+        android:textSize="@dimen/btn_textsize_large"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_start_master"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/androidGreen"
+        android:onClick="onStartClick"
+        android:padding="@dimen/btn_padding_large"
+        android:text="@string/btn_start_master"
+        android:textColor="@android:color/background_light"
+        android:textSize="@dimen/btn_textsize_large"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_to_master_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/androidGreen"
+        android:onClick="onGoToMenuClick"
+        android:padding="@dimen/btn_padding_large"
+        android:text="@string/btn_master_menu"
+        android:textColor="@android:color/background_light"
+        android:textSize="@dimen/btn_textsize_large"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+
+</LinearLayout>

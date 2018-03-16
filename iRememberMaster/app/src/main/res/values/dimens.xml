@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Padding -->
     <dimen name="layout_padding">40dp</dimen>
+    <dimen name="padding_medium">20dp</dimen>
+    <dimen name="padding_layout">40dp</dimen>
 
+    <!-- Text Views -->
+    <dimen name="textsize_xlarge">35sp</dimen>
+
+    <!-- Buttons -->
     <dimen name="btn_text_size">20sp</dimen>
+    <dimen name="btn_textsize_large">20sp</dimen>
     <dimen name="btn_padding">20dp</dimen>
+    <dimen name="btn_padding_large">20dp</dimen>
     <dimen name="btn_margin">20dp</dimen>
 
+    <!-- Text Views -->
     <dimen name="tv_text_size">20sp</dimen>
     <dimen name="tv_padding">20dp</dimen>
     <dimen name="tv_margin">20dp</dimen>

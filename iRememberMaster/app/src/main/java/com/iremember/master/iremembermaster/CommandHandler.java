@@ -2,15 +2,16 @@ package com.iremember.master.iremembermaster;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.iremember.master.iremembermaster.Constants.Command;
+import com.iremember.master.iremembermaster.Utils.PreferenceUtils;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 import java.util.Hashtable;
-import java.util.LinkedList;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,15 +20,14 @@ import java.util.TimerTask;
  */
 
 public class CommandHandler extends Thread {
-    DatagramSocket datagramSocket;
-// For MulticastSocket    MulticastSocket multicastSocket;
+    private DatagramSocket datagramSocket;
     private String mCommand;
     private Hashtable<String, String> answers = new Hashtable<String, String>();
-    private Hashtable<String, String> registered = new Hashtable<String, String>();
-
+    private Map<String, ?> knownSubscribers;
+    private Context sContext;
     public CommandHandler(String command, Context context){
         mCommand = command;
-        populateRegistered();
+        sContext = context;
         this.start();
     }
 
@@ -36,41 +36,33 @@ public class CommandHandler extends Thread {
         log("Start of run");
         DatagramPacket packetSend;
         DatagramPacket packetReceived;
-        InetAddress receiverInetAddress;
-        int receiverPort = 12345;
+        InetAddress receiverInetAddress = null;
+        int receiverPort = 0;
         byte[] sendBuffer = new byte[1024];
         String answer = null;
         byte[] receiveBuffer = new byte[1024];
+        knownSubscribers = PreferenceUtils.getAllSubscribers(sContext);
 
         try{
             // Sending the packet. Trying a few times
-            for (int i=0; i<10 && (answers.size() != registered.size()); i++) {
+            for (int i=0; i<10 && (answers.size() != knownSubscribers.size()); i++) {
                 log("Try nbr: " + i);
                 // Set up for sending meal command to receivers
                 setDeviceDiscoveryTimer();
 
                 /* For datagram socket */
                 datagramSocket = new DatagramSocket();
-                datagramSocket.setBroadcast(true);
 
-
-//                receiverInetAddress = InetAddress.getByName("255.255.255.255");
-                receiverInetAddress = InetAddress.getByName("192.168.0.173");
+                // Send meal command to every registered subscriber
                 sendBuffer = mCommand.getBytes();
-                packetSend = new DatagramPacket(sendBuffer, sendBuffer.length,
-                        receiverInetAddress, receiverPort);
-                datagramSocket.send(packetSend);
-
-
-                /* For multicast socket
-                multicastSocket = new MulticastSocket();
-                multicastSocket.setBroadcast(true);
-                receiverInetAddress = InetAddress.getByName("224.2.2.2");
-                sendBuffer = mCommand.getBytes();
-                packetSend = new DatagramPacket(sendBuffer, sendBuffer.length,
-                        receiverInetAddress, receiverPort);
-                multicastSocket.send(packetSend);
-                 End for multicast sockets */
+                for (Map.Entry<String, ?> subscriber : knownSubscribers.entrySet()) {
+                    String[] value = ((String) subscriber.getValue()).split("$");
+                    receiverInetAddress = InetAddress.getByName(value[0]);
+                    receiverPort = Integer.parseInt(value[1]);
+                    packetSend = new DatagramPacket(sendBuffer, sendBuffer.length,
+                            receiverInetAddress, receiverPort);
+                    datagramSocket.send(packetSend);
+                }
 
                 Thread.sleep(100);
                 log("After sending...");
@@ -85,16 +77,13 @@ public class CommandHandler extends Thread {
                         /* For DatagramSocket */
                         datagramSocket.receive(packetReceived);
 
-                        /* For MulticastSocket
-                        multicastSocket.receive(packetReceived);
-                        End MulticastSocket */
-
+                        // Store the room name of the answered subscriber, in answer.
                         answer = new String(packetReceived.getData(), 0,
                                 packetReceived.getLength());
                         log("Answer from receiver: " + answer);
                         answers.put(answer, "found");
-                        if (answers.size() == registered.size()) {
-                            log("Breaking out");
+                        if (answers.size() == knownSubscribers.size()) {
+                            log("Breaking out, all subscribers have got the message");
                             break;
                         }
                     } catch (Exception e) {
@@ -102,27 +91,26 @@ public class CommandHandler extends Thread {
                         break;
                     }
                 }
-
             }
-
         }catch (Exception e){
             log("Exception when socket is closed");
         }
         /* For DatagramSocket */
-        datagramSocket.close();
+        if (datagramSocket != null) {
+            datagramSocket.close();
+        }
 
-
-        /* For MulticastSocket
-        multicastSocket.close();
-        For MulticastSocket */
 
         // Kolla hur många svar som kommit och jämför med hur många enheter som borde svarat.
         log("Kolla hur många svar som inkommit...");
-    }
+        if (answers.size() == knownSubscribers.size()) {
+//            Toast.makeText(sContext, "Alla rum har fått besked om att maten är klar",
+//                    Toast.LENGTH_SHORT).show();
+            log("Alla subscribers har svarat");
+        } else {
+            findNonRespondedRooms();
+        }
 
-    private void populateRegistered(){
-        registered.put("222", "room");
-//        registered.put("333", "room");
     }
 
     private void setDeviceDiscoveryTimer() {
@@ -130,16 +118,24 @@ public class CommandHandler extends Thread {
             public void run() {
                 /* For DatagramSocket */
                 datagramSocket.close();
-
-
-                /* For MulticastSocket
-                multicastSocket.close();
-                End MulticastSocket */
             }
         };
         new Timer().schedule(task, Command.DURATION);
     }
 
+    /**
+     * Find the rooms that did not respond
+     */
+    private void findNonRespondedRooms() {
+        String notResponded = "The following rooms did not respond:\n";
+        for (Map.Entry<String, ?> subscriber : knownSubscribers.entrySet()) {
+            String roomName = (String) subscriber.getKey();
+            if (!answers.containsKey(roomName)) {
+                notResponded = notResponded + roomName + "\n";
+            }
+        }
+        log(notResponded);
+    }
 
     public void log(String msg) {
         Log.d("CommandHandler", msg);

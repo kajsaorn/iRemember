@@ -3,4 +3,11 @@
     <string name="btn_breakfast">FRUKOST</string>
     <string name="btn_lunch">LUNCH</string>
     <string name="btn_dinner">MIDDAG</string>
+    <string name="btn_store_master_name">SPARA</string>
+    <string name="btn_settings">INSTÄLLNINGAR</string>
+    <string name="hint_master_name">Ange masterns namn</string>
+    <string name="toast_mastername_invalid">Det blev fel namn, försök igen!</string>
+    <string name="btn_start_master">Starta master</string>
+    <string name="btn_stop_master">Stoppa master</string>
+    <string name="btn_master_menu">Tillbaka till måltidsmeny</string>
 </resources>
