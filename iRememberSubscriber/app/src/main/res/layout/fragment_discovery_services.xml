@@ -47,7 +47,8 @@
             android:text="@string/tv_no_services"
             android:textSize="@dimen/textsize_medium"
             android:textStyle="italic"
-            android:layout_marginTop="@dimen/margin_large" />
+            android:layout_marginTop="@dimen/margin_xlarge"
+            android:layout_marginBottom="@dimen/margin_xlarge" />
 
         <Button
             android:id="@+id/btn_search_services"

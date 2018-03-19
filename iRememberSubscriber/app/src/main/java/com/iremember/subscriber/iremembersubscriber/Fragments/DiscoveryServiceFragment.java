@@ -21,21 +21,21 @@ import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
+import java.util.ArrayList;
+
 public class DiscoveryServiceFragment extends Fragment {
 
-    View mContent;
-    OnServiceClickListener mListener;
-    DiscoveryMessageReceiver mBroadcastReceiver;
-    View tvSearching, tvNoServices, btnSearchServices, btnBack;
-    LinearLayout layoutServices;
+    private View mContent;
+    private OnServiceClickListener mListener;
+    private DiscoveryMessageReceiver mBroadcastReceiver;
+    private View tvSearching, tvNoServices, btnSearchServices, btnBack;
+    private LinearLayout layoutServices;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("DiscoveryFragment", "onCreate()");
         mContent = inflater.inflate(R.layout.fragment_discovery_services, container, false);
         initComponents();
         initListeners();
-        startNetworkService();
         return mContent;
     }
 
@@ -43,11 +43,13 @@ public class DiscoveryServiceFragment extends Fragment {
     public void onResume() {
         super.onResume();
         registerBroadcastReceiver();
+        startNetworkService();
     }
 
     @Override
     public void onStop() {
         unregisterBroadcastReceiver();
+        stopNetworkService();
         super.onStop();
     }
 
@@ -67,14 +69,12 @@ public class DiscoveryServiceFragment extends Fragment {
         btnSearchServices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopNetworkService();
                 mListener.onSearchServices();
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopNetworkService();
                 mListener.onBackClick();
             }
         });
@@ -95,29 +95,8 @@ public class DiscoveryServiceFragment extends Fragment {
         layoutServices.removeAllViews();
     }
 
-    /**
-     * Start network service which, among other things, will look for available
-     * remote iRemember Master Services. If one is found, this fragment will receive
-     * a broadcast message and display the available service.
-     */
-    private void startNetworkService() {
-        Intent intent = new Intent(getContext(), NetworkService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getContext().startForegroundService(intent);
-        } else {
-            getContext().startService(intent);
-        }
-    }
-
-    /**
-     * Stop network service.
-     */
-    private void stopNetworkService() {
-        Intent intent = new Intent(getContext(), NetworkService.class);
-        getContext().stopService(intent);
-    }
-
     private void onDiscoveryDone() {
+        stopNetworkService();
         tvSearching.setVisibility(View.GONE);
         btnSearchServices.setVisibility(View.VISIBLE);
         btnBack.setVisibility(View.VISIBLE);
@@ -170,6 +149,28 @@ public class DiscoveryServiceFragment extends Fragment {
             getContext().unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
         }
+    }
+
+    /**
+     * Start network service which, among other things, will look for available
+     * remote iRemember Master Services. If one is found, this fragment will receive
+     * a broadcast message and display the available service.
+     */
+    private void startNetworkService() {
+        Intent intent = new Intent(getContext(), NetworkService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getContext().startForegroundService(intent);
+        } else {
+            getContext().startService(intent);
+        }
+    }
+
+    /**
+     * Stop network service.
+     */
+    private void stopNetworkService() {
+        Intent intent = new Intent(getContext(), NetworkService.class);
+        getContext().stopService(intent);
     }
 
     /**
