@@ -33,10 +33,7 @@ public class SettingsGeneralFragment extends Fragment {
     }
 
     private void initComponents() {
-        View.OnClickListener roomNameListener = new RoomNameListener();
         View.OnClickListener radioButtonListener = new RadioButtonListener();
-
-        mFragment.findViewById(R.id.btn_save_room_name).setOnClickListener(roomNameListener);
         mFragment.findViewById(R.id.rb_allow_reminders_yes).setOnClickListener(radioButtonListener);
         mFragment.findViewById(R.id.rb_allow_reminders_no).setOnClickListener(radioButtonListener);
         mFragment.findViewById(R.id.rb_allow_music_yes).setOnClickListener(radioButtonListener);
@@ -44,10 +41,6 @@ public class SettingsGeneralFragment extends Fragment {
     }
 
     private void displayCurrentSettings() {
-        String roomName = PreferenceUtils.readRoomName(mContext);
-        roomName = (roomName == null) ? getString(R.string.et_room_name_hint) : roomName;
-        ((EditText) mFragment.findViewById(R.id.et_room_name)).setHint(roomName);
-
         boolean remindersAllowed = PreferenceUtils.readRemindersAllowed(mContext);
         ((RadioButton) mFragment.findViewById(R.id.rb_allow_reminders_yes)).setChecked(remindersAllowed);
         ((RadioButton) mFragment.findViewById(R.id.rb_allow_reminders_no)).setChecked(!remindersAllowed);
@@ -55,14 +48,6 @@ public class SettingsGeneralFragment extends Fragment {
         boolean musicAllowed = PreferenceUtils.readMusicAllowed(mContext);
         ((RadioButton) mFragment.findViewById(R.id.rb_allow_music_yes)).setChecked(musicAllowed);
         ((RadioButton) mFragment.findViewById(R.id.rb_allow_music_no)).setChecked(!musicAllowed);
-    }
-
-    private class RoomNameListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            Log.d("SettingsInfoFragment", "Clicked Save RoomName");
-            PreferenceUtils.showUserConfirmation(mContext);
-        }
     }
 
     private class RadioButtonListener implements View.OnClickListener {

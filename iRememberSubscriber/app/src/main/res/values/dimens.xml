@@ -31,8 +31,8 @@
     <dimen name="textsize_small">10sp</dimen>
 
     <dimen name="tv_reminder">50sp</dimen>
-    <dimen name="tv_status_margin">25dp</dimen>
-    <dimen name="tv_status_width">250dp</dimen>
+    <dimen name="tv_content_margin">25dp</dimen>
+    <dimen name="tv_content_width">250dp</dimen>
 
     <!-- Shapes -->
     <dimen name="setting_circle_diameter">80dp</dimen>

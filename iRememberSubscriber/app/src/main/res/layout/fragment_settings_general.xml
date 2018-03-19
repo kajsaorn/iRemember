@@ -104,51 +104,5 @@
             android:background="@color/dark"
             />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/textsize_medium"
-                android:text="@string/tv_roomname_label"
-                android:paddingRight="@dimen/padding_large"
-                />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/et_room_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:inputType="text"
-                    android:textSize="@dimen/textsize_medium"
-                    android:gravity="center_horizontal"
-                    android:maxLength="10"
-                    />
-
-                <Button
-                    android:id="@+id/btn_save_room_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorAccent"
-                    android:padding="@dimen/btn_padding_small"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:text="@string/btn_save_roomname"
-                    android:textSize="@dimen/btn_textsize_medium"
-                    android:textColor="@color/light"
-                    />
-            </LinearLayout>
-
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

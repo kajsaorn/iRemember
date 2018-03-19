@@ -7,7 +7,7 @@
     <string name="et_room_name_hint">"Ditt rumsnamn"</string>
     <string name="btn_disconnect">STÄNG AV</string>
     <string name="btn_settings">INSTÄLLNINGAR</string>
-    <string name="status_connected">Här kommer det att visas ett meddelande när maten är klar.</string>
+    <string name="tv_main_label">Här kommer det att visas ett meddelande när maten är klar.</string>
     <string name="btn_reminder_stop">AVBRYT PÅMINNELSE</string>
     <string name="err_mediaplayer">Ops, något gick fel när vi försökte spela låten.</string>
 
@@ -30,8 +30,8 @@
     </string>
 
     <string name="tv_info_label_2">
-        Här kan du ändra hur meddelanden ser ut och låter. Du kan till
-        exempel välja mellan olika låtar och färger.
+        Bland tabbarna längst upp kan du ändra hur kökets meddelanden ser ut och låter.
+        Du kan till exempel välja vilken musik och vilka färger du vill ha.
     </string>
 
     <string name="tv_roomname_label">Ange ett rumsnamn</string>
@@ -40,12 +40,16 @@
     <string name="tv_choose_service">Välj en köksenhet</string>
     <string name="tv_no_services">Vi kunde inte hitta någon tillgänglig köksenhet.</string>
     <string name="tv_searching">Söker...</string>
-    <string name="tv_config_intro_1">Här konfigurerar du din enhet.</string>
-    <string name="tv_config_intro_2">För att komma igång behöver du ge din rumsenhet ett namn.</string>
-    <string name="tv_config_intro_3">
+    <string name="tv_discovery_intro_1">Här konfigurerar du din enhet.</string>
+    <string name="tv_discovery_intro_2">För att komma igång behöver du ge din rumsenhet ett namn.</string>
+    <string name="tv_discovery_intro_3">
         Sedan söker vi efter tillgängliga köksenheter. Den köksenhet du väljer kommer
         att kunna skicka meddelanden till dig när det är dags för frukost, lunch och middag.
     </string>
+
+    <string name="tv_restriction_label">Observera dina nuvarande inställningar</string>
+    <string name="tv_restriction_reminder">Köket får inte skicka meddelanden</string>
+    <string name="tv_restriction_music">Köket får inte skicka meddelanden med musik</string>
 
     <!-- Settings Buttons and Options -->
 
@@ -59,8 +63,5 @@
 
     <!-- Notifications -->
     <string name="foreground_started">Lyssnar</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

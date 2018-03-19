@@ -55,28 +55,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_search_again"
-            android:textSize="@dimen/textsize_large"
+            android:textSize="@dimen/textsize_medium"
             android:textStyle="bold"
             android:textColor="@color/light"
             android:background="@color/turquoise"
             android:padding="@dimen/padding_small"
-            android:layout_marginTop="@dimen/margin_xlarge"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large" />
+            android:layout_marginTop="@dimen/margin_xlarge" />
 
         <Button
             android:id="@+id/btn_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_back"
-            android:textSize="@dimen/textsize_large"
+            android:textSize="@dimen/textsize_medium"
             android:textStyle="bold"
             android:textColor="@color/light"
             android:background="@color/stop"
             android:padding="@dimen/padding_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large" />
+            android:layout_marginTop="@dimen/margin_small" />
     </LinearLayout>
 
 </ScrollView>

@@ -5,17 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
-import com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryServiceFragment;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
+import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         registerBroadcastReceiver();
+        showCurrentUserRestrictions();
     }
 
     @Override
@@ -108,6 +110,26 @@ public class MainActivity extends AppCompatActivity {
     private void showSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    private void showCurrentUserRestrictions() {
+        boolean isMusicAllowed = PreferenceUtils.readMusicAllowed(this);
+        boolean isRemindersAllowed = PreferenceUtils.readRemindersAllowed(this);
+        TextView tvRestrictionsHeader = findViewById(R.id.tv_restriction_label);
+        TextView tvRestrictionsReminders = findViewById(R.id.tv_restriction_reminder);
+        TextView tvRestrictionsMusic = findViewById(R.id.tv_restriction_music);
+
+        tvRestrictionsHeader.setVisibility(View.GONE);
+        tvRestrictionsReminders.setVisibility(View.GONE);
+        tvRestrictionsMusic.setVisibility(View.GONE);
+
+        if (!isRemindersAllowed) {
+            tvRestrictionsHeader.setVisibility(View.VISIBLE);
+            tvRestrictionsReminders.setVisibility(View.VISIBLE);
+        } else if (!isMusicAllowed) {
+            tvRestrictionsHeader.setVisibility(View.VISIBLE);
+            tvRestrictionsMusic.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

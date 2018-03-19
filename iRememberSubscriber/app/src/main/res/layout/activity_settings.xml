@@ -25,19 +25,6 @@
             android:background="@drawable/tab_unselected" />
 
         <Button
-            android:id="@+id/tab_general"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onGeneralClick"
-            android:paddingTop="@dimen/btn_padding_medium"
-            android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/tv_general_tab"
-            android:textSize="@dimen/tab_textsize"
-            android:background="@drawable/tab_unselected" />
-
-
-        <Button
             android:id="@+id/tab_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,6 +59,18 @@
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/tv_music_tab"
+            android:textSize="@dimen/tab_textsize"
+            android:background="@drawable/tab_unselected" />
+
+        <Button
+            android:id="@+id/tab_general"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onGeneralClick"
+            android:paddingTop="@dimen/btn_padding_medium"
+            android:paddingBottom="@dimen/btn_padding_medium"
+            android:text="@string/tv_general_tab"
             android:textSize="@dimen/tab_textsize"
             android:background="@drawable/tab_unselected" />
 
