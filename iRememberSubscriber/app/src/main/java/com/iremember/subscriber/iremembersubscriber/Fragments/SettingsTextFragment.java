@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ public class SettingsTextFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View thisFragment = inflater.inflate(R.layout.fragment_settings_text, container, false);
         mColorPalette = thisFragment.findViewById(R.id.color_palette);
-        mColorPaletteLabel = getString(R.string.settings_text_label);
+        mColorPaletteLabel = getString(R.string.tv_text_label);
 
         setColorPaletteLabel();
         setColorPaletteListener();

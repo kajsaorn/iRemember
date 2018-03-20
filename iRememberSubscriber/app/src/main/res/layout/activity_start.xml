@@ -1,39 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     android:padding="@dimen/padding_layout"
     tools:context="com.iremember.subscriber.iremembersubscriber.StartActivity">
 
-
-    <EditText
-        android:id="@+id/et_room_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/et_room_name_hint"
-        android:padding="@dimen/padding_medium"
-        android:textAlignment="center"
-        android:textSize="@dimen/textsize_large"
-        android:singleLine="true"
-        android:maxLength="10"
-        android:visibility="invisible" />
+    <ImageButton
+        android:layout_width="@dimen/textsize_xlarge"
+        android:layout_height="@dimen/textsize_xlarge"
+        android:background="@mipmap/ic_settings"
+        android:layout_gravity="top|right"
+        android:onClick="onDiscoveryClick"/>
 
     <Button
-        android:id="@+id/btn_connect"
+        android:id="@+id/btn_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/androidGreen"
-        android:onClick="onConnectClick"
+        android:onClick="onStartClick"
         android:padding="@dimen/btn_padding_large"
-        android:text="@string/btn_connect"
+        android:text="@string/btn_start"
         android:textColor="@android:color/background_light"
         android:textSize="@dimen/btn_textsize_large"
         android:textStyle="bold"
-        android:visibility="visible" />
+        android:layout_gravity="center_vertical"
+        />
 
-
-</LinearLayout>
+</FrameLayout>

@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
@@ -31,7 +29,7 @@ public class SettingsBackgroundFragment extends Fragment implements View.OnClick
         View thisFragment = inflater.inflate(R.layout.fragment_settings_background, container, false);
         mContext = thisFragment.getContext();
         mColorPalette = thisFragment.findViewById(R.id.color_palette);
-        mColorPaletteLabel = getString(R.string.settings_background_label);
+        mColorPaletteLabel = getString(R.string.tv_background_label);
 
         setColorPaletteLabel();
         setColorPaletteListener();

@@ -1,0 +1,81 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryServiceFragment"
+    android:id="@+id/fragment_discovery_services"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/padding_layout"
+    android:paddingRight="@dimen/padding_layout">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_choose_service"
+            android:textSize="@dimen/textsize_large"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/container_services"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_large">
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_searching"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_searching"
+            android:textSize="@dimen/textsize_medium"
+            android:textStyle="italic"
+            android:layout_marginTop="@dimen/margin_large" />
+
+        <TextView
+            android:id="@+id/tv_no_services"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_no_services"
+            android:textSize="@dimen/textsize_medium"
+            android:textStyle="italic"
+            android:layout_marginTop="@dimen/margin_large" />
+
+        <Button
+            android:id="@+id/btn_search_services"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_search_again"
+            android:textSize="@dimen/textsize_large"
+            android:textStyle="bold"
+            android:textColor="@color/light"
+            android:background="@color/turquoise"
+            android:padding="@dimen/padding_small"
+            android:layout_marginTop="@dimen/margin_xlarge"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large" />
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_back"
+            android:textSize="@dimen/textsize_large"
+            android:textStyle="bold"
+            android:textColor="@color/light"
+            android:background="@color/stop"
+            android:padding="@dimen/padding_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large" />
+    </LinearLayout>
+
+</ScrollView>

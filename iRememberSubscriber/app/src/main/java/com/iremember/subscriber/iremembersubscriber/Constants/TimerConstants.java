@@ -5,5 +5,6 @@ package com.iremember.subscriber.iremembersubscriber.Constants;
  */
 
 public class TimerConstants {
-    public static final int DURATION = 1000 * 20 ;
+    public static final int COMMAND_DURATION = 10 * 1000;
+    public static final int DISCOVERY_DURATION = 3 * 1000;
 }

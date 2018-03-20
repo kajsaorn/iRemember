@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="@string/settings_info_label_1"
+        android:text="@string/tv_info_label_1"
         android:textSize="@dimen/textsize_large"
         android:textStyle="bold"
         />
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="@string/settings_info_label_2"
+        android:text="@string/tv_info_label_2"
         android:textSize="@dimen/textsize_large"
         android:textStyle="bold"
         />

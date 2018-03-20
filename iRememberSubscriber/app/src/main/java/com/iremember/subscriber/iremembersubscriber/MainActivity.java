@@ -12,8 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.iremember.subscriber.iremembersubscriber.Constants.Network;
+import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
+import com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryServiceFragment;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,21 +27,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (!isServiceRunning(NetworkService.class)) {
-            connectToNetwork();
+            showStartActivity();
+            finish();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mBroadcastReceiver == null) {
-            mBroadcastReceiver = new MessageReceiver();
-        }
+        registerBroadcastReceiver();
     }
 
     @Override
     protected void onDestroy() {
+        unregisterBroadcastReceiver();
         super.onDestroy();
+    }
+
+    /**
+     * Called when settings button is clicked. Starts settings activity.
+     */
+    public void onSettingsClick(View view) {
+        showSettingsActivity();
+    }
+
+    /**
+     * Called when disconnect button is clicked. Stops the network service.
+     */
+    public void onDisconnectClick(View v) {
+        stopNetworkService();
+    }
+
+    private void registerBroadcastReceiver() {
+        if (mBroadcastReceiver == null) {
+            mBroadcastReceiver = new ConnectionMessageReceiver();
+        }
+    }
+
+    private void unregisterBroadcastReceiver() {
         if (mBroadcastReceiver != null) {
             unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
@@ -48,38 +72,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when settings button is clicked.
+     * Stop network service, which will try to disconnect from current
+     * remote iRemember Master Service. If the disconnection succeeds
+     * the start activity is shown, otherwise an error message.
      */
-    public void onSettingsClick(View view) {
-        showSettingsActivity();
-    }
-
-    /**
-     * Called when disconnect button is clicked.
-     */
-    public void onDisconnectClick(View v) {
-        disconnectFromNetwork();
-    }
-
-    /**
-     * Make this device discoverable on local network.
-     */
-    private void connectToNetwork() {
-        log("connectToNetwork()");
-        Intent intent = new Intent(this, NetworkService.class);
-//        startService(intent);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        } else {
-            log("before startService");
-            startService(intent);
-        }
-    }
-
-    /**
-     * Stop the service handling network connection and device discoverability.
-     */
-    private void disconnectFromNetwork() {
+    private void stopNetworkService() {
         Intent intent = new Intent(this, NetworkService.class);
         stopService(intent);
     }
@@ -100,9 +97,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Show start activity.
      */
-    private void showStartActivity(String message) {
+    private void showStartActivity() {
         Intent intent = new Intent(this, StartActivity.class);
-        intent.putExtra(Network.MESSAGE, message);
         startActivity(intent);
     }
 
@@ -117,14 +113,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Display message to user as Android Toast.
      */
-    private void log(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        Log.d("MainActivity", message);
-    }
-
-    /**
-     * Display message to user as Android Toast.
-     */
     private void showUserMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
@@ -132,41 +120,32 @@ public class MainActivity extends AppCompatActivity {
     /**
      * BroadcastReceiver class that enables services to broadcast messages to this activity.
      */
-    private class MessageReceiver extends BroadcastReceiver {
+    private class ConnectionMessageReceiver extends BroadcastReceiver {
 
-        public MessageReceiver() {
+        public ConnectionMessageReceiver() {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Network.CONNECTION_SUCCESS);
-            intentFilter.addAction(Network.CONNECTION_FAILURE);
-            intentFilter.addAction(Network.DISCONNECTION_SUCCESS);
-            intentFilter.addAction(Network.DISCONNECTION_FAILURE);
-            intentFilter.addAction(Network.SOCKET_FAILURE);
+            intentFilter.addAction(Broadcast.DISCONNECTION_SUCCESS);
+            intentFilter.addAction(Broadcast.DISCONNECTION_FAILURE);
+            intentFilter.addAction(Broadcast.SOCKET_FAILURE);
             registerReceiver(this, intentFilter);
-            log("MessageReceiver()");
         }
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            log("onReceive()");
             String action = intent.getAction();
 
             switch (action) {
-                case Network.CONNECTION_SUCCESS:
-                    showUserMessage(getString(R.string.toast_connection_success));
-                    break;
-                case Network.DISCONNECTION_SUCCESS:
-                    showStartActivity(Network.DISCONNECTION_SUCCESS);
+                case Broadcast.DISCONNECTION_SUCCESS:
+                    showUserMessage(UserMessage.DISCONNECTION_SUCCESS);
+                    showStartActivity();
                     finish();
                     break;
-                case Network.CONNECTION_FAILURE:
-                    showStartActivity(Network.DISCONNECTION_FAILURE);
-                    finish();
+                case Broadcast.DISCONNECTION_FAILURE:
+                    showUserMessage(UserMessage.DISCONNECTION_FAILURE);
                     break;
-                case Network.DISCONNECTION_FAILURE:
-                    showUserMessage(getString(R.string.toast_disconnection_failure));
-                    break;
-                case Network.SOCKET_FAILURE:
-                    showStartActivity(Network.SOCKET_FAILURE);
+                case Broadcast.SOCKET_FAILURE:
+                    showUserMessage(UserMessage.SOCKET_FAILURE);
+                    showStartActivity();
                     finish();
                     break;
             }

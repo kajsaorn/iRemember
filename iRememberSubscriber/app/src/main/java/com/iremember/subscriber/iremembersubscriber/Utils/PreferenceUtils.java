@@ -15,6 +15,16 @@ import java.lang.reflect.Field;
 
 public class PreferenceUtils {
 
+    public static void writeMasterServiceName(Context context, String serviceName) {
+        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        prefs.edit().putString(SharedPrefs.MASTER_SERVICE, serviceName).commit();
+    }
+
+    public static String readMasterServiceName(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        return prefs.getString(SharedPrefs.MASTER_SERVICE, null);
+    }
+
     public static void writeRoomName(Context context, String roomName) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putString(SharedPrefs.MY_ROOM_NAME, roomName).commit();

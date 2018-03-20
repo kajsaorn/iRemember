@@ -22,7 +22,7 @@
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textsize_medium"
-                android:text="@string/settings_general_reminder_label"
+                android:text="@string/tv_allow_reminders_label"
                 android:paddingRight="@dimen/padding_large"
                 />
 
@@ -35,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/padding_small"
-                    android:text="@string/settings_option_yes"
+                    android:text="@string/option_yes_label"
                     android:textSize="@dimen/textsize_medium"
                     android:textColor="@color/dark" />
                 <RadioButton
@@ -43,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/padding_small"
-                    android:text="@string/settings_option_no"
+                    android:text="@string/option_no_label"
                     android:textSize="@dimen/textsize_medium"
                     android:textColor="@color/dark" />
             </RadioGroup>
@@ -69,7 +69,7 @@
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textsize_medium"
-                android:text="@string/settings_info_music_label"
+                android:text="@string/tv_allow_music_label"
                 android:paddingRight="@dimen/padding_large"
                 />
 
@@ -82,7 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/padding_small"
-                    android:text="@string/settings_option_yes"
+                    android:text="@string/option_yes_label"
                     android:textSize="@dimen/textsize_medium"
                     android:textColor="@color/dark" />
                 <RadioButton
@@ -90,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/padding_small"
-                    android:text="@string/settings_option_no"
+                    android:text="@string/option_no_label"
                     android:textSize="@dimen/textsize_medium"
                     android:textColor="@color/dark" />
             </RadioGroup>
@@ -115,7 +115,7 @@
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textsize_medium"
-                android:text="@string/settings_general_roomname_label"
+                android:text="@string/tv_roomname_label"
                 android:paddingRight="@dimen/padding_large"
                 />
 
@@ -143,7 +143,7 @@
                     android:background="@color/colorAccent"
                     android:padding="@dimen/btn_padding_small"
                     android:layout_marginTop="@dimen/margin_small"
-                    android:text="@string/settings_btn_save_roomname"
+                    android:text="@string/btn_save_roomname"
                     android:textSize="@dimen/btn_textsize_medium"
                     android:textColor="@color/light"
                     />

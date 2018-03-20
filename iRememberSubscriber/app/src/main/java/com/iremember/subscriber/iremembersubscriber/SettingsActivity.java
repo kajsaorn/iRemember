@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsBackgroundFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsGeneralFragment;
@@ -115,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
                 return;
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
+        transaction.replace(R.id.fragment_container_settings, fragment);
         transaction.commit();
     }
 

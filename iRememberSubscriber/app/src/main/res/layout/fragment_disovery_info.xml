@@ -1,0 +1,51 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryInfoFragment"
+    android:id="@+id/fragment_discovery_info"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingLeft="@dimen/padding_layout"
+    android:paddingRight="@dimen/padding_layout">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/tv_config_intro_1"
+        android:textSize="@dimen/textsize_large"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/margin_medium" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/tv_config_intro_2"
+        android:textSize="@dimen/textsize_medium"
+        android:layout_marginBottom="@dimen/margin_medium" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/tv_config_intro_3"
+        android:textSize="@dimen/textsize_medium"
+        android:layout_marginBottom="@dimen/margin_medium" />
+
+    <Button
+        android:id="@+id/btn_start_configuration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_continue"
+        android:textSize="@dimen/textsize_large"
+        android:textStyle="bold"
+        android:textColor="@color/light"
+        android:background="@color/turquoise"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_small"
+        android:onClick="onStartConfiguration"/>
+</LinearLayout>

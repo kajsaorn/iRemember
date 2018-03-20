@@ -1,0 +1,44 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryRoomFragment"
+    android:id="@+id/fragment_discovery_room"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/padding_layout">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/tv_roomname_label"
+        android:textSize="@dimen/textsize_large"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/et_room_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="@string/et_room_name_hint"
+        android:textColorHint="@color/hint"
+        android:textSize="@dimen/textsize_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:maxLength="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/btn_save_room_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_continue"
+        android:textSize="@dimen/textsize_large"
+        android:textStyle="bold"
+        android:textColor="@color/light"
+        android:background="@color/turquoise"
+        android:padding="@dimen/padding_small"
+        android:layout_marginTop="@dimen/margin_xlarge" />
+
+</LinearLayout>

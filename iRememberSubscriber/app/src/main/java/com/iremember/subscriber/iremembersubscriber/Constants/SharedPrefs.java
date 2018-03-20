@@ -7,4 +7,5 @@ public class SharedPrefs {
     public static final String MY_SONG_TITLE = "song_title";
     public static final String ALLOW_REMINDERS = "allow_reminders";
     public static final String ALLOW_MUSIC = "allow_music";
+    public static final String MASTER_SERVICE = "master_service";
 }

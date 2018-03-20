@@ -3,8 +3,8 @@
     <!-- General -->
 
     <string name="app_name">iRememberSubscriber</string>
-    <string name="btn_connect">STARTA</string>
-    <string name="et_room_name_hint">ANGE RUMSNUMMER</string>
+    <string name="btn_start">STARTA</string>
+    <string name="et_room_name_hint">"Ditt rumsnamn"</string>
     <string name="btn_disconnect">STÄNG AV</string>
     <string name="btn_settings">INSTÄLLNINGAR</string>
     <string name="status_connected">Här kommer det att visas ett meddelande när maten är klar.</string>
@@ -13,44 +13,54 @@
 
     <!-- Settings Tabs -->
 
-    <string name="settings_info_tab">Info</string>
-    <string name="settings_background_tab">Bakgrund</string>
-    <string name="settings_text_tab">Text</string>
-    <string name="settings_music_tab">Musik</string>
-    <string name="settings_general_tab">Allmänt</string>
+    <string name="tv_info_tab">Info</string>
+    <string name="tv_background_tab">Bakgrund</string>
+    <string name="tv_text_tab">Text</string>
+    <string name="tv_music_tab">Musik</string>
+    <string name="tv_general_tab">Allmänt</string>
 
     <!-- Settings Labels -->
 
-    <string name="settings_background_label">Din nuvarande bakgrundsfärg på meddelanden</string>
-    <string name="settings_text_label">Din nuvarande textfärg på meddelanden</string>
-    <string name="settings_music_label">Din nuvarande låt för meddelanden</string>
+    <string name="tv_background_label">Din nuvarande bakgrundsfärg på meddelanden</string>
+    <string name="tv_text_label">Din nuvarande textfärg på meddelanden</string>
+    <string name="tv_music_label">Din nuvarande låt för meddelanden</string>
 
-    <string name="settings_info_label_1">
+    <string name="tv_info_label_1">
         iRemember är en applikation som hjälper köket att skicka meddelanden till dig när maten är klar.
     </string>
 
-    <string name="settings_info_label_2">
+    <string name="tv_info_label_2">
         Här kan du ändra hur meddelanden ser ut och låter. Du kan till
         exempel välja mellan olika låtar och färger.
     </string>
 
-    <string name="settings_general_roomname_label">Vill du ändra ditt rumsnamn?</string>
-    <string name="settings_info_music_label">Får musik spelas när meddelanden visas?</string>
-    <string name="settings_general_reminder_label">Får köket skicka meddelanden till dig när maten är klar?</string>
-    <string name="settings_option_yes">Ja</string>
-    <string name="settings_option_no">Nej</string>
-    <string name="settings_btn_save_roomname">Spara</string>
+    <string name="tv_roomname_label">Ange ett rumsnamn</string>
+    <string name="tv_allow_music_label">Får musik spelas när meddelanden visas?</string>
+    <string name="tv_allow_reminders_label">Får köket skicka meddelanden till dig när maten är klar?</string>
+    <string name="tv_choose_service">Välj en köksenhet</string>
+    <string name="tv_no_services">Vi kunde inte hitta någon tillgänglig köksenhet.</string>
+    <string name="tv_searching">Söker...</string>
+    <string name="tv_config_intro_1">Här konfigurerar du din enhet.</string>
+    <string name="tv_config_intro_2">För att komma igång behöver du ge din rumsenhet ett namn.</string>
+    <string name="tv_config_intro_3">
+        Sedan söker vi efter tillgängliga köksenheter. Den köksenhet du väljer kommer
+        att kunna skicka meddelanden till dig när det är dags för frukost, lunch och middag.
+    </string>
 
-    <!-- Toast messages -->
+    <!-- Settings Buttons and Options -->
 
-    <string name="toast_roomname_invalid">Du glömde fylla i ett namn för ditt rum.</string>
-    <string name="toast_connection_failure">Något gick fel när vi försökte ansluta till nätverket. Prova en gång till!</string>
-    <string name="toast_connection_success">Du är nu ansluten till iRemember</string>
-    <string name="toast_disconnection_failure">Något gick fel när vi försökte koppla ner från nätverket. Prova en gång till!</string>
-    <string name="toast_disconnection_success">Du är inte längre ansluten till iRemember</string>
-    <string name="toast_socket_failure">Något gick fel. Försök starta igen!</string>
+    <string name="option_yes_label">Ja</string>
+    <string name="option_no_label">Nej</string>
+    <string name="btn_save_roomname">Spara</string>
+    <string name="btn_search_services">Sök efter köksenheter</string>
+    <string name="btn_search_again">Sök igen</string>
+    <string name="btn_continue">Fortsätt</string>
+    <string name="btn_back">Tillbaka</string>
 
     <!-- Notifications -->
     <string name="foreground_started">Lyssnar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

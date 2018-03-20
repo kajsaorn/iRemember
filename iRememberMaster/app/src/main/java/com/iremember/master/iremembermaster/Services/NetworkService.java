@@ -70,6 +70,7 @@ public class NetworkService extends Service {
      * Register the service (NSD)
      */
     private void registerTheService() {
+        acquireWiFiLock();
         registerAsForegroundService();
         initializeSubscriberRegistrationSocket();
         startSubscriberRegistrationThread();
@@ -170,6 +171,15 @@ public class NetworkService extends Service {
                 serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
     }
 
+    private void acquireWiFiLock() {
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        if (wifiManager != null) {
+            wifiLock = wifiManager.createWifiLock("0 wifi lock");
+            wifiLock.acquire();
+        }
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
@@ -192,8 +202,6 @@ public class NetworkService extends Service {
             byte[] readBuffer = new byte[256];
             String message;
             byte[] sendBuffer;
-
-            acquireWiFiLock();
 
             while (shallContinueListen) {
                 try {
@@ -248,16 +256,6 @@ public class NetworkService extends Service {
             }
             return false;
         }
-
-        private void acquireWiFiLock() {
-            wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-            if (wifiManager != null) {
-                wifiLock = wifiManager.createWifiLock("0 wifi lock");
-                wifiLock.acquire();
-            }
-        }
-
     }
 
     public void log(String msg) {
