@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.SharedPrefs;
 import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryServiceFragment;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
@@ -26,8 +27,6 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-
-        //getSharedPreferences(BuildConfig.APPLICATION_ID, 0).edit().clear().commit();    // TODO: Remove later
     }
 
     @Override
@@ -101,6 +100,14 @@ public class StartActivity extends AppCompatActivity {
     }
 
     /**
+     * Stop network service.
+     */
+    private void stopNetworkService() {
+        Intent intent = new Intent(this, NetworkService.class);
+        stopService(intent);
+    }
+
+    /**
      * Display message to user as Android Toast.
      */
     private void showUserMessage(String message) {
@@ -146,15 +153,19 @@ public class StartActivity extends AppCompatActivity {
             switch (action) {
                 case Broadcast.MISSING_ROOM_NAME:
                     showUserMessage(UserMessage.MISSING_ROOM_NAME);
+                    stopNetworkService();
                     break;
                 case Broadcast.MISSING_SERVICE_NAME:
                     showUserMessage(UserMessage.MISSING_SERVICE_NAME);
+                    stopNetworkService();
                     break;
                 case Broadcast.DISCOVERY_FAILURE:
                     showUserMessage(UserMessage.DISCOVERY_FAILURE);
+                    stopNetworkService();
                     break;
                 case Broadcast.CONNECTION_FAILURE:
                     showUserMessage(UserMessage.CONNECTION_FAILURE);
+                    stopNetworkService();
                     break;
                 case Broadcast.CONNECTION_SUCCESS:
                     startMainActivity();

@@ -9,28 +9,28 @@
     tools:context="com.iremember.subscriber.iremembersubscriber.MainActivity">
 
     <TextView
-        android:id="@+id/tv_status"
-        android:layout_width="@dimen/tv_status_width"
+        android:id="@+id/tv_main_label"
+        android:layout_width="@dimen/tv_content_width"
         android:layout_height="wrap_content"
-        android:text="@string/status_connected"
+        android:text="@string/tv_main_label"
         android:textAlignment="center"
         android:textSize="@dimen/textsize_large"
-        android:textStyle="bold"
-        android:layout_margin="@dimen/tv_status_margin"
-        android:visibility="visible" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_large">
 
         <Button
             android:id="@+id/btn_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_blue_light"
-            android:onClick="onDiscoveryClick"
+            android:onClick="onSettingsClick"
             android:padding="@dimen/btn_padding_large"
             android:text="@string/btn_settings"
             android:textColor="@android:color/background_light"
@@ -48,6 +48,31 @@
             android:textColor="@android:color/background_light"
             android:textSize="@dimen/btn_textsize_large"
             android:textStyle="bold" />
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_restriction_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_restriction_label"
+        android:textAlignment="center"
+        android:textSize="@dimen/textsize_medium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_restriction_reminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_restriction_reminder"
+        android:textAlignment="center"
+        android:textSize="@dimen/textsize_medium" />
+
+    <TextView
+        android:id="@+id/tv_restriction_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_restriction_music"
+        android:textAlignment="center"
+        android:textSize="@dimen/textsize_medium" />
+
 </LinearLayout>

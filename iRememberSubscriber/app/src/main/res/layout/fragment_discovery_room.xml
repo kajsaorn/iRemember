@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_continue"
-        android:textSize="@dimen/textsize_large"
+        android:textSize="@dimen/textsize_medium"
         android:textStyle="bold"
         android:textColor="@color/light"
         android:background="@color/turquoise"

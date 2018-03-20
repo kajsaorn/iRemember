@@ -24,7 +24,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,6 +35,7 @@ public class NetworkService extends Service {
     private String mServiceName, mRoomName;
     private ConnectionHandler mConnectionHandler;
     private NotificationUtils mNotificationManager;
+    private boolean mServiceIsFound;
 
     @Override
     public void onCreate() {
@@ -92,6 +92,7 @@ public class NetworkService extends Service {
     }
 
     private void startServiceDiscovery() {
+        mServiceIsFound = false;
         mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
         initializeServiceResolver();
         initializeDiscoveryListener();
@@ -104,8 +105,8 @@ public class NetworkService extends Service {
         mNsdManager.stopServiceDiscovery(mDiscoveryListener);
         BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_DONE, getApplicationContext());
 
-        if (!isConnected()) {
-            BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
+        if (!mServiceIsFound) {
+            BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_FAILURE, getApplicationContext());
         }
     }
 
@@ -169,6 +170,7 @@ public class NetworkService extends Service {
 
                 if (mServiceName != null && mServiceName.equals(serviceName)) {
                     log("Resolving service with correct name: " + serviceName);
+                    mServiceIsFound = true;
                     startConnection(serviceInfo.getHost(), serviceInfo.getPort());
                 } else {
                     log("Resolving service with incorrect name: " + serviceName);
@@ -187,10 +189,6 @@ public class NetworkService extends Service {
             e.printStackTrace();
             BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
         }
-    }
-
-    private boolean isConnected() {
-        return (mConnectionHandler != null && mConnectionHandler.isAlive());
     }
 
     public void log(String msg) {

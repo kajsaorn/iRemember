@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/tv_config_intro_1"
+        android:text="@string/tv_discovery_intro_1"
         android:textSize="@dimen/textsize_large"
         android:textStyle="bold"
         android:layout_marginBottom="@dimen/margin_medium" />
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/tv_config_intro_2"
+        android:text="@string/tv_discovery_intro_2"
         android:textSize="@dimen/textsize_medium"
         android:layout_marginBottom="@dimen/margin_medium" />
 
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/tv_config_intro_3"
+        android:text="@string/tv_discovery_intro_3"
         android:textSize="@dimen/textsize_medium"
         android:layout_marginBottom="@dimen/margin_medium" />
 
@@ -40,12 +40,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_continue"
-        android:textSize="@dimen/textsize_large"
+        android:textSize="@dimen/textsize_medium"
         android:textStyle="bold"
         android:textColor="@color/light"
         android:background="@color/turquoise"
         android:layout_marginTop="@dimen/margin_medium"
         android:paddingTop="@dimen/padding_small"
-        android:paddingBottom="@dimen/padding_small"
-        android:onClick="onStartConfiguration"/>
+        android:paddingBottom="@dimen/padding_small" />
 </LinearLayout>
