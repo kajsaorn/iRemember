@@ -20,4 +20,6 @@ public class Broadcast {
     public static final String SOCKET_FAILURE = "socket_failure";
     public static final String SEARCH_MASTER_SERVICE = "search_master";
     public static final String FINISH_ACTIVITY = "finish_activity";
+
+    public static final String MESSAGE = "message";
 }

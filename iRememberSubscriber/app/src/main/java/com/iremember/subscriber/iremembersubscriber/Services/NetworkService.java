@@ -7,14 +7,13 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
-import com.iremember.subscriber.iremembersubscriber.Constants.Command;
 import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 import com.iremember.subscriber.iremembersubscriber.Constants.TimerConstants;
+import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.ReminderActivity;
 import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.NotificationUtils;
@@ -166,14 +165,14 @@ public class NetworkService extends Service {
             @Override
             public void onServiceResolved(NsdServiceInfo serviceInfo) {
                 isMasterServiceFound = true;
-                startConnection(serviceInfo.getHost(), serviceInfo.getPort());
+                startConnection(serviceInfo.getHost(), serviceInfo.getPort(), serviceInfo.getServiceName());
             }
         };
     }
 
-    private void startConnection(InetAddress host, int port) {
+    private void startConnection(InetAddress host, int port, String name) {
         try {
-            mConnectionHandler = new ConnectionHandler(host, port);
+            mConnectionHandler = new ConnectionHandler(host, port, name);
             mConnectionHandler.start();
         } catch (SocketException e) {
             e.printStackTrace();
@@ -207,17 +206,19 @@ public class NetworkService extends Service {
     private class ConnectionHandler extends Thread {
 
         private DatagramSocket mDatagramSocket;
-        private InetAddress mMasterHost;
-        private int mMasterPort;
+        private InetAddress mMasterServiceHost;
+        private int mMasterServicePort;
+        private String mMasterServiceName;
         private boolean isConnected;
 
         byte[] mWriteBuffer, mReadBuffer;
         DatagramPacket mWritePacket, mReadPacket;
         boolean isMessageRecentlyReceived, isRegistrationConfirmed;
 
-        public ConnectionHandler(InetAddress host, int port) throws SocketException {
-            mMasterHost = host;
-            mMasterPort = port;
+        public ConnectionHandler(InetAddress host, int port, String name) throws SocketException {
+            mMasterServiceHost = host;
+            mMasterServicePort = port;
+            mMasterServiceName = name;
             mDatagramSocket = new DatagramSocket(0);
         }
 
@@ -229,73 +230,106 @@ public class NetworkService extends Service {
             isMessageRecentlyReceived = false;
             isConnected = true;
 
-            try {
-                sendRegistrationMessage();
-                setRegistrationTimer();
-            } catch (IOException e) {
-                e.printStackTrace();
-                BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
-            }
+            sendRegistrationMessage();
+            setRegistrationTimer();
 
             while (isConnected) {
                 try {
                     mReadPacket = new DatagramPacket(mReadBuffer, mReadBuffer.length);
                     mDatagramSocket.receive(mReadPacket);
 
-                    String ipSender = mReadPacket.getAddress().getHostAddress();
-                    String ipMaster = mMasterHost.getHostAddress();
+                    String[] data = new String(mReadPacket.getData(), 0, mReadPacket.getLength()).split("//$");
+                    InetAddress host = mReadPacket.getAddress();
+                    int port = mReadPacket.getPort();
 
-                    if (!ipSender.equals(ipMaster)) {
-                        continue;
+                    String command = "", serviceName = "";
+
+                    if (data.length > 1) {
+                        command = data[0];
+                        serviceName = data[1];
                     }
-                    if (isMessageRecentlyReceived) {
-                        continue;
+
+                    if (serviceName.equals(mMasterServiceName) && !isMessageRecentlyReceived) {
+                        handleCommand(command, host, port);
                     }
-
-                    handlePacket(mReadPacket);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (isConnected) {
                         BroadcastUtils.broadcastAction(Broadcast.SOCKET_FAILURE, getApplicationContext());
                     } else {
-                        BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
+                        sendUnregistrationMessage();
                     }
+                } finally {
+                    mDatagramSocket.close();
                 }
-            }
-
-            try {
-                sendUnregistrationMessage();
-            } catch (IOException e) {
-                e.printStackTrace();
-                log("Unregistration failed");
             }
         }
 
         public void closeConnection() {
             isConnected = false;
-            mDatagramSocket.close();
         }
 
-        private void sendRegistrationMessage() throws IOException {
-            log("Sending registration message: " + Protocol.MESSAGE_REGISTER_PREFIX + mRoomName);
-            mWriteBuffer = (Protocol.MESSAGE_REGISTER_PREFIX + mRoomName).getBytes();
-            mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, mMasterHost, mMasterPort);
-            mDatagramSocket.send(mWritePacket);
+        private void handleCommand(String command, InetAddress host, int port) throws IOException {
+            log("Handling socket command: " + command);
+
+            switch (command) {
+                case Protocol.COMMAND_COFFEE:
+                    setRecentlyReceived(true);
+                    sendConfirmationMessage(host, port);
+                    startReminderActivity(getString(R.string.reminder_coffee));
+                    setReminderTimer();
+                    break;
+                case Protocol.COMMAND_MIDDAY:
+                    setRecentlyReceived(true);
+                    sendConfirmationMessage(host, port);
+                    startReminderActivity(getString(R.string.reminder_midday));
+                    setReminderTimer();
+                    break;
+                case Protocol.COMMAND_SUPPER:
+                    setRecentlyReceived(true);
+                    sendConfirmationMessage(host, port);
+                    startReminderActivity(getString(R.string.reminder_supper));
+                    setReminderTimer();
+                    break;
+                case Protocol.COMMAND_REGISTERED:
+                    setRegistrationConfirmed(true);
+                    BroadcastUtils.broadcastAction(Broadcast.CONNECTION_SUCCESS, getApplicationContext());
+                    break;
+            }
         }
 
-        private void sendUnregistrationMessage() throws IOException {
-            log("Sending unregistration message: " + Protocol.MESSAGE_UNREGISTER_PREFIX + mRoomName);
-            mDatagramSocket = new DatagramSocket(0);
-            mWriteBuffer = (Protocol.MESSAGE_UNREGISTER_PREFIX + mRoomName).getBytes();
-            mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, mMasterHost, mMasterPort);
-            mDatagramSocket.send(mWritePacket);
-            mDatagramSocket.close();
+        private void sendRegistrationMessage() {
+            try {
+                sendMessage(Protocol.REGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
+            } catch (IOException e) {
+                e.printStackTrace();
+                BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
+                Log.e("NetworkService", "Exception when sending registration message.");
+            }
         }
 
-        private void sendConfirmationMessage(InetAddress host, int port) throws IOException {
-            log("Sending confirmation message: " + Protocol.MESSAGE_CONFIRMATION_PREFIX + mRoomName);
-            mWriteBuffer = (Protocol.MESSAGE_CONFIRMATION_PREFIX + mRoomName).getBytes();
+        private void sendUnregistrationMessage() {
+            try {
+                sendMessage(Protocol.UNREGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
+                BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+                BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_FAILURE, getApplicationContext());
+                Log.e("NetworkService", "Exception when sending unregistration message.");
+            }
+        }
+
+        private void sendConfirmationMessage(InetAddress host, int port) {
+            try {
+                sendMessage(Protocol.CONFIRMATION_PREFIX + mRoomName, host, port);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("NetworkService", "Exception when sending confirmation message.");
+            }
+        }
+
+        private void sendMessage(String message, InetAddress host, int port) throws IOException {
+            mWriteBuffer = message.getBytes();
             mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, host, port);
             mDatagramSocket.send(mWritePacket);
         }
@@ -303,11 +337,11 @@ public class NetworkService extends Service {
         private void setRecentlyReceived(boolean isReceived) {
             isMessageRecentlyReceived = isReceived;
             if (isReceived) {
-                setMessageReceivedTimer();
+                setRecentlyReceivedTimer();
             }
         }
 
-        private void setMessageReceivedTimer() {
+        private void setRecentlyReceivedTimer() {
             TimerTask task = new TimerTask() {
                 public void run() {
                     setRecentlyReceived(false);
@@ -331,39 +365,6 @@ public class NetworkService extends Service {
             new Timer().schedule(task, TimerConstants.REGISTRATION_DURATION);
         }
 
-        private void handlePacket(DatagramPacket packet) throws IOException {
-            String message = new String(mReadPacket.getData(), 0, mReadPacket.getLength());
-            InetAddress host = packet.getAddress();
-            int port = packet.getPort();
-
-            log("Received socket message: " + message);
-
-            switch (message) {
-                case Command.BREAKFAST:
-                    setRecentlyReceived(true);
-                    sendConfirmationMessage(host, port);
-                    startReminderActivity(message);
-                    setReminderTimer();
-                    break;
-                case Command.LUNCH:
-                    setRecentlyReceived(true);
-                    sendConfirmationMessage(host, port);
-                    startReminderActivity(message);
-                    setReminderTimer();
-                    break;
-                case Command.DINNER:
-                    setRecentlyReceived(true);
-                    sendConfirmationMessage(host, port);
-                    startReminderActivity(message);
-                    setReminderTimer();
-                    break;
-                case Protocol.REGISTRATION_CONFIRMATION:
-                    setRegistrationConfirmed(true);
-                    BroadcastUtils.broadcastAction(Broadcast.CONNECTION_SUCCESS, getApplicationContext());
-                    break;
-            }
-        }
-
         private void setReminderTimer() {
             TimerTask task = new TimerTask() {
                 public void run() {
@@ -373,16 +374,15 @@ public class NetworkService extends Service {
             new Timer().schedule(task, TimerConstants.REMINDER_DURATION);
         }
 
-        private void startReminderActivity(String message) {
-            log("Starting reminder activity: " + message);
-            Intent intent = new Intent(getApplicationContext(), ReminderActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Command.MESSAGE, message);
-            startActivity(intent);
-        }
-
         private void stopReminderActivity() {
             BroadcastUtils.broadcastAction(Broadcast.FINISH_ACTIVITY, getApplicationContext());
+        }
+
+        private void startReminderActivity(String message) {
+            Intent intent = new Intent(getApplicationContext(), ReminderActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(Broadcast.MESSAGE, message);
+            startActivity(intent);
         }
     }
 }

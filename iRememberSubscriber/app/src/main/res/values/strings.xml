@@ -1,5 +1,10 @@
 <resources>
 
+    <!-- Reminder Labels -->
+    <string name="reminder_coffee">Nu serveras det kaffe i köket.</string>
+    <string name="reminder_midday">Nu serveras det middag i köket.</string>
+    <string name="reminder_supper">Nu serveras det kvällsmat i köket.</string>
+
     <!-- General -->
 
     <string name="app_name">iRememberSubscriber</string>
