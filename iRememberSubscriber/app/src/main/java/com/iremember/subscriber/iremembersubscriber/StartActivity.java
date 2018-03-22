@@ -4,7 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,9 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
-import com.iremember.subscriber.iremembersubscriber.Constants.SharedPrefs;
 import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
-import com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryServiceFragment;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
@@ -22,17 +23,19 @@ public class StartActivity extends AppCompatActivity {
 
     private BroadcastReceiver mBroadcastReceiver;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        //getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE).edit().clear().commit(); // TODO: Remove this later
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         registerBroadcastReceiver();
+        stopNetworkService();
+        setDozeMode();
     }
 
     @Override
@@ -82,6 +85,23 @@ public class StartActivity extends AppCompatActivity {
     }
 
     /**
+     * Ask user for permission to use unoptimized battery settings.
+     */
+    private void setDozeMode() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getPackageName();
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+
+            if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivity(intent);
+            }
+        }
+    }
+
+    /**
      * Start network service which, among other things, will try to connect to a
      * previously defined remote iRemember Master Service. If the connection succeeds
      * this activity will receive a broadcast message and the main activity is shown,
@@ -89,8 +109,7 @@ public class StartActivity extends AppCompatActivity {
      */
     private void startNetworkService() {
         Intent intent = new Intent(this, NetworkService.class);
-        intent.putExtra(Broadcast.SERVICE_NAME, PreferenceUtils.readMasterServiceName(this));
-        intent.putExtra(Broadcast.ROOM_NAME, PreferenceUtils.readRoomName(this));
+        intent.putExtra(Broadcast.SEARCH_MASTER_SERVICE, true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);

@@ -35,16 +35,6 @@ public class PreferenceUtils {
         return prefs.getString(SharedPrefs.MY_ROOM_NAME, null);
     }
 
-    public static void writeAllowReminders(Context context, boolean allow) {
-        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        prefs.edit().putBoolean(SharedPrefs.ALLOW_REMINDERS, allow).commit();
-    }
-
-    public static boolean readRemindersAllowed(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        return prefs.getBoolean(SharedPrefs.ALLOW_REMINDERS, true);
-    }
-
     public static void writeAllowMusic(Context context, boolean allow) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putBoolean(SharedPrefs.ALLOW_MUSIC, allow).commit();

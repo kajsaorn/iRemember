@@ -1,29 +1,51 @@
 package com.iremember.subscriber.iremembersubscriber;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.os.Build;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.Command;
+import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
 public class ReminderActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
+    PowerManager.WakeLock mWakeLock = null;
+    private BroadcastReceiver mBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
+
         setBackgroundColor();
         setTextColor();
+        turnScreenOn();
+    }
+
+    private void turnScreenOn(){
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         String reminderText = getTextFromIntent();
         boolean isMusicAllowed = PreferenceUtils.readMusicAllowed(this);
 
@@ -31,16 +53,31 @@ public class ReminderActivity extends AppCompatActivity {
             startMediaPlayer();
         }
         displayText(reminderText);
+        registerBroadcastReceiver();
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
+        unregisterBroadcastReceiver();
         stopMediaPlayer();
+        super.onStop();
     }
 
     public void onStopClick(View view) {
         finish();
+    }
+
+    private void registerBroadcastReceiver() {
+        if (mBroadcastReceiver == null) {
+            mBroadcastReceiver = new ReminderActivity.MessageReceiver();
+        }
+    }
+
+    private void unregisterBroadcastReceiver() {
+        if (mBroadcastReceiver != null) {
+            unregisterReceiver(mBroadcastReceiver);
+            mBroadcastReceiver = null;
+        }
     }
 
     private void setBackgroundColor() {
@@ -55,7 +92,7 @@ public class ReminderActivity extends AppCompatActivity {
 
     private String getTextFromIntent() {
         Intent intent = getIntent();
-        return (intent != null) ? intent.getStringExtra("command") : "";
+        return (intent != null) ? intent.getStringExtra(Command.MESSAGE) : "";
     }
 
     private void displayText(String text) {
@@ -78,6 +115,27 @@ public class ReminderActivity extends AppCompatActivity {
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
+        }
+    }
+
+    /**
+     * BroadcastReceiver class that enables services to broadcast messages to this activity.
+     */
+    private class MessageReceiver extends BroadcastReceiver {
+
+        public MessageReceiver() {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(Broadcast.FINISH_ACTIVITY);
+            registerReceiver(this, intentFilter);
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case Broadcast.FINISH_ACTIVITY:
+                    finish();
+                    break;
+            }
         }
     }
 }

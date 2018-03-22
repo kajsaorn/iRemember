@@ -67,8 +67,6 @@ public class SettingsBackgroundFragment extends Fragment implements View.OnClick
      */
     private void setCurrentColor() {
         int color = PreferenceUtils.readBackgroundColor(this.getContext());
-        Log.d("SettingsBackground", "Read current color: " + color);
-
         View colorView = mColorPalette.findViewById(R.id.selected_color);
         GradientDrawable background = (GradientDrawable) colorView.getBackground();
         background.setColor(color);

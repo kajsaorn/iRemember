@@ -34,17 +34,11 @@ public class SettingsGeneralFragment extends Fragment {
 
     private void initComponents() {
         View.OnClickListener radioButtonListener = new RadioButtonListener();
-        mFragment.findViewById(R.id.rb_allow_reminders_yes).setOnClickListener(radioButtonListener);
-        mFragment.findViewById(R.id.rb_allow_reminders_no).setOnClickListener(radioButtonListener);
         mFragment.findViewById(R.id.rb_allow_music_yes).setOnClickListener(radioButtonListener);
         mFragment.findViewById(R.id.rb_allow_music_no).setOnClickListener(radioButtonListener);
     }
 
     private void displayCurrentSettings() {
-        boolean remindersAllowed = PreferenceUtils.readRemindersAllowed(mContext);
-        ((RadioButton) mFragment.findViewById(R.id.rb_allow_reminders_yes)).setChecked(remindersAllowed);
-        ((RadioButton) mFragment.findViewById(R.id.rb_allow_reminders_no)).setChecked(!remindersAllowed);
-
         boolean musicAllowed = PreferenceUtils.readMusicAllowed(mContext);
         ((RadioButton) mFragment.findViewById(R.id.rb_allow_music_yes)).setChecked(musicAllowed);
         ((RadioButton) mFragment.findViewById(R.id.rb_allow_music_no)).setChecked(!musicAllowed);
@@ -56,14 +50,6 @@ public class SettingsGeneralFragment extends Fragment {
             int btnId = view.getId();
 
             switch (btnId) {
-                case R.id.rb_allow_reminders_yes:
-                    PreferenceUtils.writeAllowReminders(mContext, true);
-                    PreferenceUtils.showUserConfirmation(mContext);
-                    break;
-                case R.id.rb_allow_reminders_no:
-                    PreferenceUtils.writeAllowReminders(mContext, false);
-                    PreferenceUtils.showUserConfirmation(mContext);
-                    break;
                 case R.id.rb_allow_music_yes:
                     PreferenceUtils.writeAllowMusic(mContext, true);
                     PreferenceUtils.showUserConfirmation(mContext);
