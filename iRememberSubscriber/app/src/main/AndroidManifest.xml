@@ -17,8 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-
-
         <service
             android:name=".Services.NetworkService"
             android:enabled="true"
@@ -27,6 +25,7 @@
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -34,7 +33,7 @@
         <activity android:name=".DiscoveryActivity" />
         <activity android:name=".ReminderActivity" />
         <activity android:name=".SettingsActivity" />
-
+        <activity android:name=".ScreenSaverActivity"></activity>
     </application>
 
 </manifest>

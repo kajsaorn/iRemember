@@ -19,6 +19,7 @@ import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 import com.iremember.subscriber.iremembersubscriber.Constants.TimerConstants;
 import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.ReminderActivity;
+import com.iremember.subscriber.iremembersubscriber.ScreenSaverActivity;
 import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.NotificationUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
@@ -28,6 +29,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -96,7 +98,7 @@ public class NetworkService extends Service {
      */
     private void registerBroadcastReceiver() {
         if (mBroadcastReceiver == null) {
-            mBroadcastReceiver = new NetworkBroadcastReceiver();
+            mBroadcastReceiver = new DeviceBroadcastReceiver();
         }
     }
 
@@ -246,6 +248,27 @@ public class NetworkService extends Service {
             mConnectionHandler.closeConnection();
             unregisterBroadcastReceiver();
         }
+    }
+
+    private void startReminderActivity(String message) {
+        Intent intent = new Intent(getApplicationContext(), ReminderActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Broadcast.MESSAGE, message);
+        startActivity(intent);
+    }
+
+    private void stopReminderActivity() {
+        BroadcastUtils.broadcastAction(Broadcast.FINISH_ACTIVITY, getApplicationContext());
+    }
+
+    private void startScreenSaverActivity() {
+        Intent intent = new Intent(getApplicationContext(), ScreenSaverActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void stopScreenSaverActivity() {
+
     }
 
     /**
@@ -461,52 +484,61 @@ public class NetworkService extends Service {
             };
             new Timer().schedule(task, TimerConstants.REMINDER_DURATION);
         }
-
-        private void stopReminderActivity() {
-            BroadcastUtils.broadcastAction(Broadcast.FINISH_ACTIVITY, getApplicationContext());
-        }
-
-        private void startReminderActivity(String message) {
-            Intent intent = new Intent(getApplicationContext(), ReminderActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Broadcast.MESSAGE, message);
-            startActivity(intent);
-        }
     }
 
     /**
      * BroadcastReceiver class that enables this service to receive broadcast messages.
      */
-    private class NetworkBroadcastReceiver extends BroadcastReceiver {
+    private class DeviceBroadcastReceiver extends BroadcastReceiver {
 
         private ConnectivityManager mConnectivityManager;
         private NetworkInfo mNetworkInfo;
 
-        public NetworkBroadcastReceiver() {
+        public DeviceBroadcastReceiver() {
             mConnectivityManager = (ConnectivityManager) getApplication()
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            intentFilter.addAction(android.content.Intent.ACTION_SCREEN_OFF);
             registerReceiver(this, intentFilter);
         }
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                NetworkInfo mNewNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            String action = intent.getAction();
 
-                if (mNetworkInfo == null && mNewNetworkInfo != null) {
-                    log("OBS! Restarting connection");
-                    closeConnection();
-                    startConnection();
-                } else {
-                    mNetworkInfo = mNewNetworkInfo;
-                }
+            switch (action) {
+                case ConnectivityManager.CONNECTIVITY_ACTION:
+                    handleConnectivityChange();
+                    break;
+                case android.content.Intent.ACTION_SCREEN_OFF:
+                    int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
+                    if (hour >= TimerConstants.SCREENSAVER_ALLOWED_START_HOUR
+                            && hour < TimerConstants.SCREENSAVER_ALLOWED_END_HOUR) {
+                        startScreenSaverActivity();
+                    }
+                    break;
+            }
 
+        }
+
+        private void handleConnectivityChange() {
+            NetworkInfo mNewNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+
+            if (mNetworkInfo == null && mNewNetworkInfo != null) {
+                log("OBS! Restarting connection");
+                closeConnection();
+                startConnection();
+            } else {
+                mNetworkInfo = mNewNetworkInfo;
             }
         }
+
+
     }
+
+
 }
