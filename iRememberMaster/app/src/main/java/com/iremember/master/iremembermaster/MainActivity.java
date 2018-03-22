@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.iremember.master.iremembermaster.Constants.Command;
+import com.iremember.master.iremembermaster.Constants.Protocol;
 import com.iremember.master.iremembermaster.Services.NetworkService;
+import com.iremember.master.iremembermaster.Utils.PreferenceUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,21 +31,24 @@ public class MainActivity extends AppCompatActivity {
         setDozeMode();
     }
 
-    public void onBreakfastClick(View view) {
+    public void onCoffeeClick(View view) {
         Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
-        netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Command.BREAKFAST);
+        netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Protocol.COMMAND_COFFEE +
+                "\\$" + PreferenceUtils.readMasterName(this));
         startService(netWorkServiceIntent);
     }
 
     public void onLunchClick(View view) {
         Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
-        netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Command.LUNCH);
+        netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Protocol.COMMAND_MIDDAY +
+                "\\$" + PreferenceUtils.readMasterName(this));
         startService(netWorkServiceIntent);
     }
 
     public void onDinnerClick(View view) {
         Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
-        netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Command.DINNER);
+        netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Protocol.COMMAND_SUPPER +
+                "\\$" + PreferenceUtils.readMasterName(this));
         startService(netWorkServiceIntent);
     }
 
