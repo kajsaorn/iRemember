@@ -1,10 +1,10 @@
 package com.iremember.master.iremembermaster.Constants;
 
 public class Command {
-    public static final String BREAKFAST = "Breakfast";
+    public static final String BREAKFAST = "Frukost";
     public static final String LUNCH = "Lunch";
-    public static final String DINNER = "Dinner";
-    public static final int DURATION = 1000 * 3;
+    public static final String DINNER = "Middag";
+    public static final int DURATION = 1000 * 5;
     public static final String REGISTRATION_CONFIRMATION = "registration$confirmation";
     public static final String REGISTRATION_REJECTED = "registration$rejected";
     public static final String REGISTER_COMMAND = "register";

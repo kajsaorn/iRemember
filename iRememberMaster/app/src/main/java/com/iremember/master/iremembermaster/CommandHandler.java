@@ -28,6 +28,7 @@ public class CommandHandler extends Thread {
     public CommandHandler(String command, Context context){
         mCommand = command;
         sContext = context;
+        log("command = " + command);
         this.start();
     }
 
@@ -42,59 +43,68 @@ public class CommandHandler extends Thread {
         String answer = null;
         byte[] receiveBuffer = new byte[1024];
         knownSubscribers = PreferenceUtils.getAllSubscribers(sContext);
+        log("knownSubscribers: " + knownSubscribers.size());
 
-        try{
             // Sending the packet. Trying a few times
-            for (int i=0; i<10 && (answers.size() != knownSubscribers.size()); i++) {
+            for (int i=0; i<5 && (answers.size() != knownSubscribers.size()); i++) {
                 log("Try nbr: " + i);
-                // Set up for sending meal command to receivers
-                setDeviceDiscoveryTimer();
+                try{
+                    /* For datagram socket */
+                    datagramSocket = new DatagramSocket();
 
-                /* For datagram socket */
-                datagramSocket = new DatagramSocket();
-
-                // Send meal command to every registered subscriber
-                sendBuffer = mCommand.getBytes();
-                for (Map.Entry<String, ?> subscriber : knownSubscribers.entrySet()) {
-                    String[] value = ((String) subscriber.getValue()).split("$");
-                    receiverInetAddress = InetAddress.getByName(value[0]);
-                    receiverPort = Integer.parseInt(value[1]);
-                    packetSend = new DatagramPacket(sendBuffer, sendBuffer.length,
+                    // Send meal command to every registered subscriber
+                    sendBuffer = mCommand.getBytes();
+                    for (Map.Entry<String, ?> subscriber : knownSubscribers.entrySet()) {
+                        log("for()...");
+                        String[] value = ((String) subscriber.getValue()).split("\\$");
+                        receiverInetAddress = InetAddress.getByName(value[0]);
+                        log("sent to value[0], ip = " + value[0]);
+                        receiverPort = Integer.parseInt(value[1]);
+                        log("send to value[1], port = " + value[1]);
+                        packetSend = new DatagramPacket(sendBuffer, sendBuffer.length,
                             receiverInetAddress, receiverPort);
-                    datagramSocket.send(packetSend);
-                }
+                        datagramSocket.send(packetSend);
+                    }
 
-                Thread.sleep(100);
-                log("After sending...");
+                    log("After sending...");
+                    // A timer will close the socket after a while which causes an exception and
+                    // breaking out of while loop if not already broken out if all rooms are found
+                    setAnswerTimer();
 
-                // A timer will close the socket after a while which causes an exception and
-                // breaking out of while loop if not already broken out if all rooms are found
-                while (true) {
-                    log("In while");
-                    // Receiving answers
-                    try {
-                        packetReceived = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-                        /* For DatagramSocket */
-                        datagramSocket.receive(packetReceived);
+                    while (true) {
+                        log("In while");
 
-                        // Store the room name of the answered subscriber, in answer.
-                        answer = new String(packetReceived.getData(), 0,
+                        // Receiving answers
+                        try {
+                            packetReceived = new DatagramPacket(receiveBuffer, receiveBuffer.length);
+                            /* For DatagramSocket */
+                            log("before receive()");
+                            datagramSocket.receive(packetReceived);
+                            log("after receive()");
+
+                            // Store the room name of the answered subscriber, in answer.
+                            answer = new String(packetReceived.getData(), 0,
                                 packetReceived.getLength());
-                        log("Answer from receiver: " + answer);
-                        answers.put(answer, "found");
-                        if (answers.size() == knownSubscribers.size()) {
-                            log("Breaking out, all subscribers have got the message");
+                            log("Answer from receiver: " + answer);
+                            answers.put(answer, "found");
+                            if (answers.size() == knownSubscribers.size()) {
+                                log("Breaking out, all subscribers have got the message");
+                                break;
+                            }
+                        } catch (Exception e) {
+                            log("Exception in while...");
+                            e.printStackTrace();
                             break;
                         }
-                    } catch (Exception e) {
-                        log("Exception in while...");
-                        break;
                     }
+                    log("has left while()");
+
+                    }catch (Exception e){
+                        log("Exception when socket is closed");
+                        e.printStackTrace();
                 }
-            }
-        }catch (Exception e){
-            log("Exception when socket is closed");
-        }
+            } // end for()
+
         /* For DatagramSocket */
         if (datagramSocket != null) {
             datagramSocket.close();
@@ -103,17 +113,20 @@ public class CommandHandler extends Thread {
 
         // Kolla hur många svar som kommit och jämför med hur många enheter som borde svarat.
         log("Kolla hur många svar som inkommit...");
+        log("answers.size() = " + answers.size());
+        log("knownSubscribers.size() = " + knownSubscribers.size());
         if (answers.size() == knownSubscribers.size()) {
 //            Toast.makeText(sContext, "Alla rum har fått besked om att maten är klar",
 //                    Toast.LENGTH_SHORT).show();
             log("Alla subscribers har svarat");
         } else {
+            log("not everyone has answered...");
             findNonRespondedRooms();
         }
 
     }
 
-    private void setDeviceDiscoveryTimer() {
+    private void setAnswerTimer() {
         TimerTask task = new TimerTask() {
             public void run() {
                 /* For DatagramSocket */

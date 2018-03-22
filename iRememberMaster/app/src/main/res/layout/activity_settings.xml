@@ -36,6 +36,7 @@
 
     <Button
         android:id="@+id/btn_start_master"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/androidGreen"
@@ -49,6 +50,7 @@
 
     <Button
         android:id="@+id/btn_to_master_menu"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/androidGreen"

@@ -1,6 +1,10 @@
 package com.iremember.master.iremembermaster;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setContentView(R.layout.activity_main);
+        setDozeMode();
     }
 
     public void onBreakfastClick(View view) {
@@ -45,6 +50,23 @@ public class MainActivity extends AppCompatActivity {
     public void onSettingsClick(View view) {
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivity(settingsIntent);
+    }
+
+    /**
+     * Ask user for permission to use unoptimized battery settings.
+     */
+    private void setDozeMode() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getPackageName();
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+
+            if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivity(intent);
+            }
+        }
     }
 
     public void log(String msg) {

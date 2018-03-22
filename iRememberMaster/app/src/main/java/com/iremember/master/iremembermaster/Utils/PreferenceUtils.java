@@ -47,8 +47,4 @@ public class PreferenceUtils {
         prefs.edit().putBoolean(SharedPrefs.NETWORK_SERVICE_RUN_STATE, runStatus).commit();
     }
 
-    public static boolean readNetworkServiceRunState(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        return prefs.getBoolean(SharedPrefs.NETWORK_SERVICE_RUN_STATE, false);
-    }
 }

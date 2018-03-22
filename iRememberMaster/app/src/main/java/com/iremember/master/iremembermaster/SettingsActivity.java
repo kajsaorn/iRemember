@@ -1,5 +1,7 @@
 package com.iremember.master.iremembermaster;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -25,9 +27,8 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         mEtMasterName = (EditText) findViewById(R.id.et_master_name);
         mEtMasterName.setText(PreferenceUtils.readMasterName(this));
-        networkServiceIsRunning = PreferenceUtils.readNetworkServiceRunState(this);
         btnStartMaster = findViewById(R.id.btn_start_master);
-        if (networkServiceIsRunning) {
+        if (isServiceRunning(NetworkService.class)) {
             btnStartMaster.setText(R.string.btn_stop_master);
         } else {
             btnStartMaster.setText(R.string.btn_start_master);
@@ -103,6 +104,20 @@ public class SettingsActivity extends AppCompatActivity {
     public void onGoToMenuClick(View view) {
         finish();
     }
+
+    /**
+     * Check if an Android service is running.
+     */
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Display message to user as Android Toast.

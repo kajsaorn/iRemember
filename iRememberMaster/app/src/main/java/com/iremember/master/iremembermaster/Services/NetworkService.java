@@ -226,10 +226,10 @@ public class NetworkService extends Service {
                     }
                     packetSend = new DatagramPacket(sendBuffer, sendBuffer.length,
                             subscriberInetAddress, subscriberPort);
+                    log("sendingConfirmation " + new String(packetSend.getData(), 0, packetSend.getLength()));
                     datagramSocket.send(packetSend);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    // Ending up here when the socket is closed -> stop while()-loop
+                   // Ending up here when the socket is closed -> stop while()-loop
                     shallContinueListen = false;
                     log("socket is closed");
                 }
@@ -242,10 +242,17 @@ public class NetworkService extends Service {
          * @param packetReceived
          */
         private boolean registerOrUnregisterSubscriber(String message, DatagramPacket packetReceived) {
-            String command = message.split("$")[0];
-            String roomName = message.split("$")[1];
+            log("regissterOrUnregisterSubscriber()");
+            log("message = " + message);
+            String[] splitedMessage = message.split("\\$");
+            String command = splitedMessage[0];
+            log("command = " + command);
+            String roomName = splitedMessage[1];
+            log("roomName = " + roomName);
             String ip = packetReceived.getAddress().getHostAddress();
+            log("ip = " + ip);
             String port = "" + packetReceived.getPort();
+            log("port = " + port);
 
             if ((command != null) && command.equals(Command.REGISTER_COMMAND)) {
                 PreferenceUtils.writeSubscriber(getApplicationContext(), roomName, (ip + "$" + port));
