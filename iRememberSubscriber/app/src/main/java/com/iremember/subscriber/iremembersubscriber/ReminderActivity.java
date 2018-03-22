@@ -5,19 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
-import com.iremember.subscriber.iremembersubscriber.Constants.Command;
-import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
 public class ReminderActivity extends AppCompatActivity {
@@ -92,7 +87,7 @@ public class ReminderActivity extends AppCompatActivity {
 
     private String getTextFromIntent() {
         Intent intent = getIntent();
-        return (intent != null) ? intent.getStringExtra(Command.MESSAGE) : "";
+        return (intent != null) ? intent.getStringExtra(Broadcast.MESSAGE) : "";
     }
 
     private void displayText(String text) {
