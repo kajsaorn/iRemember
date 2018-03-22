@@ -140,10 +140,8 @@ public class NetworkService extends Service {
         log("Stopped service discovery");
         mNsdManager.stopServiceDiscovery(mDiscoveryListener);
         if (isSearchingMasterService && !isMasterServiceFound) {
-            log("Broadcasting Discovery Failure");
             BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_FAILURE, getApplicationContext());
         }
-        log("Broadcasting Discovery Done");
         BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_DONE, getApplicationContext());
     }
 
@@ -300,10 +298,6 @@ public class NetworkService extends Service {
         private boolean isConnected, isMessageRecentlyReceived, isRegistrationConfirmed;
 
         public ConnectionHandler() throws SocketException {
-            log("Creating datagram socket");
-            log("Master service name: " + mMasterServiceName);
-            log("Master service host: " + mMasterServiceHost);
-            log("Master service port: " + mMasterServicePort);
             mDatagramSocket = new DatagramSocket(0);
         }
 
@@ -319,28 +313,18 @@ public class NetworkService extends Service {
             int port;
             String command, serviceName;
 
-            log("Send registration message");
             sendRegistrationMessage();
-            log("Set registration timer");
             setRegistrationTimer();
 
             while (isConnected) {
                 try {
                     mReadPacket = new DatagramPacket(mReadBuffer, mReadBuffer.length);
                     mDatagramSocket.receive(mReadPacket);
-                    log("Received a socket package:");
 
-                    String message = new String(mReadPacket.getData(), 0, mReadPacket.getLength());
-                    log(message);
+                    data = new String(mReadPacket.getData(), 0, mReadPacket.getLength()).split("\\$");
 
-
-                    data = message.split("//$");
-
-                    log(data.toString());
                     host = mReadPacket.getAddress();
-                    log(host.toString());
                     port = mReadPacket.getPort();
-                    log("From port: " + port);
 
                     command = "";
                     serviceName = "";
@@ -350,13 +334,15 @@ public class NetworkService extends Service {
                         serviceName = data[1];
                     }
 
+                    log("Received socket message from " + serviceName + ": " + command);
+
                     if (serviceName.equals(mMasterServiceName) && !isMessageRecentlyReceived) {
                         handleCommand(command, host, port);
                     }
 
                 } catch (Exception e) {
-                    log("Socket Exception");
-                    e.printStackTrace();
+                    Log.d("NetworkService", "Exception in thread while loop");
+                    //e.printStackTrace();
                     if (isConnected) {
                         BroadcastUtils.broadcastAction(Broadcast.SOCKET_FAILURE, getApplicationContext());
                     } else {
@@ -372,8 +358,6 @@ public class NetworkService extends Service {
         }
 
         private void handleCommand(String command, InetAddress host, int port) throws IOException {
-            log("Handling socket command: " + command);
-
             switch (command) {
                 case Protocol.COMMAND_COFFEE:
                     setRecentlyReceived(true);
@@ -403,6 +387,7 @@ public class NetworkService extends Service {
         private void sendRegistrationMessage() {
             try {
                 sendMessage(Protocol.REGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
+
             } catch (IOException e) {
                 //e.printStackTrace();
                 BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
@@ -416,7 +401,7 @@ public class NetworkService extends Service {
                 sendMessage(Protocol.UNREGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
                 BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
             } catch (IOException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
                 BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_FAILURE, getApplicationContext());
                 Log.e("NetworkService", "Exception when sending unregistration message.");
             }
@@ -432,10 +417,11 @@ public class NetworkService extends Service {
         }
 
         private void sendMessage(String message, InetAddress host, int port) throws IOException {
-            log("Send socket message: " + message);
+            log("Sending socket message: " + message);
             mWriteBuffer = message.getBytes();
             mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, host, port);
             mDatagramSocket.send(mWritePacket);
+
         }
 
         private void setRecentlyReceived(boolean isReceived) {

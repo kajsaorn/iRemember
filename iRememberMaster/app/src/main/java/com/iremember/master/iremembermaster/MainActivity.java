@@ -34,21 +34,21 @@ public class MainActivity extends AppCompatActivity {
     public void onCoffeeClick(View view) {
         Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
         netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Protocol.COMMAND_COFFEE +
-                "\\$" + PreferenceUtils.readMasterName(this));
+                "$" + PreferenceUtils.readMasterName(this));
         startService(netWorkServiceIntent);
     }
 
     public void onLunchClick(View view) {
         Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
         netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Protocol.COMMAND_MIDDAY +
-                "\\$" + PreferenceUtils.readMasterName(this));
+                "$" + PreferenceUtils.readMasterName(this));
         startService(netWorkServiceIntent);
     }
 
     public void onDinnerClick(View view) {
         Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
         netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Protocol.COMMAND_SUPPER +
-                "\\$" + PreferenceUtils.readMasterName(this));
+                "$" + PreferenceUtils.readMasterName(this));
         startService(netWorkServiceIntent);
     }
 
