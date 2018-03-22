@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
             intentFilter.addAction(Broadcast.DISCONNECTION_SUCCESS);
             intentFilter.addAction(Broadcast.DISCONNECTION_FAILURE);
             intentFilter.addAction(Broadcast.SOCKET_FAILURE);
-            intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
             registerReceiver(this, intentFilter);
         }
 
@@ -160,20 +159,6 @@ public class MainActivity extends AppCompatActivity {
                     showStartActivity();
                     finish();
                     break;
-                    /*
-                case WifiManager.WIFI_STATE_CHANGED_ACTION:
-                    int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
-                    Log.d("MainActivity", WifiManager.WIFI_STATE_CHANGED_ACTION);
-                    Log.d("MainActivity", wifiState + "");
-
-
-                    if (WifiManager.WIFI_STATE_ENABLED == wifiState) {
-                        showUserMessage(UserMessage.WIFI_STATE_CHANGED);
-                        //showStartActivity();
-                        //finish();
-                    }
-                    break;
-                    */
             }
         }
     }

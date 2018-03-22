@@ -1,8 +1,12 @@
 package com.iremember.subscriber.iremembersubscriber.Services;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.net.wifi.WifiManager;
@@ -13,8 +17,10 @@ import android.util.Log;
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 import com.iremember.subscriber.iremembersubscriber.Constants.TimerConstants;
+import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.ReminderActivity;
+import com.iremember.subscriber.iremembersubscriber.StartActivity;
 import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.NotificationUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
@@ -31,11 +37,16 @@ public class NetworkService extends Service {
 
     private NsdManager mNsdManager;
     private NsdManager.DiscoveryListener mDiscoveryListener;
-    private String mServiceName, mRoomName;
     private ConnectionHandler mConnectionHandler;
     private NotificationUtils mNotificationManager;
-    WifiManager.WifiLock mWifiLock = null;
+    private BroadcastReceiver mBroadcastReceiver;
+    private WifiManager.WifiLock mWifiLock = null;
+
     private boolean isSearchingMasterService, isMasterServiceFound;
+    private InetAddress mMasterServiceHost;
+    private int mMasterServicePort;
+    private String mMasterServiceName;
+    private String mRoomName;
 
     @Override
     public void onCreate() {
@@ -47,14 +58,14 @@ public class NetworkService extends Service {
         log("Started network service.");
 
         mRoomName = PreferenceUtils.readRoomName(getApplicationContext());
-        mServiceName = PreferenceUtils.readMasterServiceName(getApplicationContext());
+        mMasterServiceName = PreferenceUtils.readMasterServiceName(getApplicationContext());
         isSearchingMasterService = intent.getBooleanExtra(Broadcast.SEARCH_MASTER_SERVICE, false);
         isMasterServiceFound = false;
 
         if (isSearchingMasterService && mRoomName == null) {
             BroadcastUtils.broadcastAction(Broadcast.MISSING_ROOM_NAME, getApplicationContext());
         }
-        if (isSearchingMasterService && mServiceName == null) {
+        if (isSearchingMasterService && mMasterServiceName == null) {
             BroadcastUtils.broadcastAction(Broadcast.MISSING_SERVICE_NAME, getApplicationContext());
         }
 
@@ -68,9 +79,7 @@ public class NetworkService extends Service {
     @Override
     public void onDestroy() {
         log("Destroying network service.");
-        if (mConnectionHandler != null) {
-            mConnectionHandler.closeConnection();
-        }
+        closeConnection();
         removeWiFiLock();
         removeForeground();
         super.onDestroy();
@@ -82,11 +91,41 @@ public class NetworkService extends Service {
         return null;
     }
 
+    /**
+     * Register broadcast receiver so that this
+     * service starts listening to broadcast messages.
+     */
+    private void registerBroadcastReceiver() {
+        if (mBroadcastReceiver == null) {
+            mBroadcastReceiver = new NetworkBroadcastReceiver();
+        }
+    }
+
+    /**
+     * Unregister broadcast receiver so that this
+     * service stops listening to broadcast messages.
+     */
+    private void unregisterBroadcastReceiver() {
+        if (mBroadcastReceiver != null) {
+            unregisterReceiver(mBroadcastReceiver);
+            mBroadcastReceiver = null;
+        }
+    }
+
+    /**
+     * Make this service a foreground service by
+     * setting up a notification manager.
+     */
     private void setupNotificationManager() {
         mNotificationManager = new NotificationUtils(this);
         mNotificationManager.createNotificationForeground("Foreground", getApplicationContext(), this);
     }
 
+    /**
+     * Start service discovery. The network discovery is focused on either
+     * finding a certain service by name or finding all available services,
+     * depending on the boolean value of isSearchingMasterService.
+     */
     private void startServiceDiscovery() {
         mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
         initializeServiceResolver();
@@ -94,15 +133,23 @@ public class NetworkService extends Service {
         mNsdManager.discoverServices(Protocol.SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
     }
 
+    /**
+     * Stop service discovery.
+     */
     private void stopServiceDiscovery() {
         log("Stopped service discovery");
         mNsdManager.stopServiceDiscovery(mDiscoveryListener);
         if (isSearchingMasterService && !isMasterServiceFound) {
+            log("Broadcasting Discovery Failure");
             BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_FAILURE, getApplicationContext());
         }
+        log("Broadcasting Discovery Done");
         BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_DONE, getApplicationContext());
     }
 
+    /**
+     * Set timer to make sure the discovery finish after a certain time.
+     */
     private void setServiceDiscoveryTimer() {
         TimerTask task = new TimerTask() {
             public void run() {
@@ -112,6 +159,9 @@ public class NetworkService extends Service {
         new Timer().schedule(task, TimerConstants.DISCOVERY_DURATION);
     }
 
+    /**
+     * Initialize actions that will happen when a network service is discovered.
+     */
     public void initializeDiscoveryListener() {
 
         mDiscoveryListener = new NsdManager.DiscoveryListener() {
@@ -127,7 +177,7 @@ public class NetworkService extends Service {
                     if (!isSearchingMasterService) {
                         BroadcastUtils.broadcastString(Broadcast.SERVICE_NAME, service.getServiceName(), getApplicationContext());
                     }
-                    if (isSearchingMasterService && service.getServiceName().equals(mServiceName)) {
+                    if (isSearchingMasterService && service.getServiceName().equals(mMasterServiceName)) {
                         mNsdManager.resolveService(service, initializeServiceResolver());
                     }
                 }
@@ -154,6 +204,10 @@ public class NetworkService extends Service {
         };
     }
 
+    /**
+     * Initialize actions that will happen when a network
+     * service matches a certain service name.
+     */
     public NsdManager.ResolveListener initializeServiceResolver() {
         return new NsdManager.ResolveListener() {
 
@@ -165,21 +219,42 @@ public class NetworkService extends Service {
             @Override
             public void onServiceResolved(NsdServiceInfo serviceInfo) {
                 isMasterServiceFound = true;
-                startConnection(serviceInfo.getHost(), serviceInfo.getPort(), serviceInfo.getServiceName());
+                mMasterServiceName = serviceInfo.getServiceName();
+                mMasterServiceHost = serviceInfo.getHost();
+                mMasterServicePort = serviceInfo.getPort();
+                startConnection();
             }
         };
     }
 
-    private void startConnection(InetAddress host, int port, String name) {
+    /**
+     * Start socket connection to network service.
+     */
+    private void startConnection() {
         try {
-            mConnectionHandler = new ConnectionHandler(host, port, name);
+            mConnectionHandler = new ConnectionHandler();
             mConnectionHandler.start();
+            registerBroadcastReceiver();
         } catch (SocketException e) {
             e.printStackTrace();
             BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
         }
     }
 
+    /**
+     * Close socket connection to network service.
+     */
+    private void closeConnection() {
+        if (mConnectionHandler != null) {
+            mConnectionHandler.closeConnection();
+            unregisterBroadcastReceiver();
+        }
+    }
+
+    /**
+     * Acquire wifi lock to prevent this service
+     * from dozing off from the network.
+     */
     private void acquireWiFiLock() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -189,60 +264,86 @@ public class NetworkService extends Service {
         }
     }
 
+    /**
+     * Remove wifi lock to allow this service
+     * to doze off from the network.
+     */
     private void removeWiFiLock() {
         mWifiLock.release();
     }
 
+    /**
+     * Remove this service from the foreground.
+     */
     private void removeForeground() {
         stopForeground(true);
     }
+
 
     public void log(String msg) {
         Log.d("NetworkService", msg);
     }
 
 
-
+    /**
+     *
+     * The ConnectionHandler is a thread handling UDP connection to an
+     * iRemember Master Service. This app is registered as a subscriber to the
+     * service and will receive messages, e.g. that it is time for supper.
+     *
+     */
     private class ConnectionHandler extends Thread {
 
         private DatagramSocket mDatagramSocket;
-        private InetAddress mMasterServiceHost;
-        private int mMasterServicePort;
-        private String mMasterServiceName;
-        private boolean isConnected;
+        private DatagramPacket mWritePacket, mReadPacket;
+        private byte[] mWriteBuffer, mReadBuffer;
+        private boolean isConnected, isMessageRecentlyReceived, isRegistrationConfirmed;
 
-        byte[] mWriteBuffer, mReadBuffer;
-        DatagramPacket mWritePacket, mReadPacket;
-        boolean isMessageRecentlyReceived, isRegistrationConfirmed;
-
-        public ConnectionHandler(InetAddress host, int port, String name) throws SocketException {
-            mMasterServiceHost = host;
-            mMasterServicePort = port;
-            mMasterServiceName = name;
+        public ConnectionHandler() throws SocketException {
+            log("Creating datagram socket");
+            log("Master service name: " + mMasterServiceName);
+            log("Master service host: " + mMasterServiceHost);
+            log("Master service port: " + mMasterServicePort);
             mDatagramSocket = new DatagramSocket(0);
         }
 
         public void run() {
             log("Connection thread is running...");
 
-            String mReadMessage;
             mReadBuffer = new byte[256];
             isMessageRecentlyReceived = false;
             isConnected = true;
 
+            String[] data;
+            InetAddress host;
+            int port;
+            String command, serviceName;
+
+            log("Send registration message");
             sendRegistrationMessage();
+            log("Set registration timer");
             setRegistrationTimer();
 
             while (isConnected) {
                 try {
                     mReadPacket = new DatagramPacket(mReadBuffer, mReadBuffer.length);
                     mDatagramSocket.receive(mReadPacket);
+                    log("Received a socket package:");
 
-                    String[] data = new String(mReadPacket.getData(), 0, mReadPacket.getLength()).split("//$");
-                    InetAddress host = mReadPacket.getAddress();
-                    int port = mReadPacket.getPort();
+                    String message = new String(mReadPacket.getData(), 0, mReadPacket.getLength());
+                    log(message);
 
-                    String command = "", serviceName = "";
+
+                    data = message.split("//$");
+
+                    log(data.toString());
+                    host = mReadPacket.getAddress();
+                    log(host.toString());
+                    port = mReadPacket.getPort();
+                    log("From port: " + port);
+
+                    command = "";
+                    serviceName = "";
 
                     if (data.length > 1) {
                         command = data[0];
@@ -252,21 +353,22 @@ public class NetworkService extends Service {
                     if (serviceName.equals(mMasterServiceName) && !isMessageRecentlyReceived) {
                         handleCommand(command, host, port);
                     }
+
                 } catch (Exception e) {
+                    log("Socket Exception");
                     e.printStackTrace();
                     if (isConnected) {
                         BroadcastUtils.broadcastAction(Broadcast.SOCKET_FAILURE, getApplicationContext());
                     } else {
                         sendUnregistrationMessage();
                     }
-                } finally {
-                    mDatagramSocket.close();
                 }
             }
         }
 
         public void closeConnection() {
             isConnected = false;
+            mDatagramSocket.close();
         }
 
         private void handleCommand(String command, InetAddress host, int port) throws IOException {
@@ -302,7 +404,7 @@ public class NetworkService extends Service {
             try {
                 sendMessage(Protocol.REGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
                 Log.e("NetworkService", "Exception when sending registration message.");
             }
@@ -310,10 +412,11 @@ public class NetworkService extends Service {
 
         private void sendUnregistrationMessage() {
             try {
+                mDatagramSocket = new DatagramSocket(0);
                 sendMessage(Protocol.UNREGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
                 BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_FAILURE, getApplicationContext());
                 Log.e("NetworkService", "Exception when sending unregistration message.");
             }
@@ -323,12 +426,13 @@ public class NetworkService extends Service {
             try {
                 sendMessage(Protocol.CONFIRMATION_PREFIX + mRoomName, host, port);
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 Log.e("NetworkService", "Exception when sending confirmation message.");
             }
         }
 
         private void sendMessage(String message, InetAddress host, int port) throws IOException {
+            log("Send socket message: " + message);
             mWriteBuffer = message.getBytes();
             mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, host, port);
             mDatagramSocket.send(mWritePacket);
@@ -383,6 +487,34 @@ public class NetworkService extends Service {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(Broadcast.MESSAGE, message);
             startActivity(intent);
+        }
+    }
+
+    /**
+     * BroadcastReceiver class that enables this service to receive broadcast messages.
+     */
+    private class NetworkBroadcastReceiver extends BroadcastReceiver {
+
+        public NetworkBroadcastReceiver() {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            registerReceiver(this, intentFilter);
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                ConnectivityManager cManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo netInfo = cManager.getActiveNetworkInfo();
+                Log.d("NetworkService", "Connectivity action: " + netInfo.getState());
+
+                // If state is connected, make a new registration to master service.
+                if (netInfo.getState().equals(NetworkInfo.State.CONNECTED)) {
+                    //closeConnection();
+                    //startConnection();
+                }
+
+            }
         }
     }
 }
