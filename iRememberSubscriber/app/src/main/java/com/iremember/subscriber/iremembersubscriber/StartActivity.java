@@ -1,21 +1,19 @@
 package com.iremember.subscriber.iremembersubscriber;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.format.Formatter;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -23,11 +21,6 @@ import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
-
-import java.math.BigInteger;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.ByteOrder;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -45,7 +38,7 @@ public class StartActivity extends AppCompatActivity {
         super.onResume();
         registerBroadcastReceiver();
         stopNetworkService();
-        setDozeMode();
+        askPermissionIgnoreBatteryOptimization();
     }
 
     @Override
@@ -97,7 +90,7 @@ public class StartActivity extends AppCompatActivity {
     /**
      * Ask user for permission to use unoptimized battery settings.
      */
-    private void setDozeMode() {
+    private void askPermissionIgnoreBatteryOptimization() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent intent = new Intent();
             String packageName = getPackageName();

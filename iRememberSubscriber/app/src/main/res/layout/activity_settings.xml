@@ -8,28 +8,29 @@
     tools:context="com.iremember.subscriber.iremembersubscriber.SettingsActivity">
 
     <LinearLayout
+        android:id="@+id/tab_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/border_size_half">
 
         <Button
             android:id="@+id/tab_info"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onInfoClick"
+            android:layout_weight="1"
+            android:onClick="onTabClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
             android:text="@string/tv_tab_info"
             android:textSize="@dimen/tab_textsize"
             android:background="@drawable/tab_unselected" />
 
         <Button
             android:id="@+id/tab_background"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onBgColorClick"
+            android:layout_weight="1"
+            android:onClick="onTabClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/tv_tab_background"
@@ -39,9 +40,10 @@
 
         <Button
             android:id="@+id/tab_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onTextColorClick"
+            android:layout_weight="1"
+            android:onClick="onTabClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/tv_tab_text"
@@ -51,9 +53,10 @@
 
         <Button
             android:id="@+id/tab_music"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onMusicClick"
+            android:layout_weight="1"
+            android:onClick="onTabClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/tv_tab_music"
@@ -62,9 +65,10 @@
 
         <Button
             android:id="@+id/tab_screensaver"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onMusicClick"
+            android:layout_weight="1"
+            android:onClick="onTabClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/tv_tab_screensaver"
@@ -73,9 +77,10 @@
 
         <Button
             android:id="@+id/tab_general"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onGeneralClick"
+            android:layout_weight="1"
+            android:onClick="onTabClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
             android:text="@string/tv_tab_general"

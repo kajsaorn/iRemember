@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsBackgroundFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsGeneralFragment;
@@ -47,46 +48,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when info tab is clicked.
+     * Called when a tab is clicked.
      */
-    public void onInfoClick(View view) {
-        mCurrentSetting = R.id.tab_info;
-        showCurrentSettingFragment();
-        markCurrentSettingTab();
-    }
-
-    /**
-     * Called when general tab is clicked.
-     */
-    public void onGeneralClick(View view) {
-        mCurrentSetting = R.id.tab_general;
-        showCurrentSettingFragment();
-        markCurrentSettingTab();
-    }
-
-    /**
-     * Called when background tab is clicked.
-     */
-    public void onBgColorClick(View view) {
-        mCurrentSetting = R.id.tab_background;
-        showCurrentSettingFragment();
-        markCurrentSettingTab();
-    }
-
-    /**
-     * Called when text tab is clicked.
-     */
-    public void onTextColorClick(View view) {
-        mCurrentSetting = R.id.tab_text;
-        showCurrentSettingFragment();
-        markCurrentSettingTab();
-    }
-
-    /**
-     * Called when music tab is clicked.
-     */
-    public void onMusicClick(View view) {
-        mCurrentSetting = R.id.tab_music;
+    public void onTabClick(View view) {
+        mCurrentSetting = view.getId();
         showCurrentSettingFragment();
         markCurrentSettingTab();
     }
@@ -110,6 +75,9 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.tab_music:
                 fragment = mMusicSettingsFragment;
                 break;
+            case R.id.tab_screensaver:
+                fragment = mScreensaverSettingsFragment;
+                break;
             case R.id.tab_general:
                 fragment = mGeneralSettingsFragment;
                 break;
@@ -125,11 +93,11 @@ public class SettingsActivity extends AppCompatActivity {
      * Display a certain tab as selected to user.
      */
     private void markCurrentSettingTab() {
-        findViewById(R.id.tab_info).setBackgroundResource(R.drawable.tab_unselected);
-        findViewById(R.id.tab_general).setBackgroundResource(R.drawable.tab_unselected);
-        findViewById(R.id.tab_background).setBackgroundResource(R.drawable.tab_unselected);
-        findViewById(R.id.tab_text).setBackgroundResource(R.drawable.tab_unselected);
-        findViewById(R.id.tab_music).setBackgroundResource(R.drawable.tab_unselected);
+        LinearLayout tabContainer = findViewById(R.id.tab_container);
+
+        for (int i = 0; i < tabContainer.getChildCount(); i++) {
+            tabContainer.getChildAt(i).setBackgroundResource(R.drawable.tab_unselected);
+        }
         findViewById(mCurrentSetting).setBackgroundResource(R.drawable.tab_selected);
     }
 }

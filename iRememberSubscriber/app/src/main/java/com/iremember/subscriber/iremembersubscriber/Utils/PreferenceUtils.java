@@ -75,6 +75,16 @@ public class PreferenceUtils {
         return prefs.getString(SharedPrefs.MY_SONG_TITLE, defaultSongTitle());
     }
 
+    public static void writeScreensaverPath(Context context, String imagePath) {
+        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        prefs.edit().putString(SharedPrefs.MY_SCREENSAVER, imagePath).commit();
+    }
+
+    public static String readScreensaverPath(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        return prefs.getString(SharedPrefs.MY_SCREENSAVER, defaultScreensaver());
+    }
+
     public static int defaultBackgroundColor(Context context) {
         return ResourcesCompat.getColor(context.getResources(), R.color.default_reminder_bg_color, null);
     }
@@ -86,6 +96,11 @@ public class PreferenceUtils {
     public static String defaultSongTitle() {
         Field[] songs = R.raw.class.getFields();
         return (songs.length > 0) ? songs[0].getName() : null;
+    }
+
+    // TODO: Default screensaver
+    public static String defaultScreensaver() {
+        return "";
     }
 
     /**

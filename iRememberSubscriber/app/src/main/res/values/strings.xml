@@ -66,11 +66,9 @@
     <string name="btn_search_again">Sök igen</string>
     <string name="btn_continue">Fortsätt</string>
     <string name="btn_back">Tillbaka</string>
+    <string name="btn_upload_screensaver">Hämta bild från mitt galleri</string>
 
     <!-- Notifications -->
     <string name="foreground_started">Lyssnar</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

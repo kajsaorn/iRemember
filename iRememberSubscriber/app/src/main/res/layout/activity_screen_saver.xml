@@ -5,7 +5,13 @@
     tools:context="com.iremember.subscriber.iremembersubscriber.ScreenSaverActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screensaver"
+    android:background="@android:color/black"
     android:onClick="turnOffScreenSaver">
+
+    <ImageView
+        android:id="@+id/img_screensaver"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/screensaver" />
 
 </RelativeLayout>
