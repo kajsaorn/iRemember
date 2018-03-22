@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setDozeMode();
     }
 
-    public void onBreakfastClick(View view) {
+    public void onCoffeeClick(View view) {
         Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
         netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Command.BREAKFAST);
         startService(netWorkServiceIntent);

@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">iRememberMaster</string>
     <string name="btn_breakfast">FRUKOST</string>
-    <string name="btn_lunch">LUNCH</string>
-    <string name="btn_dinner">MIDDAG</string>
+    <string name="btn_lunch">MIDDAG</string>
+    <string name="btn_dinner">KVÄLLSMAT</string>
+    <string name="btn_coffee">MIDDAG</string>
     <string name="btn_store_master_name">SPARA</string>
     <string name="btn_settings">INSTÄLLNINGAR</string>
     <string name="hint_master_name">Ange masterns namn</string>

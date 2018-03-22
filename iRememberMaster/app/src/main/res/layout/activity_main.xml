@@ -28,21 +28,7 @@
         android:padding="@dimen/layout_padding">
 
         <Button
-            android:id="@+id/btn_breakfast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_green_light"
-            android:padding="@dimen/btn_padding"
-            android:text="@string/btn_breakfast"
-            android:textColor="@android:color/background_light"
-            android:textSize="@dimen/btn_text_size"
-            android:textStyle="bold"
-            android:onClick="onBreakfastClick"
-            />
-
-        <Button
             android:id="@+id/btn_lunch"
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_green_light"
@@ -52,7 +38,6 @@
             android:textSize="@dimen/btn_text_size"
             android:textStyle="bold"
             android:onClick="onLunchClick"
-            android:layout_below="@id/btn_breakfast"
             />
 
         <Button
@@ -68,6 +53,21 @@
             android:textStyle="bold"
             android:onClick="onDinnerClick"
             android:layout_below="@id/btn_lunch"
+            />
+
+        <Button
+            android:id="@+id/btn_coffee"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_green_light"
+            android:padding="@dimen/btn_padding"
+            android:text="@string/btn_breakfast"
+            android:textColor="@android:color/background_light"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold"
+            android:onClick="onCoffeeClick"
+            android:layout_below="@id/btn_dinner"
             />
 
     </RelativeLayout>
