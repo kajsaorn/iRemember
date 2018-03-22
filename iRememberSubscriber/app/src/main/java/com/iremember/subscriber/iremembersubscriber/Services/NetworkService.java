@@ -17,10 +17,8 @@ import android.util.Log;
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 import com.iremember.subscriber.iremembersubscriber.Constants.TimerConstants;
-import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.ReminderActivity;
-import com.iremember.subscriber.iremembersubscriber.StartActivity;
 import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.NotificationUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
@@ -82,6 +80,7 @@ public class NetworkService extends Service {
         closeConnection();
         removeWiFiLock();
         removeForeground();
+        BroadcastUtils.broadcastAction(Broadcast.NETWORK_SERVICE_OFF, this);
         super.onDestroy();
     }
 
@@ -399,7 +398,6 @@ public class NetworkService extends Service {
             try {
                 mDatagramSocket = new DatagramSocket(0);
                 sendMessage(Protocol.UNREGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
-                BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
             } catch (IOException e) {
                 e.printStackTrace();
                 BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_FAILURE, getApplicationContext());
@@ -481,7 +479,14 @@ public class NetworkService extends Service {
      */
     private class NetworkBroadcastReceiver extends BroadcastReceiver {
 
+        private ConnectivityManager mConnectivityManager;
+        private NetworkInfo mNetworkInfo;
+
         public NetworkBroadcastReceiver() {
+            mConnectivityManager = (ConnectivityManager) getApplication()
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
             registerReceiver(this, intentFilter);
@@ -490,15 +495,16 @@ public class NetworkService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                ConnectivityManager cManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo netInfo = cManager.getActiveNetworkInfo();
-                Log.d("NetworkService", "Connectivity action: " + netInfo.getState());
+                NetworkInfo mNewNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 
-                // If state is connected, make a new registration to master service.
-                if (netInfo.getState().equals(NetworkInfo.State.CONNECTED)) {
-                    //closeConnection();
-                    //startConnection();
+                if (mNetworkInfo == null && mNewNetworkInfo != null) {
+                    log("OBS! Restarting connection");
+                    closeConnection();
+                    startConnection();
+                } else {
+                    mNetworkInfo = mNewNetworkInfo;
                 }
+
 
             }
         }

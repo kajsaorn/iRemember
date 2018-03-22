@@ -16,6 +16,7 @@ public class Broadcast {
 
     public static final String DISCONNECTION_FAILURE = "disconnection_failure";
     public static final String DISCONNECTION_SUCCESS = "disconnection_success";
+    public static final String NETWORK_SERVICE_OFF = "network_off";
 
     public static final String SOCKET_FAILURE = "socket_failure";
     public static final String SEARCH_MASTER_SERVICE = "search_master";

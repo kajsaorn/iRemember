@@ -5,20 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -135,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
         public ConnectionMessageReceiver() {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Broadcast.DISCONNECTION_SUCCESS);
+            intentFilter.addAction(Broadcast.NETWORK_SERVICE_OFF);
             intentFilter.addAction(Broadcast.DISCONNECTION_FAILURE);
             intentFilter.addAction(Broadcast.SOCKET_FAILURE);
             registerReceiver(this, intentFilter);
@@ -146,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
 
             switch (action) {
-                case Broadcast.DISCONNECTION_SUCCESS:
-                    showUserMessage(UserMessage.DISCONNECTION_SUCCESS);
+                case Broadcast.NETWORK_SERVICE_OFF:
+                    showUserMessage(UserMessage.NETWORK_SERVICE_OFF);
                     showStartActivity();
                     finish();
                     break;
