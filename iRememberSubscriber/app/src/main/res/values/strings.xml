@@ -18,11 +18,12 @@
 
     <!-- Settings Tabs -->
 
-    <string name="tv_info_tab">Info</string>
-    <string name="tv_background_tab">Bakgrund</string>
-    <string name="tv_text_tab">Text</string>
-    <string name="tv_music_tab">Musik</string>
-    <string name="tv_general_tab">Allmänt</string>
+    <string name="tv_tab_info">Info</string>
+    <string name="tv_tab_background">Bakgrund</string>
+    <string name="tv_tab_text">Text</string>
+    <string name="tv_tab_music">Musik</string>
+    <string name="tv_tab_general">Allmänt</string>
+    <string name="tv_tab_screensaver">Skärmsläckare</string>
 
     <!-- Settings Labels -->
 
@@ -68,5 +69,8 @@
 
     <!-- Notifications -->
     <string name="foreground_started">Lyssnar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

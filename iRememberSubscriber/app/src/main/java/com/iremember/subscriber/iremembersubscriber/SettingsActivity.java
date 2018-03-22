@@ -10,6 +10,7 @@ import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsBackground
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsGeneralFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsInfoFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsMusicFragment;
+import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsScreensaverFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsTextFragment;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -20,6 +21,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Fragment mTextSettingsFragment;
     private Fragment mMusicSettingsFragment;
     private Fragment mGeneralSettingsFragment;
+    private Fragment mScreensaverSettingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
         mTextSettingsFragment = new SettingsTextFragment();
         mMusicSettingsFragment = new SettingsMusicFragment();
         mGeneralSettingsFragment = new SettingsGeneralFragment();
+        mScreensaverSettingsFragment = new SettingsScreensaverFragment();
 
         mCurrentSetting = (savedInstanceState != null) ? savedInstanceState.getInt("mCurrentSetting") : R.id.tab_info;
         showCurrentSettingFragment();

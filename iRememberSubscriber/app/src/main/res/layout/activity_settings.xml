@@ -14,63 +14,71 @@
 
         <Button
             android:id="@+id/tab_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="onInfoClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/tv_info_tab"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:text="@string/tv_tab_info"
             android:textSize="@dimen/tab_textsize"
             android:background="@drawable/tab_unselected" />
 
         <Button
             android:id="@+id/tab_background"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="onBgColorClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/tv_background_tab"
+            android:text="@string/tv_tab_background"
             android:textSize="@dimen/tab_textsize"
             android:background="@drawable/tab_unselected"  />
 
 
         <Button
             android:id="@+id/tab_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="onTextColorClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/tv_text_tab"
+            android:text="@string/tv_tab_text"
             android:textSize="@dimen/tab_textsize"
             android:background="@drawable/tab_unselected"  />
 
 
         <Button
             android:id="@+id/tab_music"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="onMusicClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/tv_music_tab"
+            android:text="@string/tv_tab_music"
+            android:textSize="@dimen/tab_textsize"
+            android:background="@drawable/tab_unselected" />
+
+        <Button
+            android:id="@+id/tab_screensaver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onMusicClick"
+            android:paddingTop="@dimen/btn_padding_medium"
+            android:paddingBottom="@dimen/btn_padding_medium"
+            android:text="@string/tv_tab_screensaver"
             android:textSize="@dimen/tab_textsize"
             android:background="@drawable/tab_unselected" />
 
         <Button
             android:id="@+id/tab_general"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="onGeneralClick"
             android:paddingTop="@dimen/btn_padding_medium"
             android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/tv_general_tab"
+            android:text="@string/tv_tab_general"
             android:textSize="@dimen/tab_textsize"
             android:background="@drawable/tab_unselected" />
 

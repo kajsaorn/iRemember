@@ -42,6 +42,6 @@
 
 
     <!-- Settings -->
-    <dimen name="tab_textsize">25sp</dimen>
+    <dimen name="tab_textsize">15sp</dimen>
 
 </resources>

@@ -40,6 +40,6 @@
     <dimen name="border_size">2dp</dimen>
 
     <!-- Settings -->
-    <dimen name="tab_textsize">12sp</dimen>
+    <dimen name="tab_textsize">10sp</dimen>
 
 </resources>
