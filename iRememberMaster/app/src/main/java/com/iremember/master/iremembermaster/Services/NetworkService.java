@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.iremember.master.iremembermaster.CommandHandler;
 import com.iremember.master.iremembermaster.Constants.Command;
+import com.iremember.master.iremembermaster.Constants.Protocol;
 import com.iremember.master.iremembermaster.Utils.NotificationUtils;
 import com.iremember.master.iremembermaster.Utils.PreferenceUtils;
 
@@ -220,9 +221,10 @@ public class NetworkService extends Service {
                     subscriberInetAddress = packetReceived.getAddress();
                     int subscriberPort = packetReceived.getPort();
                     if (commandOk) {
-                        sendBuffer = Command.REGISTRATION_CONFIRMATION.getBytes();
+                        sendBuffer = (Protocol.REGISTRATION_CONFIRMATION +
+                                PreferenceUtils.readMasterName(getApplicationContext())).getBytes();
                     } else {
-                        sendBuffer = Command.REGISTRATION_REJECTED.getBytes();
+                        sendBuffer = Protocol.REGISTRATION_REJECTED.getBytes();
                     }
                     packetSend = new DatagramPacket(sendBuffer, sendBuffer.length,
                             subscriberInetAddress, subscriberPort);
@@ -254,10 +256,10 @@ public class NetworkService extends Service {
             String port = "" + packetReceived.getPort();
             log("port = " + port);
 
-            if ((command != null) && command.equals(Command.REGISTER_COMMAND)) {
+            if ((command != null) && command.equals(Protocol.REGISTER_PREFIX)) {
                 PreferenceUtils.writeSubscriber(getApplicationContext(), roomName, (ip + "$" + port));
                 return true;
-            } else if ((command != null) && command.equals(Command.UNREGISTER_COMMAND)){
+            } else if ((command != null) && command.equals(Protocol.UNREGISTER_PREFIX)){
                 PreferenceUtils.removeSubscriber(getApplicationContext(), roomName);
                 return true;
             }

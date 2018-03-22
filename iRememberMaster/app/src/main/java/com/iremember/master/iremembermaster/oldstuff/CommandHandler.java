@@ -64,11 +64,12 @@ public class CommandHandler {
             public void onServiceFound(NsdServiceInfo service) {
                 log("A service was found: " + service.getServiceName());
                 log("ip: " + service.getHost());
-                if (service.getServiceName().startsWith(Protocol.SERVICE_PREFIX)){
+             /*   if (service.getServiceName().startsWith(Protocol.SERVICE_PREFIX)){
                     //mNsdManager.resolveService(service, mResolveListener);
                     log("Service name starts with: " + Protocol.SERVICE_PREFIX);
                         mNsdManager.resolveService(service, new RoomFoundResolveListener());
                 }
+                */
             }
 
             @Override

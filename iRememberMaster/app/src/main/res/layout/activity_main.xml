@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/holo_green_light"
             android:padding="@dimen/btn_padding"
-            android:text="@string/btn_breakfast"
+            android:text="@string/btn_coffee"
             android:textColor="@android:color/background_light"
             android:textSize="@dimen/btn_text_size"
             android:textStyle="bold"
