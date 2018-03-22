@@ -15,13 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
-
-import java.util.ArrayList;
 
 public class DiscoveryServiceFragment extends Fragment {
 
@@ -34,14 +34,14 @@ public class DiscoveryServiceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContent = inflater.inflate(R.layout.fragment_discovery_services, container, false);
-        initComponents();
-        initListeners();
         return mContent;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        initComponents();
+        initListeners();
         registerBroadcastReceiver();
         startNetworkService();
     }
@@ -101,30 +101,28 @@ public class DiscoveryServiceFragment extends Fragment {
         btnSearchServices.setVisibility(View.VISIBLE);
         btnBack.setVisibility(View.VISIBLE);
 
-        if (layoutServices.getChildCount() == 0) {
-            tvNoServices.setVisibility(View.VISIBLE);
-        }
+        int visibility = (layoutServices.getChildCount() == 0) ? View.VISIBLE : View.GONE;
+        tvNoServices.setVisibility(visibility);
     }
 
     private void onServiceFound(String service) {
         layoutServices.setVisibility(View.VISIBLE);
-        layoutServices.addView(createListItemSeparator());
         layoutServices.addView(createServiceListItem(service));
+        layoutServices.addView(createListItemSeparator());
     }
 
     private View createServiceListItem(final String service) {
-        int padding = (int) getResources().getDimension(R.dimen.padding_medium);
-
         TextView vService = new TextView(getContext());
         vService.setText(service);
         vService.setTextSize(getResources().getDimension(R.dimen.textsize_medium));
         vService.setGravity(Gravity.CENTER);
         vService.setTextColor(getResources().getColor(R.color.dark));
-        vService.setPadding(padding, padding, padding, padding);
+
         vService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PreferenceUtils.writeMasterServiceName(getContext(), service);
+                showUserMessage(UserMessage.SAVED_SERVICE_NAME);
                 mListener.onServiceSaved();
             }
         });
@@ -132,9 +130,13 @@ public class DiscoveryServiceFragment extends Fragment {
     }
 
     private View createListItemSeparator() {
+        int margin = (int) getResources().getDimension(R.dimen.margin_medium);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+        params.setMargins(0, margin, 0, margin);
+
         View vSeparator = new View(getContext());
         vSeparator.setBackgroundColor(getResources().getColor(R.color.dark));
-        vSeparator.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1));
+        vSeparator.setLayoutParams(params);
         return vSeparator;
     }
 
@@ -158,6 +160,7 @@ public class DiscoveryServiceFragment extends Fragment {
      */
     private void startNetworkService() {
         Intent intent = new Intent(getContext(), NetworkService.class);
+        intent.putExtra(Broadcast.SEARCH_MASTER_SERVICE, false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getContext().startForegroundService(intent);
         } else {
@@ -171,6 +174,13 @@ public class DiscoveryServiceFragment extends Fragment {
     private void stopNetworkService() {
         Intent intent = new Intent(getContext(), NetworkService.class);
         getContext().stopService(intent);
+    }
+
+    /**
+     * Display message to user as Android Toast.
+     */
+    private void showUserMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -199,5 +209,4 @@ public class DiscoveryServiceFragment extends Fragment {
             }
         }
     }
-
 }

@@ -5,8 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -114,22 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void showCurrentUserRestrictions() {
         boolean isMusicAllowed = PreferenceUtils.readMusicAllowed(this);
-        boolean isRemindersAllowed = PreferenceUtils.readRemindersAllowed(this);
-        TextView tvRestrictionsHeader = findViewById(R.id.tv_restriction_label);
-        TextView tvRestrictionsReminders = findViewById(R.id.tv_restriction_reminder);
-        TextView tvRestrictionsMusic = findViewById(R.id.tv_restriction_music);
-
-        tvRestrictionsHeader.setVisibility(View.GONE);
-        tvRestrictionsReminders.setVisibility(View.GONE);
-        tvRestrictionsMusic.setVisibility(View.GONE);
-
-        if (!isRemindersAllowed) {
-            tvRestrictionsHeader.setVisibility(View.VISIBLE);
-            tvRestrictionsReminders.setVisibility(View.VISIBLE);
-        } else if (!isMusicAllowed) {
-            tvRestrictionsHeader.setVisibility(View.VISIBLE);
-            tvRestrictionsMusic.setVisibility(View.VISIBLE);
-        }
+        int visibility = (isMusicAllowed) ? View.GONE : View.VISIBLE;
+        findViewById(R.id.tv_restriction_label).setVisibility(visibility);
+        findViewById(R.id.tv_restriction_music).setVisibility(visibility);
     }
 
     /**
@@ -149,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
             intentFilter.addAction(Broadcast.DISCONNECTION_SUCCESS);
             intentFilter.addAction(Broadcast.DISCONNECTION_FAILURE);
             intentFilter.addAction(Broadcast.SOCKET_FAILURE);
+            intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
             registerReceiver(this, intentFilter);
         }
 
@@ -170,6 +160,20 @@ public class MainActivity extends AppCompatActivity {
                     showStartActivity();
                     finish();
                     break;
+                    /*
+                case WifiManager.WIFI_STATE_CHANGED_ACTION:
+                    int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
+                    Log.d("MainActivity", WifiManager.WIFI_STATE_CHANGED_ACTION);
+                    Log.d("MainActivity", wifiState + "");
+
+
+                    if (WifiManager.WIFI_STATE_ENABLED == wifiState) {
+                        showUserMessage(UserMessage.WIFI_STATE_CHANGED);
+                        //showStartActivity();
+                        //finish();
+                    }
+                    break;
+                    */
             }
         }
     }

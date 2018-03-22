@@ -18,6 +18,7 @@ import com.iremember.subscriber.iremembersubscriber.Constants.TimerConstants;
 import com.iremember.subscriber.iremembersubscriber.ReminderActivity;
 import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.NotificationUtils;
+import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -31,32 +32,34 @@ public class NetworkService extends Service {
 
     private NsdManager mNsdManager;
     private NsdManager.DiscoveryListener mDiscoveryListener;
-    private NsdManager.ResolveListener mServiceResolver;
     private String mServiceName, mRoomName;
     private ConnectionHandler mConnectionHandler;
     private NotificationUtils mNotificationManager;
-    private boolean mServiceIsFound;
+    WifiManager.WifiLock mWifiLock = null;
+    private boolean isSearchingMasterService, isMasterServiceFound;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        log("onCreate()");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        log("onStartCommand()");
+        log("Started network service.");
 
-        mRoomName = intent.getStringExtra(Broadcast.ROOM_NAME);
-        mServiceName = intent.getStringExtra(Broadcast.SERVICE_NAME);
+        mRoomName = PreferenceUtils.readRoomName(getApplicationContext());
+        mServiceName = PreferenceUtils.readMasterServiceName(getApplicationContext());
+        isSearchingMasterService = intent.getBooleanExtra(Broadcast.SEARCH_MASTER_SERVICE, false);
+        isMasterServiceFound = false;
 
-        if (mRoomName == null) {
+        if (isSearchingMasterService && mRoomName == null) {
             BroadcastUtils.broadcastAction(Broadcast.MISSING_ROOM_NAME, getApplicationContext());
         }
-        if (mServiceName == null) {
+        if (isSearchingMasterService && mServiceName == null) {
             BroadcastUtils.broadcastAction(Broadcast.MISSING_SERVICE_NAME, getApplicationContext());
         }
 
+        acquireWiFiLock();
         startServiceDiscovery();
         setServiceDiscoveryTimer();
         setupNotificationManager();
@@ -65,17 +68,12 @@ public class NetworkService extends Service {
 
     @Override
     public void onDestroy() {
-        log("onDestroy()");
+        log("Destroying network service.");
         if (mConnectionHandler != null) {
-            try {
-                mConnectionHandler.closeConnection();
-                mConnectionHandler.interrupt();
-            } catch (IOException e) {
-                e.printStackTrace();
-                BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_FAILURE, getApplicationContext());
-            }
+            mConnectionHandler.closeConnection();
         }
-        BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
+        removeWiFiLock();
+        removeForeground();
         super.onDestroy();
     }
 
@@ -86,13 +84,11 @@ public class NetworkService extends Service {
     }
 
     private void setupNotificationManager() {
-        log("NotificationManager created foreground thread and notification.");
         mNotificationManager = new NotificationUtils(this);
         mNotificationManager.createNotificationForeground("Foreground", getApplicationContext(), this);
     }
 
     private void startServiceDiscovery() {
-        mServiceIsFound = false;
         mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
         initializeServiceResolver();
         initializeDiscoveryListener();
@@ -100,14 +96,12 @@ public class NetworkService extends Service {
     }
 
     private void stopServiceDiscovery() {
-        log("Stop Service Discovery");
-
+        log("Stopped service discovery");
         mNsdManager.stopServiceDiscovery(mDiscoveryListener);
-        BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_DONE, getApplicationContext());
-
-        if (!mServiceIsFound) {
+        if (isSearchingMasterService && !isMasterServiceFound) {
             BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_FAILURE, getApplicationContext());
         }
+        BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_DONE, getApplicationContext());
     }
 
     private void setServiceDiscoveryTimer() {
@@ -125,13 +119,18 @@ public class NetworkService extends Service {
 
             @Override
             public void onDiscoveryStarted(String regType) {
-                log("Started Service Discovery: " + mServiceName);
+                log("Service discovery started.");
             }
 
             @Override
             public void onServiceFound(NsdServiceInfo service) {
                 if (service.getServiceType().equals(Protocol.SERVICE_TYPE)) {
-                    mNsdManager.resolveService(service, mServiceResolver);
+                    if (!isSearchingMasterService) {
+                        BroadcastUtils.broadcastString(Broadcast.SERVICE_NAME, service.getServiceName(), getApplicationContext());
+                    }
+                    if (isSearchingMasterService && service.getServiceName().equals(mServiceName)) {
+                        mNsdManager.resolveService(service, initializeServiceResolver());
+                    }
                 }
             }
 
@@ -156,8 +155,8 @@ public class NetworkService extends Service {
         };
     }
 
-    public void initializeServiceResolver() {
-        mServiceResolver = new NsdManager.ResolveListener() {
+    public NsdManager.ResolveListener initializeServiceResolver() {
+        return new NsdManager.ResolveListener() {
 
             @Override
             public void onResolveFailed(NsdServiceInfo nsdServiceInfo, int i) {
@@ -166,23 +165,14 @@ public class NetworkService extends Service {
 
             @Override
             public void onServiceResolved(NsdServiceInfo serviceInfo) {
-                String serviceName = serviceInfo.getServiceName();
-
-                if (mServiceName != null && mServiceName.equals(serviceName)) {
-                    log("Resolving service with correct name: " + serviceName);
-                    mServiceIsFound = true;
-                    startConnection(serviceInfo.getHost(), serviceInfo.getPort());
-                } else {
-                    log("Resolving service with incorrect name: " + serviceName);
-                    BroadcastUtils.broadcastString(Broadcast.SERVICE_NAME, serviceName, getApplicationContext());
-                }
+                isMasterServiceFound = true;
+                startConnection(serviceInfo.getHost(), serviceInfo.getPort());
             }
         };
     }
 
     private void startConnection(InetAddress host, int port) {
         try {
-            log("Start connection");
             mConnectionHandler = new ConnectionHandler(host, port);
             mConnectionHandler.start();
         } catch (SocketException e) {
@@ -191,121 +181,133 @@ public class NetworkService extends Service {
         }
     }
 
+    private void acquireWiFiLock() {
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        if (wifiManager != null) {
+            mWifiLock = wifiManager.createWifiLock("0 Backup wifi lock");
+            mWifiLock.acquire();
+        }
+    }
+
+    private void removeWiFiLock() {
+        mWifiLock.release();
+    }
+
+    private void removeForeground() {
+        stopForeground(true);
+    }
+
     public void log(String msg) {
         Log.d("NetworkService", msg);
     }
 
 
 
-
-
     private class ConnectionHandler extends Thread {
 
         private DatagramSocket mDatagramSocket;
-        private InetAddress mRemoteHost;
-        private int mRemotePort;
+        private InetAddress mMasterHost;
+        private int mMasterPort;
+        private boolean isConnected;
 
         byte[] mWriteBuffer, mReadBuffer;
         DatagramPacket mWritePacket, mReadPacket;
-        boolean hasRecentlyReceivedCommand;
+        boolean isMessageRecentlyReceived, isRegistrationConfirmed;
 
         public ConnectionHandler(InetAddress host, int port) throws SocketException {
-            log("Creating ConnectionHandler");
-            mRemoteHost = host;
-            mRemotePort = port;
+            mMasterHost = host;
+            mMasterPort = port;
             mDatagramSocket = new DatagramSocket(0);
         }
 
-        public void closeConnection() throws IOException {
-            sendUnregistrationMessage();
-            mDatagramSocket.close();
-        }
-
         public void run() {
+            log("Connection thread is running...");
+
             String mReadMessage;
             mReadBuffer = new byte[256];
-            hasRecentlyReceivedCommand = false;
-
-            acquireWiFiLock();
+            isMessageRecentlyReceived = false;
+            isConnected = true;
 
             try {
                 sendRegistrationMessage();
+                setRegistrationTimer();
             } catch (IOException e) {
                 e.printStackTrace();
                 BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
             }
 
-            while (true) {
+            while (isConnected) {
                 try {
                     mReadPacket = new DatagramPacket(mReadBuffer, mReadBuffer.length);
                     mDatagramSocket.receive(mReadPacket);
 
-                    if (hasRecentlyReceivedCommand) {
-                        log("Ignoring incoming message because previously received one.");
+                    String ipSender = mReadPacket.getAddress().getHostAddress();
+                    String ipMaster = mMasterHost.getHostAddress();
+
+                    if (!ipSender.equals(ipMaster)) {
+                        continue;
+                    }
+                    if (isMessageRecentlyReceived) {
                         continue;
                     }
 
-                    mReadMessage = new String(mReadPacket.getData(), 0, mReadPacket.getLength());
-                    handleMessage(mReadMessage);
-                    sendConfirmationMessage();
+                    handlePacket(mReadPacket);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    BroadcastUtils.broadcastAction(Broadcast.SOCKET_FAILURE, getApplicationContext());
+                    if (isConnected) {
+                        BroadcastUtils.broadcastAction(Broadcast.SOCKET_FAILURE, getApplicationContext());
+                    } else {
+                        BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_SUCCESS, getApplicationContext());
+                    }
                 }
             }
+
+            try {
+                sendUnregistrationMessage();
+            } catch (IOException e) {
+                e.printStackTrace();
+                log("Unregistration failed");
+            }
+        }
+
+        public void closeConnection() {
+            isConnected = false;
+            mDatagramSocket.close();
         }
 
         private void sendRegistrationMessage() throws IOException {
-            log("Sending register message");
+            log("Sending registration message: " + Protocol.MESSAGE_REGISTER_PREFIX + mRoomName);
             mWriteBuffer = (Protocol.MESSAGE_REGISTER_PREFIX + mRoomName).getBytes();
-            mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, mRemoteHost, mRemotePort);
+            mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, mMasterHost, mMasterPort);
             mDatagramSocket.send(mWritePacket);
-            log("Done sending register message");
         }
 
         private void sendUnregistrationMessage() throws IOException {
-            log("Sending unregister message");
+            log("Sending unregistration message: " + Protocol.MESSAGE_UNREGISTER_PREFIX + mRoomName);
+            mDatagramSocket = new DatagramSocket(0);
             mWriteBuffer = (Protocol.MESSAGE_UNREGISTER_PREFIX + mRoomName).getBytes();
-            mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, mRemoteHost, mRemotePort);
+            mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, mMasterHost, mMasterPort);
             mDatagramSocket.send(mWritePacket);
-            log("Done sending unregister message");
+            mDatagramSocket.close();
         }
 
-        private void sendConfirmationMessage() throws IOException {
-            log("Sending confirmation message");
+        private void sendConfirmationMessage(InetAddress host, int port) throws IOException {
+            log("Sending confirmation message: " + Protocol.MESSAGE_CONFIRMATION_PREFIX + mRoomName);
             mWriteBuffer = (Protocol.MESSAGE_CONFIRMATION_PREFIX + mRoomName).getBytes();
-            mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, mRemoteHost, mRemotePort);
+            mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, host, port);
             mDatagramSocket.send(mWritePacket);
-            log("Done sending confirmation message");
         }
 
-        private void acquireWiFiLock() {
-            WifiManager.WifiLock mWifiLock = null;
-            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-            if (wifiManager != null) {
-                mWifiLock = wifiManager.createWifiLock("0 Backup wifi lock");
-                mWifiLock.acquire();
+        private void setRecentlyReceived(boolean isReceived) {
+            isMessageRecentlyReceived = isReceived;
+            if (isReceived) {
+                setMessageReceivedTimer();
             }
         }
 
-        private void turnScreenOn(){
-            //log("turnScreenOn()");
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
-                    | PowerManager.ACQUIRE_CAUSES_WAKEUP, "CHESS");
-            wl.acquire();
-        }
-
-        private void setRecentlyReceived(boolean hasReceived) {
-            hasRecentlyReceivedCommand = hasReceived;
-            if (hasReceived) {
-                setRecentlyReceivedTimer();
-            }
-        }
-
-        private void setRecentlyReceivedTimer() {
+        private void setMessageReceivedTimer() {
             TimerTask task = new TimerTask() {
                 public void run() {
                     setRecentlyReceived(false);
@@ -314,208 +316,73 @@ public class NetworkService extends Service {
             new Timer().schedule(task, TimerConstants.COMMAND_DURATION);
         }
 
-        private void handleMessage(String message) {
+        private void setRegistrationConfirmed(boolean isConfirmed) {
+            isRegistrationConfirmed = isConfirmed;
+        }
+
+        private void setRegistrationTimer() {
+            TimerTask task = new TimerTask() {
+                public void run() {
+                    if (!isRegistrationConfirmed) {
+                        BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
+                    }
+                }
+            };
+            new Timer().schedule(task, TimerConstants.REGISTRATION_DURATION);
+        }
+
+        private void handlePacket(DatagramPacket packet) throws IOException {
+            String message = new String(mReadPacket.getData(), 0, mReadPacket.getLength());
+            InetAddress host = packet.getAddress();
+            int port = packet.getPort();
+
+            log("Received socket message: " + message);
+
             switch (message) {
                 case Command.BREAKFAST:
-                    turnScreenOn();
                     setRecentlyReceived(true);
+                    sendConfirmationMessage(host, port);
                     startReminderActivity(message);
+                    setReminderTimer();
                     break;
                 case Command.LUNCH:
-                    turnScreenOn();
                     setRecentlyReceived(true);
+                    sendConfirmationMessage(host, port);
                     startReminderActivity(message);
+                    setReminderTimer();
                     break;
                 case Command.DINNER:
-                    turnScreenOn();
                     setRecentlyReceived(true);
+                    sendConfirmationMessage(host, port);
                     startReminderActivity(message);
+                    setReminderTimer();
                     break;
-                case Protocol.CONNECTION_CONFIRMATION:
+                case Protocol.REGISTRATION_CONFIRMATION:
+                    setRegistrationConfirmed(true);
                     BroadcastUtils.broadcastAction(Broadcast.CONNECTION_SUCCESS, getApplicationContext());
                     break;
             }
         }
 
+        private void setReminderTimer() {
+            TimerTask task = new TimerTask() {
+                public void run() {
+                    stopReminderActivity();
+                }
+            };
+            new Timer().schedule(task, TimerConstants.REMINDER_DURATION);
+        }
+
         private void startReminderActivity(String message) {
+            log("Starting reminder activity: " + message);
             Intent intent = new Intent(getApplicationContext(), ReminderActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(Command.MESSAGE, message);
             startActivity(intent);
         }
-    }
 
-
-
-    /*
-
-    private CommandReceiver mCommandReceiver;
-    private NotificationUtils mNotificationManager;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mCommandReceiver = new CommandReceiver();
-        mNotificationManager = new NotificationUtils(this);
-        log("onCreate()");
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        // Tells the system this is a foreground service
-        mNotificationManager.createNotificationForeground("Foreground", getApplicationContext(), this);
-        mCommandReceiver.start();
-
-        return START_NOT_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        unregisterCommandReceiver();
-        super.onDestroy();
-    }
-
-    private void unregisterCommandReceiver() {
-        mCommandReceiver.interrupt();
-        mCommandReceiver = null;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-    */
-
-
-
-
-
-
-     //The CommandReceiver is a thread that listens for incoming UDP messages on the network.
-    /*
-    private class CommandReceiver extends Thread {
-
-        private DatagramSocket socket;
-        private int port = 12345;
-        private boolean recentlyReceived = false;
-
-        public CommandReceiver() {
-
-            log("CommandReceiver");
-            try {
-                // For DatagramSocket
-                socket = new DatagramSocket(port);
-
-            } catch (SocketException e) {
-                e.printStackTrace();
-                BroadcastUtils.broadcastAction(Broadcast.SOCKET_FAILURE, getApplicationContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void finnishConnection(){
-            socket.close();
-        }
-
-        public void run() {
-            DatagramPacket packetReceived;
-            DatagramPacket packetSend;
-            InetAddress masterInetAddress;
-            int masterPort;
-            byte[] readBuffer = new byte[256];
-            String command;
-            byte[] sendBuffer;
-
-            acquireWiFiLock();
-            //acquireMultiCastLock();
-
-            while (true) {
-                try {
-                    packetReceived = new DatagramPacket(readBuffer, readBuffer.length);
-                    socket.receive(packetReceived);
-
-                    // If a command is not recently received, then do the command and answer
-                    if (!recentlyReceived) {
-                        turnScreenOn();
-                        setRecentlyReceived(true);
-                        setRecentlyReceivedTimer();
-                        command = new String(packetReceived.getData(), 0,
-                                packetReceived.getLength());
-                        validateCommand(command);
-
-                        // Sending packet with room id
-                        masterInetAddress = packetReceived.getAddress();
-                        masterPort = packetReceived.getPort();
-                        String mRoomName = PreferenceUtils.readRoomName(getApplicationContext());
-                        sendBuffer = mRoomName.getBytes();
-                        packetSend = new DatagramPacket(sendBuffer, sendBuffer.length,
-                                masterInetAddress, masterPort);
-                        socket.send(packetSend);
-                        log("After validating command");
-                    } else {
-                        log("Command are recently received");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    BroadcastUtils.broadcastAction(Broadcast.SOCKET_FAILURE, getApplicationContext());
-                }
-            }
-        }
-
-        private synchronized void setRecentlyReceived(boolean received){
-            recentlyReceived = received;
-
-        }
-
-        private void setRecentlyReceivedTimer() {
-            TimerTask task = new TimerTask() {
-                public void run() {
-                    setRecentlyReceived(false);
-                }
-            };
-            new Timer().schedule(task, TimerConstants.COMMAND_DURATION);
-        }
-
-        private void validateCommand(String command) {
-            if (
-                    command.equals(Command.BREAKFAST) ||
-                    command.equals(Command.LUNCH) ||
-                    command.equals(Command.DINNER ))
-            {
-                Intent intent = new Intent(getApplicationContext(), ReminderActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("command", command);
-                startActivity(intent);
-            }
+        private void stopReminderActivity() {
+            BroadcastUtils.broadcastAction(Broadcast.FINISH_ACTIVITY, getApplicationContext());
         }
     }
-
-    private void turnScreenOn(){
-        log("turnScreenOn()");
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
-                | PowerManager.ACQUIRE_CAUSES_WAKEUP, "CHESS");
-        wl.acquire();
-    }
-
-    private void acquireWiFiLock() {
-        WifiManager.WifiLock _wifiLock = null;
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-        if (wifiManager != null) {
-            log("wifiManager not null; " + wifiManager.toString());
-            _wifiLock = wifiManager.createWifiLock("0 Backup wifi lock");
-            _wifiLock.acquire();
-            log("_wifiLock.isHeld() = " + _wifiLock.isHeld());
-        }
-    }
-
-
-    private void acquireMultiCastLock(){
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiManager.MulticastLock multicastLock = wifiManager.createMulticastLock("lock");
-        multicastLock.acquire();
-    }
-*/
 }

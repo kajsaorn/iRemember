@@ -41,6 +41,7 @@ public class DiscoveryRoomFragment extends Fragment {
                     showUserMessage(UserMessage.MISSING_ROOM_NAME);
                 } else {
                     PreferenceUtils.writeRoomName(getContext(), mRoomName);
+                    showUserMessage(UserMessage.SAVED_ROOM_NAME);
                     mListener.onRoomNameSaved();
                 }
             }
