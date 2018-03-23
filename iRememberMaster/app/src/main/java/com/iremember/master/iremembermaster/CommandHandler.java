@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -88,7 +89,8 @@ public class CommandHandler extends Thread {
                             answer = new String(packetReceived.getData(), 0,
                                 packetReceived.getLength());
                             log("Answer from receiver: " + answer);
-                            answers.put(answer, "found");
+                            String[] splitedMessage = answer.split("\\$");
+                            answers.put(splitedMessage[1], "answered");
                             if (answers.size() == knownSubscribers.size()) {
                                 log("Breaking out, all subscribers have got the message");
                                 break;
@@ -146,9 +148,10 @@ public class CommandHandler extends Thread {
     private void showResults() {
         String[] noRespond = findNonRespondedRooms();
         Intent answerIntent = new Intent(sContext, AnswersActivity.class);
-        String[] responds = (String[])(answers.keySet().toArray());
+        String[] responds = getRespondedRooms();
         answerIntent.putExtra(Command.ANSWERS, responds);
         answerIntent.putExtra(Command.NO_ANSWERS, noRespond);
+        answerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         sContext.startActivity(answerIntent);
     }
 
@@ -156,14 +159,37 @@ public class CommandHandler extends Thread {
      * Find the rooms that did not respond
      */
     private String[] findNonRespondedRooms() {
+        log("findNonRespondedRooms");
+        log("alla som svarat: ");
+
         LinkedList<String> lstNoRespond = new LinkedList<String>();
-        for (Map.Entry<String, ?> subscriber : knownSubscribers.entrySet()) {
-            String roomName = (String) subscriber.getKey();
+        for (String roomName : knownSubscribers.keySet()) {
             if (!answers.containsKey(roomName)) {
+                log("roomName: " + roomName + " finns inte i answers");
                 lstNoRespond.addLast(roomName);
             }
         }
-        return (String[]) lstNoRespond.toArray();
+
+        log("storlek på lstNoRespond = " + lstNoRespond.size());
+        if (lstNoRespond.size() == 0) {
+            log("den är 0");
+            return new String[0];
+        }
+        log("innan return");
+        String[] arrNoRespond = new String[lstNoRespond.size()];
+        for (int i = 0; i < arrNoRespond.length; i++) {
+            arrNoRespond[i] = lstNoRespond.get(i);
+        }
+        return arrNoRespond;
+    }
+
+    private String[] getRespondedRooms() {
+        if (answers.size() == 0) {
+            return new String[0];
+        }
+//        String[] arrRespond = new String[answers.size()];
+
+        return answers.keySet().toArray(new String[0]);
     }
 
     public void log(String msg) {

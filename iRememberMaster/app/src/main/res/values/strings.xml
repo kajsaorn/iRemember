@@ -12,4 +12,7 @@
     <string name="btn_stop_master">Stoppa master</string>
     <string name="btn_master_menu">Tillbaka till måltidsmeny</string>
     <string name="tv_answers">Svar från rum</string>
+    <string name="btn_act_reg_sub">Registredade rumsenheter</string>
+    <string name="btn_update_reg_sub">Uppdatera</string>
+    <string name="btn_settings_menu">Tillbaka till inställningar</string>
 </resources>

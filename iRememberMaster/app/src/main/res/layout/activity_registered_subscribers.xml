@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.iremember.master.iremembermaster.AnswersActivity">
+    tools:context="com.iremember.master.iremembermaster.RegisteredSubscribersActivity">
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,20 +24,34 @@
             android:layout_centerHorizontal="true"
             android:background="@android:color/holo_green_light"
             android:textColor="@android:color/background_light"
-            android:onClick="onAnsweredClick"
-            android:text="@string/btn_master_menu" />
+            android:onClick="onGoToMenuClick"
+            android:text="@string/btn_settings_menu" />
+
+        <Button
+            android:id="@+id/btn_uppdatera"
+            android:layout_marginTop="20dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/holo_green_light"
+            android:textColor="@android:color/background_light"
+            android:onClick="onUppdateClick"
+            android:layout_below="@id/btn_to_master_menu"
+            android:text="@string/btn_update_reg_sub" />
+
 
         <TextView
-            android:id="@+id/tv_answers"
+            android:id="@+id/tv_registered_subscribers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/btn_margin"
             android:textSize="@dimen/tv_text_size"
             android:ems="10"
-            android:layout_below="@+id/btn_to_master_menu"
+            android:layout_below="@+id/btn_uppdatera"
             android:inputType="textMultiLine"/>
 
     </RelativeLayout>
+
 
 </FrameLayout>

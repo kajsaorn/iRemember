@@ -126,4 +126,9 @@ public class SettingsActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Log.d("MainActivity", message);
     }
+
+    public void onRegSubClick(View view) {
+        Intent intent = new Intent(this, RegisteredSubscribersActivity.class);
+        startActivity(intent);
+    }
 }

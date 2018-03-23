@@ -49,6 +49,20 @@
         android:visibility="visible" />
 
     <Button
+        android:id="@+id/btn_to_reg_sub_menu"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/androidGreen"
+        android:onClick="onRegSubClick"
+        android:padding="@dimen/btn_padding_large"
+        android:text="@string/btn_act_reg_sub"
+        android:textColor="@android:color/background_light"
+        android:textSize="@dimen/btn_textsize_large"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+    <Button
         android:id="@+id/btn_to_master_menu"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"

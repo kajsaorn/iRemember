@@ -28,7 +28,8 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".AnswersActivity"></activity>
+        <activity android:name=".AnswersActivity" />
+        <activity android:name=".RegisteredSubscribersActivity"></activity>
     </application>
 
 </manifest>
