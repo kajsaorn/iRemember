@@ -1,9 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.iremember.master.iremembermaster.AnswersActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp">
+
+
+        <Button
+            android:id="@+id/btn_to_master_menu"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/holo_green_light"
+            android:textColor="@android:color/background_light"
+            android:text="@string/btn_master_menu" />
+
+        <TextView
+            android:id="@+id/tv_answers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/btn_margin"
+            android:textSize="@dimen/tv_text_size"
+            android:ems="10"
+            android:layout_below="@+id/btn_to_master_menu"
+            android:inputType="textMultiLine"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

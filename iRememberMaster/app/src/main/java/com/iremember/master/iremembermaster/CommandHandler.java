@@ -1,6 +1,7 @@
 package com.iremember.master.iremembermaster;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,6 +12,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -115,7 +117,7 @@ public class CommandHandler extends Thread {
         log("Kolla hur många svar som inkommit...");
         log("answers.size() = " + answers.size());
         log("knownSubscribers.size() = " + knownSubscribers.size());
-        if (answers.size() == knownSubscribers.size()) {
+/*        if (answers.size() == knownSubscribers.size()) {
 //            Toast.makeText(sContext, "Alla rum har fått besked om att maten är klar",
 //                    Toast.LENGTH_SHORT).show();
             log("Alla subscribers har svarat");
@@ -123,6 +125,8 @@ public class CommandHandler extends Thread {
             log("not everyone has answered...");
             findNonRespondedRooms();
         }
+        */
+        showResults();
 
     }
 
@@ -137,17 +141,29 @@ public class CommandHandler extends Thread {
     }
 
     /**
+     * Displays the result from subscribers answers
+     */
+    private void showResults() {
+        String[] noRespond = findNonRespondedRooms();
+        Intent answerIntent = new Intent(sContext, AnswersActivity.class);
+        String[] responds = (String[])(answers.keySet().toArray());
+        answerIntent.putExtra(Command.ANSWERS, responds);
+        answerIntent.putExtra(Command.NO_ANSWERS, noRespond);
+        sContext.startActivity(answerIntent);
+    }
+
+    /**
      * Find the rooms that did not respond
      */
-    private void findNonRespondedRooms() {
-        String notResponded = "The following rooms did not respond:\n";
+    private String[] findNonRespondedRooms() {
+        LinkedList<String> lstNoRespond = new LinkedList<String>();
         for (Map.Entry<String, ?> subscriber : knownSubscribers.entrySet()) {
             String roomName = (String) subscriber.getKey();
             if (!answers.containsKey(roomName)) {
-                notResponded = notResponded + roomName + "\n";
+                lstNoRespond.addLast(roomName);
             }
         }
-        log(notResponded);
+        return (String[]) lstNoRespond.toArray();
     }
 
     public void log(String msg) {

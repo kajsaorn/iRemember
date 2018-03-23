@@ -11,4 +11,5 @@
     <string name="btn_start_master">Starta master</string>
     <string name="btn_stop_master">Stoppa master</string>
     <string name="btn_master_menu">Tillbaka till måltidsmeny</string>
+    <string name="tv_answers">Svar från rum</string>
 </resources>
