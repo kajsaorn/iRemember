@@ -98,7 +98,7 @@ public class NetworkService extends Service {
      */
     private void registerBroadcastReceiver() {
         if (mBroadcastReceiver == null) {
-            mBroadcastReceiver = new DeviceBroadcastReceiver();
+            mBroadcastReceiver = new GlobalBroadcastReceiver();
         }
     }
 
@@ -231,9 +231,9 @@ public class NetworkService extends Service {
      */
     private void startConnection() {
         try {
+            registerBroadcastReceiver();
             mConnectionHandler = new ConnectionHandler();
             mConnectionHandler.start();
-            registerBroadcastReceiver();
         } catch (SocketException e) {
             e.printStackTrace();
             BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
@@ -258,17 +258,17 @@ public class NetworkService extends Service {
     }
 
     private void stopReminderActivity() {
-        BroadcastUtils.broadcastAction(Broadcast.FINISH_ACTIVITY, getApplicationContext());
+        BroadcastUtils.broadcastAction(Broadcast.FINISH_REMINDER, getApplicationContext());
     }
 
-    private void startScreenSaverActivity() {
+    private void startScreensaverActivity() {
         Intent intent = new Intent(getApplicationContext(), ScreenSaverActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
-    private void stopScreenSaverActivity() {
-
+    private void stopScreensaverActivity() {
+        BroadcastUtils.broadcastAction(Broadcast.FINISH_SCREENSAVER, getApplicationContext());
     }
 
     /**
@@ -374,38 +374,66 @@ public class NetworkService extends Service {
             }
         }
 
+        /**
+         * Close connection to the iRemember Master Service.
+         * This will cause this thread to die.
+         */
         public void closeConnection() {
             isConnected = false;
             mDatagramSocket.close();
         }
 
+        /**
+         * Handle command from iRemember Master Service.
+         * @param command The command that describes what we should act upon.
+         * @param host The host where the command came from.
+         * @param port The port where the command came from.
+         * @throws IOException
+         */
         private void handleCommand(String command, InetAddress host, int port) throws IOException {
             switch (command) {
                 case Protocol.COMMAND_COFFEE:
-                    setRecentlyReceived(true);
-                    sendConfirmationMessage(host, port);
-                    startReminderActivity(getString(R.string.reminder_coffee));
-                    setReminderTimer();
+                    handleReminderCommand(getString(R.string.reminder_coffee), host, port);
                     break;
                 case Protocol.COMMAND_MIDDAY:
-                    setRecentlyReceived(true);
-                    sendConfirmationMessage(host, port);
-                    startReminderActivity(getString(R.string.reminder_midday));
-                    setReminderTimer();
+                    handleReminderCommand(getString(R.string.reminder_midday), host, port);
+
                     break;
                 case Protocol.COMMAND_SUPPER:
-                    setRecentlyReceived(true);
-                    sendConfirmationMessage(host, port);
-                    startReminderActivity(getString(R.string.reminder_supper));
-                    setReminderTimer();
+                    handleReminderCommand(getString(R.string.reminder_supper), host, port);
                     break;
                 case Protocol.COMMAND_REGISTERED:
-                    setRegistrationConfirmed(true);
-                    BroadcastUtils.broadcastAction(Broadcast.CONNECTION_SUCCESS, getApplicationContext());
+                    handleRegistrationConfirmation();
                     break;
             }
         }
 
+        /**
+         * Handle a reminder command. The reminder activity will start and display the
+         * provided reminder text. A confirmation message is sent to the host and port.
+         */
+        private void handleReminderCommand(String reminderText, InetAddress host, int port) {
+            setRecentlyReceived(true);
+            sendConfirmationMessage(host, port);
+            stopScreensaverActivity();
+            startReminderActivity(reminderText);
+            setReminderTimer();
+        }
+
+        /**
+         * Handle a registration confirmation. A connection success constant is broadcasted
+         * to which ever activity is listening, in this case it will be the StartActivity,
+         * which will in turn proceed to display the MainActivity.
+         */
+        private void handleRegistrationConfirmation() {
+            setRegistrationConfirmed(true);
+            BroadcastUtils.broadcastAction(Broadcast.CONNECTION_SUCCESS, getApplicationContext());
+        }
+
+        /**
+         * Send a registration request message to the iRemember Master Service.
+         * If the service received our request, we will get a confirmation message back.
+         */
         private void sendRegistrationMessage() {
             try {
                 sendMessage(Protocol.REGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
@@ -417,6 +445,11 @@ public class NetworkService extends Service {
             }
         }
 
+        /**
+         * Send an unregistration message to the iRemember Master Service.
+         * It will now know that we are no longer subscribing to reminder messages
+         * and will not be worried if we do not send back message confirmations.
+         */
         private void sendUnregistrationMessage() {
             try {
                 mDatagramSocket = new DatagramSocket(0);
@@ -428,6 +461,12 @@ public class NetworkService extends Service {
             }
         }
 
+        /**
+         * Send a confirmation message to the iRemember Master Service.
+         * This indicates to the service that we have received and acted upon a message.
+         * @param host The host to send confirmation message to.
+         * @param port The port to send confirmation message to.
+         */
         private void sendConfirmationMessage(InetAddress host, int port) {
             try {
                 sendMessage(Protocol.CONFIRMATION_PREFIX + mRoomName, host, port);
@@ -437,6 +476,12 @@ public class NetworkService extends Service {
             }
         }
 
+        /**
+         * Send a message to some host.
+         * @param host The host to send message to.
+         * @param port The port to send message to.
+         * @throws IOException
+         */
         private void sendMessage(String message, InetAddress host, int port) throws IOException {
             log("Sending socket message: " + message);
             mWriteBuffer = message.getBytes();
@@ -445,6 +490,12 @@ public class NetworkService extends Service {
 
         }
 
+        /**
+         * Set boolean value to true if we recently received a message.
+         * After some time this will automatically go back to not recently received.
+         * This prevents our datagram socket to be overloaded with spam.
+         * @param isReceived
+         */
         private void setRecentlyReceived(boolean isReceived) {
             isMessageRecentlyReceived = isReceived;
             if (isReceived) {
@@ -452,6 +503,10 @@ public class NetworkService extends Service {
             }
         }
 
+        /**
+         * Set timer so that after a certain time we know that a message has not been
+         * received recently, and our datagram socket will start acting on messages again.
+         */
         private void setRecentlyReceivedTimer() {
             TimerTask task = new TimerTask() {
                 public void run() {
@@ -461,10 +516,19 @@ public class NetworkService extends Service {
             new Timer().schedule(task, TimerConstants.COMMAND_DURATION);
         }
 
+        /**
+         * Set boolean value to true if we received a registration
+         * confirmed message from the iRemember Master Service.
+         * @param isConfirmed
+         */
         private void setRegistrationConfirmed(boolean isConfirmed) {
             isRegistrationConfirmed = isConfirmed;
         }
 
+        /**
+         * Set timer so that after a certain time we know that the iRemember Master has
+         * not received or accepted our request to be registered as subscriber.
+         */
         private void setRegistrationTimer() {
             TimerTask task = new TimerTask() {
                 public void run() {
@@ -476,6 +540,9 @@ public class NetworkService extends Service {
             new Timer().schedule(task, TimerConstants.REGISTRATION_DURATION);
         }
 
+        /**
+         * Set time so that after a certain time the reminder is deactivated.
+         */
         private void setReminderTimer() {
             TimerTask task = new TimerTask() {
                 public void run() {
@@ -489,15 +556,20 @@ public class NetworkService extends Service {
     /**
      * BroadcastReceiver class that enables this service to receive broadcast messages.
      */
-    private class DeviceBroadcastReceiver extends BroadcastReceiver {
+    private class GlobalBroadcastReceiver extends BroadcastReceiver {
 
+        private static final String UNDEFINED = "$";
         private ConnectivityManager mConnectivityManager;
-        private NetworkInfo mNetworkInfo;
+        private String mMasterNetworkName;
+        private String mLatestNetworkName;
 
-        public DeviceBroadcastReceiver() {
+        public GlobalBroadcastReceiver() {
             mConnectivityManager = (ConnectivityManager) getApplication()
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
-            mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+
+            NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+            mMasterNetworkName = networkInfo != null ? networkInfo.getExtraInfo() : UNDEFINED;
+            mLatestNetworkName = networkInfo != null ? networkInfo.getExtraInfo() : UNDEFINED;
 
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -518,27 +590,24 @@ public class NetworkService extends Service {
 
                     if (hour >= TimerConstants.SCREENSAVER_ALLOWED_START_HOUR
                             && hour < TimerConstants.SCREENSAVER_ALLOWED_END_HOUR) {
-                        startScreenSaverActivity();
+                        startScreensaverActivity();
                     }
                     break;
             }
-
         }
 
         private void handleConnectivityChange() {
             NetworkInfo mNewNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            String mNewNetworkName = mNewNetworkInfo != null ? mNewNetworkInfo.getExtraInfo() : UNDEFINED;
 
-            if (mNetworkInfo == null && mNewNetworkInfo != null) {
-                log("OBS! Restarting connection");
+            if (mLatestNetworkName.equals(mMasterNetworkName) && !mNewNetworkName.equals(mMasterNetworkName)) {
+                BroadcastUtils.broadcastAction(Broadcast.WRONG_WIFI, getApplicationContext());
+            }
+            if (!mLatestNetworkName.equals(mMasterNetworkName) && mNewNetworkName.equals(mMasterNetworkName)) {
                 closeConnection();
                 startConnection();
-            } else {
-                mNetworkInfo = mNewNetworkInfo;
             }
+            mLatestNetworkName = mNewNetworkName;
         }
-
-
     }
-
-
 }

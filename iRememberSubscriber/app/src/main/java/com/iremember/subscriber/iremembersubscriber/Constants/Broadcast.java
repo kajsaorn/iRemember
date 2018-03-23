@@ -17,10 +17,13 @@ public class Broadcast {
     public static final String DISCONNECTION_FAILURE = "disconnection_failure";
     public static final String DISCONNECTION_SUCCESS = "disconnection_success";
     public static final String NETWORK_SERVICE_OFF = "network_off";
+    public static final String WRONG_WIFI = "wifi_changed";
 
     public static final String SOCKET_FAILURE = "socket_failure";
+
     public static final String SEARCH_MASTER_SERVICE = "search_master";
-    public static final String FINISH_ACTIVITY = "finish_activity";
+    public static final String FINISH_REMINDER = "finish_reminder";
+    public static final String FINISH_SCREENSAVER = "finish_screensaver";
 
     public static final String MESSAGE = "message";
 }

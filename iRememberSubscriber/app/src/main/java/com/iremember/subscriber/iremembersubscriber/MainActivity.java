@@ -110,11 +110,31 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Show current user restrictions, e.g. that music is not allowed.
+     */
     private void showCurrentUserRestrictions() {
         boolean isMusicAllowed = PreferenceUtils.readMusicAllowed(this);
         int visibility = (isMusicAllowed) ? View.GONE : View.VISIBLE;
         findViewById(R.id.tv_restriction_label).setVisibility(visibility);
         findViewById(R.id.tv_restriction_music).setVisibility(visibility);
+    }
+
+    /**
+     * Show wifi error message. This should be called when wifi state
+     * changes and the new wifi is not the one where the app previously
+     * connected to the iRemember Master Service.
+     */
+    private void showWifiErrorMessage() {
+        findViewById(R.id.tv_wrong_wifi).setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Hide wifi error message. This should be called when as soon
+     * as the app is connected to the iRemember Master Service.
+     */
+    private void hideWifiErrorMessage() {
+        findViewById(R.id.tv_wrong_wifi).setVisibility(View.GONE);
     }
 
     /**
@@ -131,21 +151,25 @@ public class MainActivity extends AppCompatActivity {
 
         public ConnectionMessageReceiver() {
             IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(Broadcast.CONNECTION_SUCCESS);
             intentFilter.addAction(Broadcast.NETWORK_SERVICE_OFF);
             intentFilter.addAction(Broadcast.DISCONNECTION_FAILURE);
             intentFilter.addAction(Broadcast.SOCKET_FAILURE);
+            intentFilter.addAction(Broadcast.WRONG_WIFI);
             registerReceiver(this, intentFilter);
         }
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            Log.d("MainActivity", "Got broadcast: " + action);
 
             switch (action) {
-                case Broadcast.NETWORK_SERVICE_OFF:
-                    showUserMessage(UserMessage.NETWORK_SERVICE_OFF);
-                    showStartActivity();
-                    finish();
+                case Broadcast.CONNECTION_SUCCESS:
+                    hideWifiErrorMessage();
+                    break;
+                case Broadcast.CONNECTION_FAILURE:
+                    showUserMessage(UserMessage.CONNECTION_FAILURE);
                     break;
                 case Broadcast.DISCONNECTION_FAILURE:
                     showUserMessage(UserMessage.DISCONNECTION_FAILURE);
@@ -154,6 +178,14 @@ public class MainActivity extends AppCompatActivity {
                     showUserMessage(UserMessage.SOCKET_FAILURE);
                     showStartActivity();
                     finish();
+                    break;
+                case Broadcast.NETWORK_SERVICE_OFF:
+                    showUserMessage(UserMessage.NETWORK_SERVICE_OFF);
+                    showStartActivity();
+                    finish();
+                    break;
+                case Broadcast.WRONG_WIFI:
+                    showWifiErrorMessage();
                     break;
             }
         }

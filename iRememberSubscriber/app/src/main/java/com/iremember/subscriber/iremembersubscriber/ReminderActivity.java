@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
+import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
 public class ReminderActivity extends AppCompatActivity {
@@ -120,14 +121,14 @@ public class ReminderActivity extends AppCompatActivity {
 
         public MessageReceiver() {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Broadcast.FINISH_ACTIVITY);
+            intentFilter.addAction(Broadcast.FINISH_REMINDER);
             registerReceiver(this, intentFilter);
         }
 
         @Override
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
-                case Broadcast.FINISH_ACTIVITY:
+                case Broadcast.FINISH_REMINDER:
                     finish();
                     break;
             }
