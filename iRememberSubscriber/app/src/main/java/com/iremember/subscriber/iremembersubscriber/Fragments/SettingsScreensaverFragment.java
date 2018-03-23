@@ -110,8 +110,5 @@ public class SettingsScreensaverFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-
-
     }
-
 }

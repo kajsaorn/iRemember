@@ -13,10 +13,7 @@
     <string name="btn_disconnect">STÄNG AV</string>
     <string name="btn_settings">INSTÄLLNINGAR</string>
     <string name="tv_main_label">Här kommer det att visas ett meddelande när maten är klar.</string>
-    <string name="btn_reminder_stop">AVBRYT PÅMINNELSE</string>
-    <string name="err_mediaplayer">Ops, något gick fel när vi försökte spela låten.</string>
-
-    <!-- Settings Tabs -->
+    <string name="tv_wrong_wifi">Just nu har du ingen kontakt med köksenheten. \nKontrollera att du är ansluten till rätt WiFi.</string>
 
     <string name="tv_tab_info">Info</string>
     <string name="tv_tab_background">Bakgrund</string>
