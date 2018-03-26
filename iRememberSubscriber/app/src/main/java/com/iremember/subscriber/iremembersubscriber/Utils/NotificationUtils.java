@@ -23,21 +23,6 @@ public class NotificationUtils {
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void createNotification(String title, Context context){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel mChannel = new NotificationChannel
-                    (CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
-            mNotificationManager.createNotificationChannel(mChannel);
-        }
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentText(title)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setChannelId(CHANNEL_ID);
-
-        mNotificationManager.notify(mNotificationCount++, mBuilder.build());
-    }
-
     public void createNotificationForeground(String title, Context context, NetworkService networkService){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel mChannel = new NotificationChannel
@@ -54,9 +39,5 @@ public class NotificationUtils {
 
     public void clearNotifications() {
         mNotificationManager.cancelAll();
-    }
-
-    public void log(String msg) {
-        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

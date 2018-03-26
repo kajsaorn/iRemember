@@ -38,41 +38,46 @@ public class SettingsScreensaverFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContent = inflater.inflate(R.layout.fragment_settings_screensaver, container, false);
         initListeners();
-        showCurrentScreensaver();
         return mContent;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showCurrentScreensaver();
+        if (!hasPermissionWriteReadStorage()) {
+            askPermissionWriteReadStorage();
+        }
     }
 
     private void initListeners() {
         mContent.findViewById(R.id.btn_upload_screensaver).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                askPermissionWriteReadStorage();
-                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), REQUEST_CODE);
+            startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), REQUEST_CODE);
             }
         });
     }
 
-    private void askPermissionWriteReadStorage() {
-
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            return;
-        }
-
+    private boolean hasPermissionWriteReadStorage() {
         int permissionWrite = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         int permissionRead = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE);
 
-        boolean hasPermission = (permissionWrite == PackageManager.PERMISSION_GRANTED)
+        return (permissionWrite == PackageManager.PERMISSION_GRANTED)
                 && (permissionRead == PackageManager.PERMISSION_GRANTED);
+    }
 
+    private void askPermissionWriteReadStorage() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            return;
+        }
         String[] permissions = { Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
-        if (!hasPermission) {
-            ActivityCompat.requestPermissions(getActivity(), permissions, 101);
-        }
+        ActivityCompat.requestPermissions(getActivity(), permissions, 101);
     }
 
     @Override

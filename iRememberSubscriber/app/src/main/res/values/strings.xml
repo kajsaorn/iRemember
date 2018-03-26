@@ -35,7 +35,7 @@
 
     <string name="tv_roomname_label">Ange ett rumsnamn</string>
     <string name="tv_allow_music_label">Får musik spelas när meddelanden visas?</string>
-    <string name="tv_allow_reminders_label">Får köket skicka meddelanden till dig när maten är klar?</string>
+    <string name="tv_allow_screensaver_label">Vill du använda en bild som skärmsläckare? Om nej, så lämnas skärmen mörk i viloläge.</string>
     <string name="tv_choose_service">Välj en köksenhet</string>
     <string name="tv_no_services">Vi kunde inte hitta någon tillgänglig köksenhet.</string>
     <string name="tv_searching">Söker...</string>
@@ -43,7 +43,7 @@
     <string name="tv_discovery_intro_2">För att komma igång behöver du ge din rumsenhet ett namn.</string>
     <string name="tv_discovery_intro_3">
         Sedan söker vi efter tillgängliga köksenheter. Den köksenhet du väljer kommer
-        att kunna skicka meddelanden till dig när det är dags för frukost, lunch och middag.
+        att kunna skicka meddelanden till dig när det är dags för mat eller kaffe.
     </string>
 
     <string name="tv_restriction_label">Observera dina nuvarande inställningar</string>

@@ -12,14 +12,12 @@ import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsGeneralFra
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsInfoFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsMusicFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsScreensaverFragment;
-import com.iremember.subscriber.iremembersubscriber.Fragments.SettingsTextFragment;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private int mCurrentSetting;
     private Fragment mInfoSettingsFragment;
     private Fragment mBackgroundSettingsFragment;
-    private Fragment mTextSettingsFragment;
     private Fragment mMusicSettingsFragment;
     private Fragment mGeneralSettingsFragment;
     private Fragment mScreensaverSettingsFragment;
@@ -31,7 +29,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         mInfoSettingsFragment = new SettingsInfoFragment();
         mBackgroundSettingsFragment = new SettingsBackgroundFragment();
-        mTextSettingsFragment = new SettingsTextFragment();
         mMusicSettingsFragment = new SettingsMusicFragment();
         mGeneralSettingsFragment = new SettingsGeneralFragment();
         mScreensaverSettingsFragment = new SettingsScreensaverFragment();
@@ -68,9 +65,6 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
             case R.id.tab_background:
                 fragment = mBackgroundSettingsFragment;
-                break;
-            case R.id.tab_text:
-                fragment = mTextSettingsFragment;
                 break;
             case R.id.tab_music:
                 fragment = mMusicSettingsFragment;

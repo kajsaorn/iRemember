@@ -45,6 +45,16 @@ public class PreferenceUtils {
         return prefs.getBoolean(SharedPrefs.ALLOW_MUSIC, true);
     }
 
+    public static void writeAllowScreensaver(Context context, boolean allow) {
+        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        prefs.edit().putBoolean(SharedPrefs.ALLOW_MUSIC, allow).commit();
+    }
+
+    public static boolean readScreensaverAllowed(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        return prefs.getBoolean(SharedPrefs.ALLOW_MUSIC, true);
+    }
+
     public static void writeBackgroundColor(Context context, int color) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putInt(SharedPrefs.MY_BACKGROUND_COLOR, color).commit();
@@ -53,16 +63,6 @@ public class PreferenceUtils {
     public static int readBackgroundColor(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         return prefs.getInt(SharedPrefs.MY_BACKGROUND_COLOR, defaultBackgroundColor(context));
-    }
-
-    public static void writeTextColor(Context context, int color) {
-        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        prefs.edit().putInt(SharedPrefs.MY_TEXT_COLOR, color).commit();
-    }
-
-    public static int readTextColor(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        return prefs.getInt(SharedPrefs.MY_TEXT_COLOR, defaultTextColor(context));
     }
 
     public static void writeSongTitle(Context context, String songTitle) {

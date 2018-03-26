@@ -19,7 +19,6 @@ import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 public class ReminderActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
-    PowerManager.WakeLock mWakeLock = null;
     private BroadcastReceiver mBroadcastReceiver;
     private String mReminderText;
 
@@ -31,7 +30,6 @@ public class ReminderActivity extends AppCompatActivity {
         mReminderText = (intent != null) ? intent.getStringExtra(Broadcast.MESSAGE) : "";
 
         setBackgroundColor();
-        setTextColor();
         turnScreenOn();
     }
 
@@ -82,12 +80,6 @@ public class ReminderActivity extends AppCompatActivity {
         int backgroundColor = PreferenceUtils.readBackgroundColor(this);
         findViewById(R.id.reminder_container).setBackgroundColor(backgroundColor);
     }
-
-    private void setTextColor() {
-        int textColor = PreferenceUtils.readTextColor(this);
-        ((TextView) findViewById(R.id.tv_reminder_label)).setTextColor(textColor);
-    }
-
 
     private void displayText() {
         ((TextView) findViewById(R.id.tv_reminder_label)).setText(mReminderText);

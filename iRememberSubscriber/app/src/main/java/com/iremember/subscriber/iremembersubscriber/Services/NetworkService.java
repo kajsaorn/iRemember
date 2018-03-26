@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.iremember.subscriber.iremembersubscriber.BuildConfig;
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 import com.iremember.subscriber.iremembersubscriber.Constants.TimerConstants;
@@ -120,7 +121,7 @@ public class NetworkService extends Service {
      */
     private void setupNotificationManager() {
         mNotificationManager = new NotificationUtils(this);
-        mNotificationManager.createNotificationForeground("Foreground", getApplicationContext(), this);
+        mNotificationManager.createNotificationForeground("iRemember", getApplicationContext(), this);
     }
 
     /**
@@ -298,6 +299,7 @@ public class NetworkService extends Service {
      */
     private void removeForeground() {
         stopForeground(true);
+        mNotificationManager.clearNotifications();
     }
 
 
@@ -586,12 +588,7 @@ public class NetworkService extends Service {
                     handleConnectivityChange();
                     break;
                 case android.content.Intent.ACTION_SCREEN_OFF:
-                    int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-
-                    if (hour >= TimerConstants.SCREENSAVER_ALLOWED_START_HOUR
-                            && hour < TimerConstants.SCREENSAVER_ALLOWED_END_HOUR) {
-                        startScreensaverActivity();
-                    }
+                    handleScreenOff();
                     break;
             }
         }
@@ -608,6 +605,17 @@ public class NetworkService extends Service {
                 startConnection();
             }
             mLatestNetworkName = mNewNetworkName;
+        }
+
+        private void handleScreenOff() {
+            boolean isScreensaverAllowed = PreferenceUtils.readScreensaverAllowed(getApplicationContext());
+            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
+            if (isScreensaverAllowed
+                    && hour >= TimerConstants.SCREENSAVER_ALLOWED_START_HOUR
+                    && hour < TimerConstants.SCREENSAVER_ALLOWED_END_HOUR) {
+                startScreensaverActivity();
+            }
         }
     }
 }

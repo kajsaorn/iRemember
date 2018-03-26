@@ -37,20 +37,6 @@
             android:textSize="@dimen/tab_textsize"
             android:background="@drawable/tab_unselected"  />
 
-
-        <Button
-            android:id="@+id/tab_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onTabClick"
-            android:paddingTop="@dimen/btn_padding_medium"
-            android:paddingBottom="@dimen/btn_padding_medium"
-            android:text="@string/tv_tab_text"
-            android:textSize="@dimen/tab_textsize"
-            android:background="@drawable/tab_unselected"  />
-
-
         <Button
             android:id="@+id/tab_music"
             android:layout_width="match_parent"

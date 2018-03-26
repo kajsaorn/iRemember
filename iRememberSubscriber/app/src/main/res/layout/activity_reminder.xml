@@ -39,10 +39,9 @@
             android:layout_weight="1"
             android:layout_centerVertical="true"
             android:textAlignment="center"
+            android:textColor="@color/light"
             android:textStyle="bold"
             android:textSize="@dimen/tv_reminder" />
-
-
 
     </LinearLayout>
 </FrameLayout>

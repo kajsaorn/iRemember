@@ -8,8 +8,8 @@
     tools:context="com.iremember.subscriber.iremembersubscriber.StartActivity">
 
     <ImageButton
-        android:layout_width="@dimen/textsize_xlarge"
-        android:layout_height="@dimen/textsize_xlarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@mipmap/ic_settings"
         android:layout_gravity="top|right"
         android:onClick="onDiscoveryClick"/>

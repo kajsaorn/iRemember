@@ -36,12 +36,20 @@ public class SettingsGeneralFragment extends Fragment {
         View.OnClickListener radioButtonListener = new RadioButtonListener();
         mFragment.findViewById(R.id.rb_allow_music_yes).setOnClickListener(radioButtonListener);
         mFragment.findViewById(R.id.rb_allow_music_no).setOnClickListener(radioButtonListener);
+        mFragment.findViewById(R.id.rb_allow_screensaver_yes).setOnClickListener(radioButtonListener);
+        mFragment.findViewById(R.id.rb_allow_screensaver_no).setOnClickListener(radioButtonListener);
     }
 
     private void displayCurrentSettings() {
-        boolean musicAllowed = PreferenceUtils.readMusicAllowed(mContext);
-        ((RadioButton) mFragment.findViewById(R.id.rb_allow_music_yes)).setChecked(musicAllowed);
-        ((RadioButton) mFragment.findViewById(R.id.rb_allow_music_no)).setChecked(!musicAllowed);
+        boolean isMusicAllowed, isScreensaverAllowed;
+
+        isMusicAllowed = PreferenceUtils.readMusicAllowed(mContext);
+        isScreensaverAllowed = PreferenceUtils.readScreensaverAllowed(mContext);
+
+        ((RadioButton) mFragment.findViewById(R.id.rb_allow_music_yes)).setChecked(isMusicAllowed);
+        ((RadioButton) mFragment.findViewById(R.id.rb_allow_music_no)).setChecked(!isMusicAllowed);
+        ((RadioButton) mFragment.findViewById(R.id.rb_allow_screensaver_yes)).setChecked(isScreensaverAllowed);
+        ((RadioButton) mFragment.findViewById(R.id.rb_allow_screensaver_no)).setChecked(!isScreensaverAllowed);
     }
 
     private class RadioButtonListener implements View.OnClickListener {
@@ -56,6 +64,14 @@ public class SettingsGeneralFragment extends Fragment {
                     break;
                 case R.id.rb_allow_music_no:
                     PreferenceUtils.writeAllowMusic(mContext, false);
+                    PreferenceUtils.showUserConfirmation(mContext);
+                    break;
+                case R.id.rb_allow_screensaver_yes:
+                    PreferenceUtils.writeAllowScreensaver(mContext, true);
+                    PreferenceUtils.showUserConfirmation(mContext);
+                    break;
+                case R.id.rb_allow_screensaver_no:
+                    PreferenceUtils.writeAllowScreensaver(mContext, false);
                     PreferenceUtils.showUserConfirmation(mContext);
                     break;
             }
