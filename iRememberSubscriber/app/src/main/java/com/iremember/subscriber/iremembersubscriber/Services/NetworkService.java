@@ -17,6 +17,7 @@ import android.util.Log;
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 import com.iremember.subscriber.iremembersubscriber.Constants.TimerConstants;
+import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.ReminderActivity;
 import com.iremember.subscriber.iremembersubscriber.ScreenSaverActivity;
@@ -393,14 +394,13 @@ public class NetworkService extends Service {
         private void handleCommand(String command, InetAddress host, int port) throws IOException {
             switch (command) {
                 case Protocol.COMMAND_COFFEE:
-                    handleReminderCommand(getString(R.string.reminder_coffee), host, port);
+                    handleReminderCommand(UserMessage.REMINDER_COFFE, host, port);
                     break;
                 case Protocol.COMMAND_MIDDAY:
-                    handleReminderCommand(getString(R.string.reminder_midday), host, port);
-
+                    handleReminderCommand(UserMessage.REMINDER_MIDDAY, host, port);
                     break;
                 case Protocol.COMMAND_SUPPER:
-                    handleReminderCommand(getString(R.string.reminder_supper), host, port);
+                    handleReminderCommand(UserMessage.REMINDER_SUPPER, host, port);
                     break;
                 case Protocol.COMMAND_REGISTERED:
                     handleRegistrationConfirmation();

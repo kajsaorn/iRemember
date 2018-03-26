@@ -85,16 +85,6 @@ public class PreferenceUtils {
         return prefs.getString(SharedPrefs.MY_SCREENSAVER, "");
     }
 
-    public static void writeMasterNetworkName(Context context, String network) {
-        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        prefs.edit().putString(SharedPrefs.MASTER_NETWORK, network).commit();
-    }
-
-    public static String readMasterNetworkName(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        return prefs.getString(SharedPrefs.MASTER_NETWORK, "");
-    }
-
     public static int defaultBackgroundColor(Context context) {
         return ResourcesCompat.getColor(context.getResources(), R.color.default_reminder_bg_color, null);
     }

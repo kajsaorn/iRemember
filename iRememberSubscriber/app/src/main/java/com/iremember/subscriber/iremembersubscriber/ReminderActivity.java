@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
-import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
+import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
 
 public class ReminderActivity extends AppCompatActivity {
@@ -21,11 +21,14 @@ public class ReminderActivity extends AppCompatActivity {
     private MediaPlayer mMediaPlayer;
     PowerManager.WakeLock mWakeLock = null;
     private BroadcastReceiver mBroadcastReceiver;
+    private String mReminderText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
+        Intent intent = getIntent();
+        mReminderText = (intent != null) ? intent.getStringExtra(Broadcast.MESSAGE) : "";
 
         setBackgroundColor();
         setTextColor();
@@ -42,13 +45,12 @@ public class ReminderActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        String reminderText = getTextFromIntent();
         boolean isMusicAllowed = PreferenceUtils.readMusicAllowed(this);
-
         if (isMusicAllowed) {
             startMediaPlayer();
         }
-        displayText(reminderText);
+        displayIcon();
+        displayText();
         registerBroadcastReceiver();
     }
 
@@ -86,13 +88,23 @@ public class ReminderActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_reminder_label)).setTextColor(textColor);
     }
 
-    private String getTextFromIntent() {
-        Intent intent = getIntent();
-        return (intent != null) ? intent.getStringExtra(Broadcast.MESSAGE) : "";
+
+    private void displayText() {
+        ((TextView) findViewById(R.id.tv_reminder_label)).setText(mReminderText);
     }
 
-    private void displayText(String text) {
-        ((TextView) findViewById(R.id.tv_reminder_label)).setText(text);
+    private void displayIcon() {
+        switch (mReminderText) {
+            case UserMessage.REMINDER_COFFE:
+                findViewById(R.id.ivCoffee).setVisibility(View.VISIBLE);
+                break;
+            case UserMessage.REMINDER_MIDDAY:
+                findViewById(R.id.ivMeal).setVisibility(View.VISIBLE);
+                break;
+            case UserMessage.REMINDER_SUPPER:
+                findViewById(R.id.ivMeal).setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
     private void startMediaPlayer() {

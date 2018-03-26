@@ -52,6 +52,7 @@ public class StartActivity extends AppCompatActivity {
      * room name and an iRemember Master Service name, the network service is started.
      */
     public void onStartClick(View view) {
+
         String mRoomName = PreferenceUtils.readRoomName(this);
         String mServiceName = PreferenceUtils.readMasterServiceName(this);
 

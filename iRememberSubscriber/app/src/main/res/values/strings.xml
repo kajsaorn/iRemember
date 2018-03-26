@@ -1,10 +1,5 @@
 <resources>
 
-    <!-- Reminder Labels -->
-    <string name="reminder_coffee">Nu serveras det kaffe i köket.</string>
-    <string name="reminder_midday">Nu serveras det middag i köket.</string>
-    <string name="reminder_supper">Nu serveras det kvällsmat i köket.</string>
-
     <!-- General -->
 
     <string name="app_name">iRememberSubscriber</string>
@@ -27,6 +22,7 @@
     <string name="tv_background_label">Din nuvarande bakgrundsfärg på meddelanden</string>
     <string name="tv_text_label">Din nuvarande textfärg på meddelanden</string>
     <string name="tv_music_label">Din nuvarande låt för meddelanden</string>
+    <string name="tv_screensaver_label">Din nuvarande skärmsläckare</string>
 
     <string name="tv_info_label_1">
         iRemember är en applikation som hjälper köket att skicka meddelanden till dig när maten är klar.

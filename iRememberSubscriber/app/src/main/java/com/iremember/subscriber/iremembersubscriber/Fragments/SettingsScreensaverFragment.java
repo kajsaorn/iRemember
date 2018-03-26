@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,10 +15,12 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.Utils.PreferenceUtils;
@@ -34,6 +38,7 @@ public class SettingsScreensaverFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContent = inflater.inflate(R.layout.fragment_settings_screensaver, container, false);
         initListeners();
+        showCurrentScreensaver();
         return mContent;
     }
 
@@ -86,29 +91,23 @@ public class SettingsScreensaverFragment extends Fragment {
             String imagePath = cursor.getString(columnIndex);
             cursor.close();
 
-            Log.d("Screensaver", "File path: " + imagePath);
             PreferenceUtils.writeScreensaverPath(getContext(), imagePath);
+            PreferenceUtils.showUserConfirmation(getActivity());
+            showCurrentScreensaver();
 
         }
     }
 
-    private void saveImage(Bitmap image) {
+    private void showCurrentScreensaver() {
+        String imagePath = PreferenceUtils.readScreensaverPath(getActivity());
+        ImageView ivScreensaver = (ImageView) mContent.findViewById(R.id.img_screensaver);
+        Bitmap mBitmap = BitmapFactory.decodeFile(imagePath);
 
-
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(image.toString());
-            image.compress(Bitmap.CompressFormat.PNG, 100, out);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (mBitmap != null) {
+            ivScreensaver.setImageBitmap(mBitmap);
+        } else {
+            Drawable mBackground = ResourcesCompat.getDrawable(getResources(), R.drawable.screensaver, null);
+            ivScreensaver.setBackground(mBackground);
         }
     }
 }

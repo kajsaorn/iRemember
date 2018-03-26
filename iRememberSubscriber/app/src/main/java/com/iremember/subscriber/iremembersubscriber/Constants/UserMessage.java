@@ -14,4 +14,8 @@ public class UserMessage {
     public static final String MISSING_ROOM_NAME = "Vänligen ange ett namn för ditt rum.";
     public static final String MISSING_SERVICE_NAME = "Vänligen ange en köksenhet att ansluta till.";
     public static final String WIFI_STATE_CHANGED = "Något hände med ditt WiFi. Vi försöker hitta köksenheten igen.";
+    public static final String REMINDER_COFFE = "Nu serveras det kaffe i köket.";
+    public static final String REMINDER_MIDDAY = "Nu serveras det middag i köket.";
+    public static final String REMINDER_SUPPER = "Nu serveras det kvällsmat i köket.";
+
 }

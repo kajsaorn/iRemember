@@ -30,14 +30,16 @@
     <dimen name="textsize_medium">15sp</dimen>
     <dimen name="textsize_small">10sp</dimen>
 
-    <dimen name="tv_reminder">50sp</dimen>
+    <dimen name="tv_reminder">30sp</dimen>
     <dimen name="tv_content_margin">25dp</dimen>
     <dimen name="tv_content_width">250dp</dimen>
 
-    <!-- Shapes -->
+    <!-- Shapes and Images-->
     <dimen name="setting_circle_diameter">80dp</dimen>
     <dimen name="border_size_half">1dp</dimen>
     <dimen name="border_size">2dp</dimen>
+    <dimen name="img_screensaver_thumbnail">160dp</dimen>
+    <dimen name="img_reminder">300dp</dimen>
 
     <!-- Settings -->
     <dimen name="tab_textsize">10sp</dimen>
