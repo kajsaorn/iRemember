@@ -12,10 +12,10 @@
 
     <string name="tv_tab_info">Info</string>
     <string name="tv_tab_background">Bakgrund</string>
-    <string name="tv_tab_text">Text</string>
     <string name="tv_tab_music">Musik</string>
     <string name="tv_tab_general">Allmänt</string>
     <string name="tv_tab_screensaver">Skärmsläckare</string>
+    <string name="tv_click_to_close">Tryck på skärmen för att ta bort meddelandet.</string>
 
     <!-- Settings Labels -->
 

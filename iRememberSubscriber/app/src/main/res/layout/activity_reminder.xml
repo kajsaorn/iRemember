@@ -43,5 +43,16 @@
             android:textStyle="bold"
             android:textSize="@dimen/tv_reminder" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_centerVertical="true"
+            android:textAlignment="center"
+            android:text="@string/tv_click_to_close"
+            android:textColor="@color/light"
+            android:textStyle="bold"
+            android:textSize="@dimen/textsize_medium" />
+
     </LinearLayout>
 </FrameLayout>
