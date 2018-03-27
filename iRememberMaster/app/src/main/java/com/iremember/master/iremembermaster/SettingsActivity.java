@@ -43,6 +43,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         if ((mMasterName != null) && (!mMasterName.equals(""))) {
             PreferenceUtils.writeMasterName(this, mMasterName);
+            Toast.makeText(this, mEtMasterName.getText().toString() + " " +
+                    getString(R.string.master_name_saved), Toast.LENGTH_SHORT).show();
         } else {
             showUserMessage(getString(R.string.toast_mastername_invalid));
             return;
@@ -73,14 +75,21 @@ public class SettingsActivity extends AppCompatActivity {
      */
     private void startNetworkService() {
         log("startNetworkService()");
-        Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
-        netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Command.REGISTER_COMMAND);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(netWorkServiceIntent);
-            updateBtnAndServiceStatus(R.string.btn_stop_master, true);
+
+        if (mEtMasterName != null && !mEtMasterName.getText().toString().isEmpty()) {
+            log("fortsätter...");
+            Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
+            netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Command.REGISTER_COMMAND);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(netWorkServiceIntent);
+                updateBtnAndServiceStatus(R.string.btn_stop_master, true);
+            } else {
+                startService(netWorkServiceIntent);
+                updateBtnAndServiceStatus(R.string.btn_stop_master, true);
+            }
+
         } else {
-            startService(netWorkServiceIntent);
-            updateBtnAndServiceStatus(R.string.btn_stop_master, true);
+            Toast.makeText(this, R.string.set_master_name, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -120,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity {
      * Display message to user as Android Toast.
      */
     private void log(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Log.d("MainActivity", message);
     }
 

@@ -8,6 +8,7 @@ import android.net.nsd.NsdServiceInfo;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.iremember.master.iremembermaster.CommandHandler;
 import com.iremember.master.iremembermaster.Constants.Command;
@@ -67,7 +68,6 @@ public class NetworkService extends Service {
         removeWiFiLock();
         removeMulticastLock();
         removeForeground();
-        stopKeepingScreenAlive();
     }
 
     /**
@@ -77,16 +77,12 @@ public class NetworkService extends Service {
         acquireWiFiLock();
         acquireMulticastLock();
         registerAsForegroundService();
-        keepScreenAlive();
         initializeSubscriberRegistrationSocket();
         startSubscriberRegistrationThread();
         initializeRegistrationListener();
         registerNSDService();
     }
 
-    private void keepScreenAlive() {
-        
-    }
 
     /**
      * Unregister NSD service so the master is not discoverable anymore
@@ -183,9 +179,8 @@ public class NetworkService extends Service {
         serviceInfo.setPort(localPort);
 
         mNsdManager = (NsdManager) getApplicationContext().getSystemService(Context.NSD_SERVICE);
-
         mNsdManager.registerService(
-                serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
+                    serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
     }
 
     private void acquireWiFiLock() {

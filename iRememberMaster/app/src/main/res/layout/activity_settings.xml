@@ -17,6 +17,7 @@
         android:padding="@dimen/btn_padding_large"
         android:textAlignment="center"
         android:textSize="@dimen/et_text_size"
+        android:textStyle="bold"
         android:singleLine="true"
         android:maxLength="20"
         android:visibility="visible" />

@@ -15,4 +15,6 @@
     <string name="btn_act_reg_sub">Registredade rumsenheter</string>
     <string name="btn_update_reg_sub">Uppdatera</string>
     <string name="btn_settings_menu">Tillbaka till inställningar</string>
+    <string name="set_master_name">Hoppsan, du måste ange namn för köksenheten</string>
+    <string name="master_name_saved">sparat</string>
 </resources>
