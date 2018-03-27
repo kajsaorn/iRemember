@@ -22,10 +22,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@android:color/holo_green_light"
+            android:background="@color/androidGreen"
             android:textColor="@android:color/background_light"
             android:padding="@dimen/btn_padding"
             android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold"
             android:onClick="onGoToMenuClick"
             android:text="@string/btn_settings_menu" />
 
@@ -37,8 +38,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@android:color/holo_green_light"
+            android:background="@color/androidGreen"
             android:textColor="@android:color/background_light"
+            android:textStyle="bold"
             android:onClick="onUppdateClick"
             android:layout_below="@id/btn_to_master_menu"
             android:text="@string/btn_update_reg_sub" />
@@ -51,6 +53,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/btn_margin"
             android:textSize="@dimen/tv_text_size"
+            android:textStyle="bold"
             android:ems="10"
             android:layout_below="@+id/btn_uppdatera"
             android:inputType="textMultiLine"/>

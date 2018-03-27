@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.iremember.master.iremembermaster.Constants.Command;
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
@@ -31,11 +34,20 @@ public class MainActivity extends AppCompatActivity {
         setDozeMode();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+    }
+
     public void onCoffeeClick(View view) {
         Intent netWorkServiceIntent = new Intent(this, NetworkService.class);
         netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Protocol.COMMAND_COFFEE +
                 "$" + PreferenceUtils.readMasterName(this));
         startService(netWorkServiceIntent);
+        Toast.makeText(this, R.string.btn_coffee, Toast.LENGTH_SHORT).show();
     }
 
     public void onLunchClick(View view) {
@@ -43,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Protocol.COMMAND_MIDDAY +
                 "$" + PreferenceUtils.readMasterName(this));
         startService(netWorkServiceIntent);
+        Toast.makeText(this, R.string.btn_lunch, Toast.LENGTH_SHORT).show();
     }
 
     public void onDinnerClick(View view) {
@@ -50,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Protocol.COMMAND_SUPPER +
                 "$" + PreferenceUtils.readMasterName(this));
         startService(netWorkServiceIntent);
+        Toast.makeText(this, R.string.btn_dinner, Toast.LENGTH_SHORT).show();
     }
 
     public void onSettingsClick(View view) {
@@ -76,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void log(String msg) {
         Log.d("MainActivity", msg);
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
 }
