@@ -18,7 +18,6 @@ import com.iremember.master.iremembermaster.Utils.PreferenceUtils;
 
 public class SettingsActivity extends AppCompatActivity {
     private EditText mEtMasterName;
-    private boolean networkServiceIsRunning = false;
     Button btnStartMaster;
 
     @Override
@@ -62,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
      * @param view
      */
     public void onStartClick(View view) {
-        if (!networkServiceIsRunning) {
+        if (!isServiceRunning(NetworkService.class)) {
             startNetworkService();
         } else {
             stopNetworkService();
@@ -97,8 +96,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void updateBtnAndServiceStatus(int btnText, boolean runStatus) {
         btnStartMaster.setText(btnText);
-        networkServiceIsRunning = runStatus;
-        PreferenceUtils.writeNetworkServiceRunState(this, runStatus);
     }
 
     public void onGoToMenuClick(View view) {

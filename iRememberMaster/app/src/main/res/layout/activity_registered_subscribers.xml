@@ -24,12 +24,16 @@
             android:layout_centerHorizontal="true"
             android:background="@android:color/holo_green_light"
             android:textColor="@android:color/background_light"
+            android:padding="@dimen/btn_padding"
+            android:textSize="@dimen/btn_text_size"
             android:onClick="onGoToMenuClick"
             android:text="@string/btn_settings_menu" />
 
         <Button
             android:id="@+id/btn_uppdatera"
             android:layout_marginTop="20dp"
+            android:padding="@dimen/btn_padding"
+            android:textSize="@dimen/btn_text_size"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
