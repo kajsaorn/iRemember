@@ -25,6 +25,8 @@
             android:background="@android:color/holo_green_light"
             android:textColor="@android:color/background_light"
             android:onClick="onAnsweredClick"
+            android:padding="@dimen/btn_padding"
+            android:textSize="@dimen/btn_text_size"
             android:text="@string/btn_master_menu" />
 
         <TextView

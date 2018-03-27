@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_master_name"
-        android:padding="@dimen/padding_medium"
+        android:padding="@dimen/btn_padding_large"
         android:textAlignment="center"
         android:textSize="@dimen/et_text_size"
         android:singleLine="true"
@@ -27,10 +27,10 @@
         android:layout_height="wrap_content"
         android:background="@color/androidGreen"
         android:onClick="onStoreClick"
-        android:padding="@dimen/btn_padding_large"
+        android:padding="@dimen/btn_padding"
         android:text="@string/btn_store_master_name"
         android:textColor="@android:color/background_light"
-        android:textSize="@dimen/btn_textsize_large"
+        android:textSize="@dimen/btn_text_size"
         android:textStyle="bold"
         android:visibility="visible" />
 
@@ -41,10 +41,10 @@
         android:layout_height="wrap_content"
         android:background="@color/androidGreen"
         android:onClick="onStartClick"
-        android:padding="@dimen/btn_padding_large"
+        android:padding="@dimen/btn_padding"
         android:text="@string/btn_start_master"
         android:textColor="@android:color/background_light"
-        android:textSize="@dimen/btn_textsize_large"
+        android:textSize="@dimen/btn_text_size"
         android:textStyle="bold"
         android:visibility="visible" />
 
@@ -55,10 +55,10 @@
         android:layout_height="wrap_content"
         android:background="@color/androidGreen"
         android:onClick="onRegSubClick"
-        android:padding="@dimen/btn_padding_large"
+        android:padding="@dimen/btn_padding"
         android:text="@string/btn_act_reg_sub"
         android:textColor="@android:color/background_light"
-        android:textSize="@dimen/btn_textsize_large"
+        android:textSize="@dimen/btn_text_size"
         android:textStyle="bold"
         android:visibility="visible" />
 
@@ -69,10 +69,10 @@
         android:layout_height="wrap_content"
         android:background="@color/androidGreen"
         android:onClick="onGoToMenuClick"
-        android:padding="@dimen/btn_padding_large"
+        android:padding="@dimen/btn_padding"
         android:text="@string/btn_master_menu"
         android:textColor="@android:color/background_light"
-        android:textSize="@dimen/btn_textsize_large"
+        android:textSize="@dimen/btn_text_size"
         android:textStyle="bold"
         android:visibility="visible" />
 

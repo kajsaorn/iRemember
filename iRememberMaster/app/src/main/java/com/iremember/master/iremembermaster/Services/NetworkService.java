@@ -30,6 +30,7 @@ public class NetworkService extends Service {
     private NsdManager.RegistrationListener mRegistrationListener;
     WifiManager.WifiLock wifiLock = null;
     WifiManager wifiManager = null;
+    WifiManager.MulticastLock wifiMulticastLock = null;
 
     public NetworkService() {
     }
@@ -64,7 +65,9 @@ public class NetworkService extends Service {
         unregisterNSD();
         closeDatagramSockets();
         removeWiFiLock();
+        removeMulticastLock();
         removeForeground();
+        stopKeepingScreenAlive();
     }
 
     /**
@@ -72,11 +75,17 @@ public class NetworkService extends Service {
      */
     private void registerTheService() {
         acquireWiFiLock();
+        acquireMulticastLock();
         registerAsForegroundService();
+        keepScreenAlive();
         initializeSubscriberRegistrationSocket();
         startSubscriberRegistrationThread();
         initializeRegistrationListener();
         registerNSDService();
+    }
+
+    private void keepScreenAlive() {
+        
     }
 
     /**
@@ -94,6 +103,13 @@ public class NetworkService extends Service {
 
     private void removeWiFiLock() {
         wifiLock.release();
+    }
+
+    private void removeMulticastLock() {
+        if (wifiMulticastLock != null) {
+            wifiMulticastLock.release();
+            wifiMulticastLock = null;
+        }
     }
 
     private void removeForeground() {
@@ -179,6 +195,13 @@ public class NetworkService extends Service {
             wifiLock = wifiManager.createWifiLock("0 wifi lock");
             wifiLock.acquire();
         }
+    }
+
+    private void acquireMulticastLock() {
+// Acquire multicast lock
+        wifiMulticastLock = wifiManager.createMulticastLock("multicastLock");
+        wifiMulticastLock.setReferenceCounted(true);
+        wifiMulticastLock.acquire();
     }
 
     @Override
