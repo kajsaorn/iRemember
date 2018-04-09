@@ -23,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/textsize_large"
-            android:text="@string/tv_text_label"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/selected_color" />
 
@@ -34,19 +33,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:stretchColumns="*" >
-
-        <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c1" android:layout_height="match_parent"/>
-            <TextView android:background="@color/c6" android:layout_height="match_parent"/>
-            <TextView android:background="@color/c11" android:layout_height="match_parent"/>
-            <TextView android:background="@color/c16" android:layout_height="match_parent"/>
-            <TextView android:background="@color/c21" android:layout_height="match_parent"/>
-            <TextView android:background="@color/c26" android:layout_height="match_parent"/>
-            <TextView android:background="@color/c31" android:layout_height="match_parent"/>
-            <TextView android:background="@color/c36" android:layout_height="match_parent"/>
-            <TextView android:background="@color/c41" android:layout_height="match_parent"/>
-            <TextView android:background="@color/c46" android:layout_height="match_parent"/>
-        </TableRow>
 
         <TableRow android:layout_weight="1">
             <TextView android:background="@color/c2" android:layout_height="match_parent"/>

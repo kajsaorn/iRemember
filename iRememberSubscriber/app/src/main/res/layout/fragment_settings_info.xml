@@ -13,16 +13,14 @@
         android:gravity="center_horizontal"
         android:text="@string/tv_info_label_1"
         android:textSize="@dimen/textsize_large"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/border_size_half"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_marginBottom="@dimen/margin_large"
-        android:background="@color/dark"
-        />
+        android:background="@color/dark" />
 
     <TextView
         android:layout_width="match_parent"
@@ -30,6 +28,6 @@
         android:gravity="center_horizontal"
         android:text="@string/tv_info_label_2"
         android:textSize="@dimen/textsize_large"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
+
 </LinearLayout>

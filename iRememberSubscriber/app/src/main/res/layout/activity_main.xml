@@ -76,6 +76,6 @@
         android:text="@string/tv_wrong_wifi"
         android:textAlignment="center"
         android:textSize="@dimen/textsize_medium"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

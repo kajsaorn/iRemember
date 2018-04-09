@@ -75,6 +75,7 @@ public class NetworkService extends Service {
         startServiceDiscovery();
         setServiceDiscoveryTimer();
         setupNotificationManager();
+        registerBroadcastReceiver();
         return START_NOT_STICKY;
     }
 
@@ -85,6 +86,7 @@ public class NetworkService extends Service {
         removeWiFiLock();
         removeForeground();
         BroadcastUtils.broadcastAction(Broadcast.NETWORK_SERVICE_OFF, this);
+        unregisterBroadcastReceiver();
         super.onDestroy();
     }
 
@@ -233,7 +235,6 @@ public class NetworkService extends Service {
      */
     private void startConnection() {
         try {
-            registerBroadcastReceiver();
             mConnectionHandler = new ConnectionHandler();
             mConnectionHandler.start();
         } catch (SocketException e) {
@@ -248,7 +249,6 @@ public class NetworkService extends Service {
     private void closeConnection() {
         if (mConnectionHandler != null) {
             mConnectionHandler.closeConnection();
-            unregisterBroadcastReceiver();
         }
     }
 
@@ -417,9 +417,15 @@ public class NetworkService extends Service {
         private void handleReminderCommand(String reminderText, InetAddress host, int port) {
             setRecentlyReceived(true);
             sendConfirmationMessage(host, port);
-            stopScreensaverActivity();
-            startReminderActivity(reminderText);
-            setReminderTimer();
+
+            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
+            if (hour >= TimerConstants.REMINDER_ALLOWED_START_HOUR
+                    && hour < TimerConstants.REMINDER_ALLOWED_END_HOUR) {
+                stopScreensaverActivity();
+                startReminderActivity(reminderText);
+                setReminderTimer();
+            }
         }
 
         /**
