@@ -23,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/textsize_large"
-            android:text="@string/tv_text_label"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/selected_color" />
 
@@ -37,7 +36,6 @@
         android:id="@+id/color_table">
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c1" android:layout_height="match_parent" />
             <TextView android:background="@color/c2" android:layout_height="match_parent"/>
             <TextView android:background="@color/c3" android:layout_height="match_parent"/>
             <TextView android:background="@color/c4" android:layout_height="match_parent"/>
@@ -45,7 +43,6 @@
         </TableRow>
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c6" android:layout_height="match_parent"/>
             <TextView android:background="@color/c7" android:layout_height="match_parent"/>
             <TextView android:background="@color/c8" android:layout_height="match_parent"/>
             <TextView android:background="@color/c9" android:layout_height="match_parent"/>
@@ -53,7 +50,6 @@
         </TableRow>
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c11" android:layout_height="match_parent"/>
             <TextView android:background="@color/c12" android:layout_height="match_parent"/>
             <TextView android:background="@color/c13" android:layout_height="match_parent"/>
             <TextView android:background="@color/c14" android:layout_height="match_parent"/>
@@ -61,7 +57,6 @@
         </TableRow>
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c16" android:layout_height="match_parent"/>
             <TextView android:background="@color/c17" android:layout_height="match_parent"/>
             <TextView android:background="@color/c18" android:layout_height="match_parent"/>
             <TextView android:background="@color/c19" android:layout_height="match_parent"/>
@@ -69,7 +64,6 @@
         </TableRow>
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c21" android:layout_height="match_parent"/>
             <TextView android:background="@color/c22" android:layout_height="match_parent"/>
             <TextView android:background="@color/c23" android:layout_height="match_parent"/>
             <TextView android:background="@color/c24" android:layout_height="match_parent"/>
@@ -77,7 +71,6 @@
         </TableRow>
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c26" android:layout_height="match_parent"/>
             <TextView android:background="@color/c27" android:layout_height="match_parent"/>
             <TextView android:background="@color/c28" android:layout_height="match_parent"/>
             <TextView android:background="@color/c29" android:layout_height="match_parent"/>
@@ -85,7 +78,6 @@
         </TableRow>
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c31" android:layout_height="match_parent"/>
             <TextView android:background="@color/c32" android:layout_height="match_parent"/>
             <TextView android:background="@color/c33" android:layout_height="match_parent"/>
             <TextView android:background="@color/c34" android:layout_height="match_parent"/>
@@ -93,7 +85,6 @@
         </TableRow>
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c36" android:layout_height="match_parent"/>
             <TextView android:background="@color/c37" android:layout_height="match_parent"/>
             <TextView android:background="@color/c38" android:layout_height="match_parent"/>
             <TextView android:background="@color/c39" android:layout_height="match_parent"/>
@@ -101,7 +92,6 @@
         </TableRow>
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c41" android:layout_height="match_parent"/>
             <TextView android:background="@color/c42" android:layout_height="match_parent"/>
             <TextView android:background="@color/c43" android:layout_height="match_parent"/>
             <TextView android:background="@color/c44" android:layout_height="match_parent"/>
@@ -109,7 +99,6 @@
         </TableRow>
 
         <TableRow android:layout_weight="1">
-            <TextView android:background="@color/c46" android:layout_height="match_parent"/>
             <TextView android:background="@color/c47" android:layout_height="match_parent"/>
             <TextView android:background="@color/c48" android:layout_height="match_parent"/>
             <TextView android:background="@color/c49" android:layout_height="match_parent"/>
@@ -117,5 +106,4 @@
         </TableRow>
 
     </TableLayout>
-
 </LinearLayout>
