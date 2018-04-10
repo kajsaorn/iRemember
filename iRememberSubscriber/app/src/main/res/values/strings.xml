@@ -4,7 +4,8 @@
 
     <string name="app_name">iRememberSubscriber</string>
     <string name="btn_start">STARTA</string>
-    <string name="et_room_name_hint">"Ditt rumsnamn"</string>
+    <string name="et_room_name_hint">Ditt rumsnamn</string>
+    <string name="et_ip_address_hint">Köksenhetens IP-adress</string>
     <string name="btn_disconnect">STÄNG AV</string>
     <string name="btn_settings">INSTÄLLNINGAR</string>
     <string name="tv_main_label">Här kommer det att visas ett meddelande när maten är klar.</string>
@@ -59,6 +60,8 @@
     <string name="btn_search_again">Sök igen</string>
     <string name="btn_continue">Fortsätt</string>
     <string name="btn_back">Tillbaka</string>
+    <string name="btn_input_ip">Skriv in manuellt</string>
+    <string name="btn_save_ip">Spara IP-adress</string>
     <string name="btn_upload_screensaver">Hämta bild från mitt galleri</string>
 
     <!-- Notifications -->
