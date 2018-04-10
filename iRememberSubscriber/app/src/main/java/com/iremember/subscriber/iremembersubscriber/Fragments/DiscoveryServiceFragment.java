@@ -8,11 +8,11 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +28,8 @@ public class DiscoveryServiceFragment extends Fragment {
     private View mContent;
     private OnServiceClickListener mListener;
     private DiscoveryMessageReceiver mBroadcastReceiver;
-    private View tvSearching, tvNoServices, btnSearchServices, btnBack;
+    private View tvSearching, tvNoServices, btnSearchServices, btnBack, btnInputIp, btnSaveIp;
+    private EditText etIpAddress;
     private LinearLayout layoutServices;
 
     @Override
@@ -56,7 +57,7 @@ public class DiscoveryServiceFragment extends Fragment {
     public interface OnServiceClickListener {
         void onServiceSaved();
         void onSearchServices();
-        void onBackClick();
+        void onFinish();
     }
 
     @Override
@@ -75,7 +76,21 @@ public class DiscoveryServiceFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onBackClick();
+                mListener.onFinish();
+            }
+        });
+        btnInputIp.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                showIpInputField();
+            }
+        });
+
+        btnSaveIp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveIpAddress();
             }
         });
     }
@@ -83,16 +98,48 @@ public class DiscoveryServiceFragment extends Fragment {
     private void initComponents() {
         tvSearching = mContent.findViewById(R.id.tv_searching);
         tvNoServices = mContent.findViewById(R.id.tv_no_services);
+        etIpAddress = mContent.findViewById(R.id.et_ip_address);
         btnSearchServices = mContent.findViewById(R.id.btn_search_services);
         btnBack = mContent.findViewById(R.id.btn_back);
+        btnInputIp = mContent.findViewById(R.id.btn_input_ip);
+        btnSaveIp = mContent.findViewById(R.id.btn_save_ip);
         layoutServices = mContent.findViewById(R.id.container_services);
 
         tvSearching.setVisibility(View.VISIBLE);
         tvNoServices.setVisibility(View.GONE);
+        etIpAddress.setVisibility(View.GONE);
         btnSearchServices.setVisibility(View.GONE);
         btnBack.setVisibility(View.GONE);
+        btnInputIp.setVisibility(View.GONE);
+        btnSaveIp.setVisibility(View.GONE);
         layoutServices.setVisibility(View.GONE);
         layoutServices.removeAllViews();
+    }
+
+    private void showIpInputField() {
+        layoutServices.setVisibility(View.GONE);
+        btnSearchServices.setVisibility(View.GONE);
+        btnInputIp.setVisibility(View.GONE);
+        btnSaveIp.setVisibility(View.VISIBLE);
+        etIpAddress.setVisibility(View.VISIBLE);
+
+        String mMasterServiceIp = PreferenceUtils.readMasterServiceIp(getContext());
+        if (mMasterServiceIp != null) {
+            etIpAddress.setText(mMasterServiceIp);
+        }
+    }
+
+    private void saveIpAddress() {
+        String ipAddress = etIpAddress.getText().toString();
+
+        if (ipAddress == null && ipAddress.equals("")) {
+            showUserMessage(UserMessage.MISSING_IP_ADDRESS);
+            return;
+        }
+        PreferenceUtils.writeMasterIpAddress(getContext(), ipAddress);
+        PreferenceUtils.writeMasterServiceName(getContext(), null);
+        showUserMessage(UserMessage.SAVED_MASTER_SERVICE);
+        mListener.onFinish();
     }
 
     private void onDiscoveryDone() {
@@ -100,6 +147,7 @@ public class DiscoveryServiceFragment extends Fragment {
         tvSearching.setVisibility(View.GONE);
         btnSearchServices.setVisibility(View.VISIBLE);
         btnBack.setVisibility(View.VISIBLE);
+        btnInputIp.setVisibility(View.VISIBLE);
 
         int visibility = (layoutServices.getChildCount() == 0) ? View.VISIBLE : View.GONE;
         tvNoServices.setVisibility(visibility);
@@ -122,7 +170,7 @@ public class DiscoveryServiceFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 PreferenceUtils.writeMasterServiceName(getContext(), service);
-                showUserMessage(UserMessage.SAVED_SERVICE_NAME);
+                showUserMessage(UserMessage.SAVED_MASTER_SERVICE);
                 mListener.onServiceSaved();
             }
         });
@@ -130,7 +178,7 @@ public class DiscoveryServiceFragment extends Fragment {
     }
 
     private View createListItemSeparator() {
-        int margin = (int) getResources().getDimension(R.dimen.margin_medium);
+        int margin = (int) getResources().getDimension(R.dimen.margin_small);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
         params.setMargins(0, margin, 0, margin);
 

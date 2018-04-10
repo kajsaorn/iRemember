@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 case Broadcast.CONNECTION_SUCCESS:
                     hideWifiErrorMessage();
                     break;
-                case Broadcast.CONNECTION_FAILURE:
+                case Broadcast.CONNECTION_SOCKET_FAILURE:
                     showUserMessage(UserMessage.CONNECTION_FAILURE);
                     break;
                 case Broadcast.DISCONNECTION_FAILURE:

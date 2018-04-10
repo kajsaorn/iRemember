@@ -26,6 +26,17 @@ public class PreferenceUtils {
         return prefs.getString(SharedPrefs.MASTER_SERVICE, null);
     }
 
+    public static void writeMasterIpAddress(Context context, String ip) {
+        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        prefs.edit().putString(SharedPrefs.MASTER_IP, ip).commit();
+        Log.d("PreferenceUtils", "Saved MasterIp: " + ip);
+    }
+
+    public static String readMasterServiceIp(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        return prefs.getString(SharedPrefs.MASTER_IP, null);
+    }
+
     public static void writeRoomName(Context context, String roomName) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putString(SharedPrefs.MY_ROOM_NAME, roomName).commit();

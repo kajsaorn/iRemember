@@ -88,7 +88,7 @@ public class DiscoveryActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onBackClick() {
+    public void onFinish() {
         finish();
     }
 }

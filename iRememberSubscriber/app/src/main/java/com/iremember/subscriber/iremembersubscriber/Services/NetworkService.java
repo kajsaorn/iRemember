@@ -14,12 +14,10 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.iremember.subscriber.iremembersubscriber.BuildConfig;
 import com.iremember.subscriber.iremembersubscriber.Constants.Broadcast;
 import com.iremember.subscriber.iremembersubscriber.Constants.Protocol;
 import com.iremember.subscriber.iremembersubscriber.Constants.TimerConstants;
 import com.iremember.subscriber.iremembersubscriber.Constants.UserMessage;
-import com.iremember.subscriber.iremembersubscriber.R;
 import com.iremember.subscriber.iremembersubscriber.ReminderActivity;
 import com.iremember.subscriber.iremembersubscriber.ScreenSaverActivity;
 import com.iremember.subscriber.iremembersubscriber.Utils.BroadcastUtils;
@@ -31,6 +29,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,9 +46,11 @@ public class NetworkService extends Service {
 
     private boolean isSearchingMasterService, isMasterServiceFound;
     private InetAddress mMasterServiceHost;
-    private int mMasterServicePort;
-    private String mMasterServiceName;
     private String mRoomName;
+    private String mMasterServiceName;
+    private String mMasterServiceIp;
+    private int mMasterServicePort;
+
 
     @Override
     public void onCreate() {
@@ -62,20 +63,38 @@ public class NetworkService extends Service {
 
         mRoomName = PreferenceUtils.readRoomName(getApplicationContext());
         mMasterServiceName = PreferenceUtils.readMasterServiceName(getApplicationContext());
+        mMasterServiceIp = PreferenceUtils.readMasterServiceIp(getApplicationContext());
         isSearchingMasterService = intent.getBooleanExtra(Broadcast.SEARCH_MASTER_SERVICE, false);
         isMasterServiceFound = false;
 
-
-        if (isSearchingMasterService && mRoomName == null) {
+        if (mRoomName == null) {
             BroadcastUtils.broadcastAction(Broadcast.MISSING_ROOM_NAME, getApplicationContext());
-        }
-        if (isSearchingMasterService && mMasterServiceName == null) {
-            BroadcastUtils.broadcastAction(Broadcast.MISSING_SERVICE_NAME, getApplicationContext());
+            return START_NOT_STICKY;
         }
 
-        acquireWiFiLock();
+        if (isSearchingMasterService && mMasterServiceName == null && mMasterServiceIp == null) {
+            BroadcastUtils.broadcastAction(Broadcast.MISSING_MASTER_SERVICE, getApplicationContext());
+            return START_NOT_STICKY;
+        }
+
+        if (isSearchingMasterService && mMasterServiceName == null && mMasterServiceIp != null) {
+            try {
+                mMasterServiceHost = InetAddress.getByName(mMasterServiceIp);
+                mMasterServicePort = Protocol.MASTER_PORT;
+                startConnection();
+                acquireWiFiLock();
+                setupNotificationManager();
+                registerBroadcastReceiver();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                BroadcastUtils.broadcastAction(Broadcast.CONNECTION_HOST_FAILURE, getApplicationContext());
+            }
+            return START_NOT_STICKY;
+        }
+
         startServiceDiscovery();
         setServiceDiscoveryTimer();
+        acquireWiFiLock();
         setupNotificationManager();
         registerBroadcastReceiver();
         return START_NOT_STICKY;
@@ -243,7 +262,7 @@ public class NetworkService extends Service {
             mConnectionHandler.start();
         } catch (SocketException e) {
             e.printStackTrace();
-            BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
+            BroadcastUtils.broadcastAction(Broadcast.CONNECTION_SOCKET_FAILURE, getApplicationContext());
         }
     }
 
@@ -331,16 +350,16 @@ public class NetworkService extends Service {
         }
 
         public void run() {
-            log("Connection started: " + mMasterServiceName);
+            log("Connection started.");
 
             mReadBuffer = new byte[256];
             isMessageRecentlyReceived = false;
             isConnected = true;
 
             String[] data;
-            InetAddress host;
-            int port;
-            String command, serviceName;
+            InetAddress packetHost;
+            int packetPort;
+            String command, serviceName, packetIp;
 
             sendRegistrationMessage();
             setRegistrationTimer();
@@ -352,9 +371,9 @@ public class NetworkService extends Service {
 
                     data = new String(mReadPacket.getData(), 0, mReadPacket.getLength()).split("\\$");
 
-                    host = mReadPacket.getAddress();
-                    port = mReadPacket.getPort();
-
+                    packetHost = mReadPacket.getAddress();
+                    packetPort = mReadPacket.getPort();
+                    packetIp = packetHost.getHostAddress();
                     command = "";
                     serviceName = "";
 
@@ -363,11 +382,14 @@ public class NetworkService extends Service {
                         serviceName = data[1];
                     }
 
-                    log("Received message from " + serviceName);
-                    log("-> " + command);
+                    log("Received message: " + command);
 
-                    if (serviceName.equals(mMasterServiceName) && !isMessageRecentlyReceived) {
-                        handleCommand(command, host, port);
+                    if (isMessageRecentlyReceived) {
+                        continue;
+                    }
+
+                    if (serviceName.equals(mMasterServiceName) || packetIp.equals(mMasterServiceIp)) {
+                        handleCommand(command, packetHost, packetPort);
                     }
 
                 } catch (Exception e) {
@@ -375,7 +397,7 @@ public class NetworkService extends Service {
                         BroadcastUtils.broadcastAction(Broadcast.SOCKET_FAILURE, getApplicationContext());
                     } else {
                         sendUnregistrationMessage();
-                        log("Connection stopped: " + mMasterServiceName);
+                        log("Connection stopped.");
                     }
                 }
             }
@@ -448,11 +470,11 @@ public class NetworkService extends Service {
          */
         private void sendRegistrationMessage() {
             try {
-                log("-> Sending registration message to: " + mMasterServiceName);
+                log("-> Sending registration message.");
                 sendMessage(Protocol.REGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
             } catch (IOException e) {
                 e.printStackTrace();
-                BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
+                BroadcastUtils.broadcastAction(Broadcast.CONNECTION_SOCKET_FAILURE, getApplicationContext());
                 log("Exception when sending registration message.");
             }
         }
@@ -464,7 +486,7 @@ public class NetworkService extends Service {
          */
         private void sendUnregistrationMessage() {
             try {
-                log("-> Sending unregistration message to: " + mMasterServiceName);
+                log("-> Sending unregistration message.");
                 mDatagramSocket = new DatagramSocket(0);
                 sendMessage(Protocol.UNREGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
                 mDatagramSocket.close();
@@ -498,7 +520,6 @@ public class NetworkService extends Service {
             mWriteBuffer = message.getBytes();
             mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, host, port);
             mDatagramSocket.send(mWritePacket);
-
         }
 
         /**
@@ -543,7 +564,7 @@ public class NetworkService extends Service {
             TimerTask task = new TimerTask() {
                 public void run() {
                     if (!isRegistrationConfirmed) {
-                        BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
+                        BroadcastUtils.broadcastAction(Broadcast.CONNECTION_SOCKET_FAILURE, getApplicationContext());
                     }
                 }
             };

@@ -9,5 +9,5 @@ public class SharedPrefs {
     public static final String ALLOW_MUSIC = "allow_music";
     public static final String ALLOW_SCREENSAVER = "allow_screensaver";
     public static final String MASTER_SERVICE = "master_service";
-
+    public static final String MASTER_IP = "master_ip";
 }

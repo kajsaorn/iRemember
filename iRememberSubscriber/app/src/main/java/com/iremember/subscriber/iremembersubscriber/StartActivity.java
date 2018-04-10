@@ -1,20 +1,15 @@
 package com.iremember.subscriber.iremembersubscriber;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -49,17 +44,18 @@ public class StartActivity extends AppCompatActivity {
 
     /**
      * Called when user clicks start button. If user has previously provided a
-     * room name and an iRemember Master Service name, the network service is started.
+     * room name and an iRemember Master Service, the network service is started.
      */
     public void onStartClick(View view) {
         String mRoomName = PreferenceUtils.readRoomName(this);
         String mServiceName = PreferenceUtils.readMasterServiceName(this);
+        String mServiceIp = PreferenceUtils.readMasterServiceIp(this);
 
-        if (mRoomName == null && mServiceName == null) {
+        if (mRoomName == null && mServiceName == null && mServiceIp == null) {
             showUserMessage(UserMessage.MISSING_ROOM_AND_SERVICE_NAME);
         } else if (mRoomName == null) {
             showUserMessage(UserMessage.MISSING_ROOM_NAME);
-        } else if (mServiceName == null) {
+        } else if (mServiceName == null && mServiceIp == null) {
             showUserMessage(UserMessage.MISSING_SERVICE_NAME);
         } else {
             startNetworkService();
@@ -161,9 +157,10 @@ public class StartActivity extends AppCompatActivity {
         public StartupMessageReceivier() {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(Broadcast.MISSING_ROOM_NAME);
-            intentFilter.addAction(Broadcast.MISSING_SERVICE_NAME);
+            intentFilter.addAction(Broadcast.MISSING_MASTER_SERVICE);
             intentFilter.addAction(Broadcast.DISCOVERY_FAILURE);
-            intentFilter.addAction(Broadcast.CONNECTION_FAILURE);
+            intentFilter.addAction(Broadcast.CONNECTION_SOCKET_FAILURE);
+            intentFilter.addAction(Broadcast.CONNECTION_HOST_FAILURE);
             intentFilter.addAction(Broadcast.CONNECTION_SUCCESS);
             registerReceiver(this, intentFilter);
         }
@@ -177,7 +174,7 @@ public class StartActivity extends AppCompatActivity {
                     showUserMessage(UserMessage.MISSING_ROOM_NAME);
                     stopNetworkService();
                     break;
-                case Broadcast.MISSING_SERVICE_NAME:
+                case Broadcast.MISSING_MASTER_SERVICE:
                     showUserMessage(UserMessage.MISSING_SERVICE_NAME);
                     stopNetworkService();
                     break;
@@ -185,8 +182,12 @@ public class StartActivity extends AppCompatActivity {
                     showUserMessage(UserMessage.DISCOVERY_FAILURE);
                     stopNetworkService();
                     break;
-                case Broadcast.CONNECTION_FAILURE:
+                case Broadcast.CONNECTION_SOCKET_FAILURE:
                     showUserMessage(UserMessage.CONNECTION_FAILURE);
+                    stopNetworkService();
+                    break;
+                case Broadcast.CONNECTION_HOST_FAILURE:
+                    showUserMessage(UserMessage.HOST_FAILURE);
                     stopNetworkService();
                     break;
                 case Broadcast.CONNECTION_SUCCESS:
