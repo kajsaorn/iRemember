@@ -40,11 +40,12 @@ public class NetworkService extends Service {
     public void onCreate() {
         super.onCreate();
         mNotificationManager = new NotificationUtils(this);
-        try {
+/*        try {
             datagramSocket = new DatagramSocket(0);
         } catch (SocketException e) {
             e.printStackTrace();
         }
+*/
     }
 
     @Override
@@ -52,7 +53,7 @@ public class NetworkService extends Service {
         log("onStartCommand");
         String command = intent.getStringExtra(Command.NETWORKSERVICE_COMMAND);
         if (command.equals(Command.REGISTER_COMMAND)) {
-            // Tell the system this is a foreground service
+            // It is a request for start and register the service
             registerTheService();
         } else {    // Then it must be a meal command
             new CommandHandler(command, getApplicationContext());
@@ -123,7 +124,7 @@ public class NetworkService extends Service {
 
     private void initializeSubscriberRegistrationSocket() {
         try {
-            datagramSocket = new DatagramSocket();
+            datagramSocket = new DatagramSocket(Protocol.REGISTRATION_SERVICE_PORT);
             localPort = datagramSocket.getLocalPort();
         } catch (SocketException e) {
             e.printStackTrace();
@@ -224,7 +225,7 @@ public class NetworkService extends Service {
 
             while (shallContinueListen) {
                 try {
-                    // Receiving packet with containing registration/unregistration commands
+                    // Receiving packet containing registration/unregistration commands
                     packetReceived = new DatagramPacket(readBuffer, readBuffer.length);
                     /* For DatagramSocket */
                     datagramSocket.receive(packetReceived);

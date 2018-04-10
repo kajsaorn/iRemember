@@ -28,6 +28,7 @@ public class CommandHandler extends Thread {
     private Hashtable<String, String> answers = new Hashtable<String, String>();
     private Map<String, ?> knownSubscribers;
     private Context sContext;
+
     public CommandHandler(String command, Context context){
         mCommand = command;
         sContext = context;

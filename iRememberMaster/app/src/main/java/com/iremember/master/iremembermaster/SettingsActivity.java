@@ -137,4 +137,9 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RegisteredSubscribersActivity.class);
         startActivity(intent);
     }
+
+    public void onShowIPClick(View view) {
+        Intent intent = new Intent(this, IPActivity.class);
+        startActivity(intent);
+    }
 }

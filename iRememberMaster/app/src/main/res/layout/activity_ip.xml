@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.iremember.master.iremembermaster.IPActivity">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp">
+
+
+        <Button
+            android:id="@+id/btn_to_settings_menu"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@color/androidGreen"
+            android:textColor="@android:color/background_light"
+            android:onClick="onToSettingsClick"
+            android:padding="@dimen/btn_padding"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold"
+            android:text="@string/btn_settings_menu" />
+
+        <TextView
+            android:id="@+id/tv_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/btn_margin"
+            android:textSize="@dimen/tv_text_size"
+            android:ems="10"
+            android:layout_below="@+id/btn_to_settings_menu"
+            android:inputType="textMultiLine"/>
+
+    </RelativeLayout>
+
+
+</FrameLayout>

@@ -9,5 +9,5 @@ public class Protocol {
     public static final String COMMAND_MIDDAY = "midday";
     public static final String COMMAND_SUPPER = "supper";
     public static final String COMMAND_COFFEE = "coffee";
-
+    public static final int REGISTRATION_SERVICE_PORT =  12345;
 }
