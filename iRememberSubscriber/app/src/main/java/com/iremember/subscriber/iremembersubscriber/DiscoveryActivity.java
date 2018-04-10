@@ -1,17 +1,13 @@
 package com.iremember.subscriber.iremembersubscriber;
 
-import android.content.Intent;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryInfoFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryRoomFragment;
 import com.iremember.subscriber.iremembersubscriber.Fragments.DiscoveryServiceFragment;
-import com.iremember.subscriber.iremembersubscriber.Services.NetworkService;
 
 public class DiscoveryActivity extends AppCompatActivity implements
         DiscoveryInfoFragment.OnStartConfigurationListener,
@@ -25,7 +21,6 @@ public class DiscoveryActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("DiscoveryActivity", "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discovery);
         initFragments();

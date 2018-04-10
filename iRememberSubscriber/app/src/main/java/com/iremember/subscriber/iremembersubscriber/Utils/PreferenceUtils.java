@@ -18,6 +18,7 @@ public class PreferenceUtils {
     public static void writeMasterServiceName(Context context, String serviceName) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putString(SharedPrefs.MASTER_SERVICE, serviceName).commit();
+        Log.d("PreferenceUtils", "Saved MasterServiceName: " + serviceName);
     }
 
     public static String readMasterServiceName(Context context) {
@@ -28,6 +29,7 @@ public class PreferenceUtils {
     public static void writeRoomName(Context context, String roomName) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putString(SharedPrefs.MY_ROOM_NAME, roomName).commit();
+        Log.d("PreferenceUtils", "Saved RoomName: " + roomName);
     }
 
     public static String readRoomName(Context context) {
@@ -38,6 +40,7 @@ public class PreferenceUtils {
     public static void writeAllowMusic(Context context, boolean allow) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putBoolean(SharedPrefs.ALLOW_MUSIC, allow).commit();
+        Log.d("PreferenceUtils", "Saved AllowMusic: " + allow);
     }
 
     public static boolean readMusicAllowed(Context context) {
@@ -48,6 +51,7 @@ public class PreferenceUtils {
     public static void writeAllowScreensaver(Context context, boolean allow) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putBoolean(SharedPrefs.ALLOW_MUSIC, allow).commit();
+        Log.d("PreferenceUtils", "Saved AllowScreensaver: " + allow);
     }
 
     public static boolean readScreensaverAllowed(Context context) {
@@ -58,6 +62,7 @@ public class PreferenceUtils {
     public static void writeBackgroundColor(Context context, int color) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putInt(SharedPrefs.MY_BACKGROUND_COLOR, color).commit();
+        Log.d("PreferenceUtils", "Saved BackgroundColor: " + color);
     }
 
     public static int readBackgroundColor(Context context) {
@@ -68,6 +73,7 @@ public class PreferenceUtils {
     public static void writeSongTitle(Context context, String songTitle) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         prefs.edit().putString(SharedPrefs.MY_SONG_TITLE, songTitle).commit();
+        Log.d("PreferenceUtils", "Saved SongTitle: " + songTitle);
     }
 
     public static String readSongTitle(Context context) {
@@ -75,9 +81,10 @@ public class PreferenceUtils {
         return prefs.getString(SharedPrefs.MY_SONG_TITLE, defaultSongTitle());
     }
 
-    public static void writeScreensaverPath(Context context, String imagePath) {
+    public static void writeScreensaverPath(Context context, String path) {
         SharedPreferences prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        prefs.edit().putString(SharedPrefs.MY_SCREENSAVER, imagePath).commit();
+        prefs.edit().putString(SharedPrefs.MY_SCREENSAVER, path).commit();
+        Log.d("PreferenceUtils", "Saved ScreensaverPath: " + path);
     }
 
     public static String readScreensaverPath(Context context) {

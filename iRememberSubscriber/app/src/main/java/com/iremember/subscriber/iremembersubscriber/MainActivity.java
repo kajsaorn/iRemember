@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -162,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.d("MainActivity", "Got broadcast: " + action);
 
             switch (action) {
                 case Broadcast.CONNECTION_SUCCESS:
@@ -180,9 +178,11 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                     break;
                 case Broadcast.NETWORK_SERVICE_OFF:
-                    showUserMessage(UserMessage.NETWORK_SERVICE_OFF);
-                    showStartActivity();
+                    //showUserMessage(UserMessage.NETWORK_SERVICE_OFF);
+                    //showStartActivity();
+                    //finish();
                     finish();
+                    System.exit(0);
                     break;
                 case Broadcast.WRONG_WIFI:
                     showWifiErrorMessage();
