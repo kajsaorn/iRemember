@@ -17,4 +17,5 @@
     <string name="btn_settings_menu">Tillbaka till inställningar</string>
     <string name="set_master_name">Hoppsan, du måste ange namn för köksenheten</string>
     <string name="master_name_saved">sparat</string>
+    <string name="btn_show_ip">Visa IP-adress</string>
 </resources>
