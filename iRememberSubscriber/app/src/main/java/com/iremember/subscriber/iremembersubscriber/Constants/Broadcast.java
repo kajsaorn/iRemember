@@ -17,7 +17,8 @@ public class Broadcast {
     public static final String DISCONNECTION_FAILURE = "disconnection_failure";
     public static final String DISCONNECTION_SUCCESS = "disconnection_success";
     public static final String NETWORK_SERVICE_OFF = "network_off";
-    public static final String WRONG_WIFI = "wifi_changed";
+    public static final String DISCONNECTED_WIFI = "wifi_changed";
+    public static final String RECONNECTED_WIFI = "wifi_connect";
 
     public static final String SOCKET_FAILURE = "socket_failure";
     public static final String CONNECTION_HOST_FAILURE = "host_failure";

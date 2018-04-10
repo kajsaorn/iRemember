@@ -627,13 +627,12 @@ public class NetworkService extends Service {
             String mNewNetworkName = mNewNetworkInfo != null ? mNewNetworkInfo.getExtraInfo() : UNDEFINED;
 
             if (mLatestNetworkName.equals(mMasterNetworkName) && !mNewNetworkName.equals(mMasterNetworkName)) {
-                log("Handling connectivity change: Wrong WiFi");
-                BroadcastUtils.broadcastAction(Broadcast.WRONG_WIFI, getApplicationContext());
+                log("Connectivity changed: Disconnected from Master WiFi");
+                BroadcastUtils.broadcastAction(Broadcast.DISCONNECTED_WIFI, getApplicationContext());
             }
             if (!mLatestNetworkName.equals(mMasterNetworkName) && mNewNetworkName.equals(mMasterNetworkName)) {
-                log("Handling connectivity change: Reconnect");
-                closeConnection();
-                startConnection();
+                log("Connectivity changed: Reconnected to Master WiFi");
+                BroadcastUtils.broadcastAction(Broadcast.RECONNECTED_WIFI, getApplicationContext());
             }
             mLatestNetworkName = mNewNetworkName;
         }

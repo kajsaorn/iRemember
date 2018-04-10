@@ -154,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
             intentFilter.addAction(Broadcast.NETWORK_SERVICE_OFF);
             intentFilter.addAction(Broadcast.DISCONNECTION_FAILURE);
             intentFilter.addAction(Broadcast.SOCKET_FAILURE);
-            intentFilter.addAction(Broadcast.WRONG_WIFI);
+            intentFilter.addAction(Broadcast.DISCONNECTED_WIFI);
+            intentFilter.addAction(Broadcast.RECONNECTED_WIFI);
             registerReceiver(this, intentFilter);
         }
 
@@ -184,9 +185,13 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                     System.exit(0);
                     break;
-                case Broadcast.WRONG_WIFI:
+                case Broadcast.DISCONNECTED_WIFI:
                     showWifiErrorMessage();
                     break;
+                case Broadcast.RECONNECTED_WIFI:
+                    hideWifiErrorMessage();
+                    break;
+
             }
         }
     }
