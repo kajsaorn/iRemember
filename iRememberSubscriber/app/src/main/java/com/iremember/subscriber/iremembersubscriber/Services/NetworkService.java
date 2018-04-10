@@ -39,6 +39,7 @@ public class NetworkService extends Service {
 
     private NsdManager mNsdManager;
     private NsdManager.DiscoveryListener mDiscoveryListener;
+    private NsdManager.ResolveListener mResolveListener;
     private ConnectionHandler mConnectionHandler;
     private NotificationUtils mNotificationManager;
     private BroadcastReceiver mBroadcastReceiver;
@@ -57,12 +58,13 @@ public class NetworkService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        log("Started network service.");
+        log("Network service started.");
 
         mRoomName = PreferenceUtils.readRoomName(getApplicationContext());
         mMasterServiceName = PreferenceUtils.readMasterServiceName(getApplicationContext());
         isSearchingMasterService = intent.getBooleanExtra(Broadcast.SEARCH_MASTER_SERVICE, false);
         isMasterServiceFound = false;
+
 
         if (isSearchingMasterService && mRoomName == null) {
             BroadcastUtils.broadcastAction(Broadcast.MISSING_ROOM_NAME, getApplicationContext());
@@ -81,7 +83,7 @@ public class NetworkService extends Service {
 
     @Override
     public void onDestroy() {
-        log("Destroying network service.");
+        log("Network service stopped.");
         closeConnection();
         removeWiFiLock();
         removeForeground();
@@ -142,7 +144,7 @@ public class NetworkService extends Service {
      * Stop service discovery.
      */
     private void stopServiceDiscovery() {
-        log("Stopped service discovery");
+        log("Service discovery stopped.");
         mNsdManager.stopServiceDiscovery(mDiscoveryListener);
         if (isSearchingMasterService && !isMasterServiceFound) {
             BroadcastUtils.broadcastAction(Broadcast.DISCOVERY_FAILURE, getApplicationContext());
@@ -166,22 +168,24 @@ public class NetworkService extends Service {
      * Initialize actions that will happen when a network service is discovered.
      */
     public void initializeDiscoveryListener() {
-
         mDiscoveryListener = new NsdManager.DiscoveryListener() {
 
             @Override
             public void onDiscoveryStarted(String regType) {
+                String service = isSearchingMasterService ? mMasterServiceName : "All services";
                 log("Service discovery started.");
+                log("-> Searching for: " + service);
             }
 
             @Override
             public void onServiceFound(NsdServiceInfo service) {
+                log("-> Service found: " + service.getServiceName());
+
                 if (service.getServiceType().equals(Protocol.SERVICE_TYPE)) {
-                    if (!isSearchingMasterService) {
-                        BroadcastUtils.broadcastString(Broadcast.SERVICE_NAME, service.getServiceName(), getApplicationContext());
-                    }
                     if (isSearchingMasterService && service.getServiceName().equals(mMasterServiceName)) {
-                        mNsdManager.resolveService(service, initializeServiceResolver());
+                        mNsdManager.resolveService(service, mResolveListener);
+                    } else {
+                        BroadcastUtils.broadcastString(Broadcast.SERVICE_NAME, service.getServiceName(), getApplicationContext());
                     }
                 }
             }
@@ -211,8 +215,8 @@ public class NetworkService extends Service {
      * Initialize actions that will happen when a network
      * service matches a certain service name.
      */
-    public NsdManager.ResolveListener initializeServiceResolver() {
-        return new NsdManager.ResolveListener() {
+    public void initializeServiceResolver() {
+        mResolveListener = new NsdManager.ResolveListener() {
 
             @Override
             public void onResolveFailed(NsdServiceInfo nsdServiceInfo, int i) {
@@ -327,7 +331,7 @@ public class NetworkService extends Service {
         }
 
         public void run() {
-            log("Connection thread is running...");
+            log("Connection started: " + mMasterServiceName);
 
             mReadBuffer = new byte[256];
             isMessageRecentlyReceived = false;
@@ -359,19 +363,19 @@ public class NetworkService extends Service {
                         serviceName = data[1];
                     }
 
-                    log("Received socket message from " + serviceName + ": " + command);
+                    log("Received message from " + serviceName);
+                    log("-> " + command);
 
                     if (serviceName.equals(mMasterServiceName) && !isMessageRecentlyReceived) {
                         handleCommand(command, host, port);
                     }
 
                 } catch (Exception e) {
-                    Log.d("NetworkService", "Exception in thread while loop");
-                    //e.printStackTrace();
                     if (isConnected) {
                         BroadcastUtils.broadcastAction(Broadcast.SOCKET_FAILURE, getApplicationContext());
                     } else {
                         sendUnregistrationMessage();
+                        log("Connection stopped: " + mMasterServiceName);
                     }
                 }
             }
@@ -444,12 +448,12 @@ public class NetworkService extends Service {
          */
         private void sendRegistrationMessage() {
             try {
+                log("-> Sending registration message to: " + mMasterServiceName);
                 sendMessage(Protocol.REGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
-
             } catch (IOException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
                 BroadcastUtils.broadcastAction(Broadcast.CONNECTION_FAILURE, getApplicationContext());
-                Log.e("NetworkService", "Exception when sending registration message.");
+                log("Exception when sending registration message.");
             }
         }
 
@@ -460,12 +464,13 @@ public class NetworkService extends Service {
          */
         private void sendUnregistrationMessage() {
             try {
+                log("-> Sending unregistration message to: " + mMasterServiceName);
                 mDatagramSocket = new DatagramSocket(0);
                 sendMessage(Protocol.UNREGISTER_PREFIX + mRoomName, mMasterServiceHost, mMasterServicePort);
+                mDatagramSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                BroadcastUtils.broadcastAction(Broadcast.DISCONNECTION_FAILURE, getApplicationContext());
-                Log.e("NetworkService", "Exception when sending unregistration message.");
+                log("Exception when sending unregistration message.");
             }
         }
 
@@ -479,8 +484,7 @@ public class NetworkService extends Service {
             try {
                 sendMessage(Protocol.CONFIRMATION_PREFIX + mRoomName, host, port);
             } catch (IOException e) {
-                //e.printStackTrace();
-                Log.e("NetworkService", "Exception when sending confirmation message.");
+                log("Exception when sending confirmation message.");
             }
         }
 
@@ -491,7 +495,6 @@ public class NetworkService extends Service {
          * @throws IOException
          */
         private void sendMessage(String message, InetAddress host, int port) throws IOException {
-            log("Sending socket message: " + message);
             mWriteBuffer = message.getBytes();
             mWritePacket = new DatagramPacket(mWriteBuffer, mWriteBuffer.length, host, port);
             mDatagramSocket.send(mWritePacket);
@@ -499,9 +502,8 @@ public class NetworkService extends Service {
         }
 
         /**
-         * Set boolean value to true if we recently received a message.
-         * After some time this will automatically go back to not recently received.
-         * This prevents our datagram socket to be overloaded with spam.
+         * To avoid socket being spammed, set boolean value to true if we recently
+         * received a message. After some time this will go back to false.
          * @param isReceived
          */
         private void setRecentlyReceived(boolean isReceived) {
@@ -604,9 +606,11 @@ public class NetworkService extends Service {
             String mNewNetworkName = mNewNetworkInfo != null ? mNewNetworkInfo.getExtraInfo() : UNDEFINED;
 
             if (mLatestNetworkName.equals(mMasterNetworkName) && !mNewNetworkName.equals(mMasterNetworkName)) {
+                log("Handling connectivity change: Wrong WiFi");
                 BroadcastUtils.broadcastAction(Broadcast.WRONG_WIFI, getApplicationContext());
             }
             if (!mLatestNetworkName.equals(mMasterNetworkName) && mNewNetworkName.equals(mMasterNetworkName)) {
+                log("Handling connectivity change: Reconnect");
                 closeConnection();
                 startConnection();
             }
