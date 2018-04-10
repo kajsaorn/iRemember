@@ -231,7 +231,7 @@ public class NetworkService extends Service {
 
                     message = new String(packetReceived.getData(), 0,
                             packetReceived.getLength());
-
+                    log("Recieved registration message from subscriber: " + message);
                     // Register the subscriber
                     boolean commandOk = registerOrUnregisterSubscriber(message, packetReceived);
 
