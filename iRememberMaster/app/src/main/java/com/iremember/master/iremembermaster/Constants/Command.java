@@ -12,4 +12,6 @@ public class Command {
     public static final String NO_ANSWERS = "no_answers";
     public static final String ANSWER_MESSAGE = "Följande rumsenheter har fått meddelandet:";
     public static final String NO_ANSWER_MESSAGE = "Följande rumsenheter har inte fått meddelandet:";
+    public static final String START_SERVICE_DIRECT = "Direct start";
+    public static final boolean START_DIRECT = true;
 }

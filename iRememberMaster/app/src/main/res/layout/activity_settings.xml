@@ -35,7 +35,7 @@
         android:textStyle="bold"
         android:visibility="visible" />
 
-    <Button
+ <!--   <Button
         android:id="@+id/btn_start_master"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
@@ -48,6 +48,7 @@
         android:textSize="@dimen/btn_text_size"
         android:textStyle="bold"
         android:visibility="visible" />
+-->
 
     <Button
         android:id="@+id/btn_to_reg_sub_menu"

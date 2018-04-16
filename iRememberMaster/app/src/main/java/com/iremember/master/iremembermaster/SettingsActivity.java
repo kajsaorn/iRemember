@@ -26,11 +26,25 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         mEtMasterName = (EditText) findViewById(R.id.et_master_name);
         mEtMasterName.setText(PreferenceUtils.readMasterName(this));
-        btnStartMaster = findViewById(R.id.btn_start_master);
+//        btnStartMaster = findViewById(R.id.btn_start_master);
         if (isServiceRunning(NetworkService.class)) {
-            btnStartMaster.setText(R.string.btn_stop_master);
+            log("NetworkService is running");
+            //btnStartMaster.setText(R.string.btn_stop_master);
         } else {
-            btnStartMaster.setText(R.string.btn_start_master);
+            //btnStartMaster.setText(R.string.btn_start_master);
+            log("NetworkService is NOT running");
+            startServiceDirect();
+        }
+        log("onCreate");
+    }
+
+    private void startServiceDirect() {
+        log("startServiceDirect()");
+        Intent intent = getIntent();
+        boolean start = intent.getBooleanExtra(Command.START_SERVICE_DIRECT, false);
+        if (start && !isServiceRunning(NetworkService.class)) {
+            startNetworkService();
+            finish();
         }
     }
 
@@ -82,10 +96,10 @@ public class SettingsActivity extends AppCompatActivity {
             netWorkServiceIntent.putExtra(Command.NETWORKSERVICE_COMMAND, Command.REGISTER_COMMAND);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(netWorkServiceIntent);
-                updateBtnAndServiceStatus(R.string.btn_stop_master, true);
+               // updateBtnAndServiceStatus(R.string.btn_stop_master, true);
             } else {
                 startService(netWorkServiceIntent);
-                updateBtnAndServiceStatus(R.string.btn_stop_master, true);
+              //  updateBtnAndServiceStatus(R.string.btn_stop_master, true);
             }
 
         } else {
@@ -130,7 +144,7 @@ public class SettingsActivity extends AppCompatActivity {
      */
     private void log(String message) {
       //  Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        Log.d("MainActivity", message);
+        Log.d("SettingsActivity", message);
     }
 
     public void onRegSubClick(View view) {

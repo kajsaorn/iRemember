@@ -30,7 +30,7 @@ public class RegisteredSubscribersActivity extends AppCompatActivity {
 
     private void displaySubscribers() {
        Map<String, ?> subscribers = PreferenceUtils.getAllSubscribers(this);
-       String strSubscribers = "\nFöljande rumsenheter är registrerade: \n\n";
+       String strSubscribers = "\n" + getString(R.string.txt_registered_rooms) + "\n\n";
         for (String roomName : subscribers.keySet()) {
             strSubscribers = strSubscribers + roomName + "\n";
         }

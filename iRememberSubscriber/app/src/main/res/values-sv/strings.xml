@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General -->
+
+    <string name="app_name">iRememberSubscriber</string>
+    <string name="btn_start">STARTA</string>
+    <string name="et_room_name_hint">Ditt rumsnamn</string>
+    <string name="et_ip_address_hint">Köksenhetens IP-adress</string>
+    <string name="btn_disconnect">STÄNG AV</string>
+    <string name="btn_settings">INSTÄLLNINGAR</string>
+    <string name="tv_main_label">Här kommer det att visas ett meddelande när maten är klar.</string>
+    <string name="tv_wrong_wifi">Just nu har du ingen kontakt med köksenheten. \nKontrollera att du är ansluten till rätt WiFi.</string>
+
+    <string name="tv_tab_info">Info</string>
+    <string name="tv_tab_background">Bakgrund</string>
+    <string name="tv_tab_music">Musik</string>
+    <string name="tv_tab_general">Allmänt</string>
+    <string name="tv_tab_screensaver">Skärmsläckare</string>
+    <string name="tv_click_to_close">Tryck på skärmen för att ta bort meddelandet.</string>
+
+    <!-- Settings Labels -->
+
+    <string name="tv_background_label">Din nuvarande bakgrundsfärg på meddelanden</string>
+    <string name="tv_text_label">Din nuvarande textfärg på meddelanden</string>
+    <string name="tv_music_label">Din nuvarande låt för meddelanden</string>
+    <string name="tv_screensaver_label">Din nuvarande skärmsläckare</string>
+
+    <string name="tv_info_label_1">
+        iRemember är en applikation som hjälper köket att skicka meddelanden till dig när maten är klar.
+    </string>
+
+    <string name="tv_info_label_2">
+        Bland tabbarna längst upp kan du ändra hur kökets meddelanden ser ut och låter.
+        Du kan till exempel välja musik och färger.
+    </string>
+
+    <string name="tv_roomname_label">Ange ett rumsnamn</string>
+    <string name="tv_allow_music_label">Får musik spelas när meddelanden visas?</string>
+    <string name="tv_allow_screensaver_label">Vill du använda en bild som skärmsläckare? Om nej, så lämnas skärmen mörk i viloläge.</string>
+    <string name="tv_choose_service">Välj en köksenhet</string>
+    <string name="tv_no_services">Vi kunde inte hitta någon tillgänglig köksenhet.</string>
+    <string name="tv_searching">Söker...</string>
+    <string name="tv_discovery_intro_1">Här konfigurerar du din enhet.</string>
+    <string name="tv_discovery_intro_2">För att komma igång behöver du ge din rumsenhet ett namn.</string>
+    <string name="tv_discovery_intro_3">
+        Sedan söker vi efter tillgängliga köksenheter. Den köksenhet du väljer kommer
+        att kunna skicka meddelanden till dig när det är dags för mat eller kaffe.
+    </string>
+
+    <string name="tv_restriction_label">Observera dina nuvarande inställningar</string>
+    <string name="tv_restriction_reminder">Köket får inte skicka meddelanden</string>
+    <string name="tv_restriction_music">Köket får inte skicka meddelanden med musik</string>
+
+    <!-- Settings Buttons and Options -->
+
+    <string name="option_yes_label">Ja</string>
+    <string name="option_no_label">Nej</string>
+    <string name="btn_save_roomname">Spara</string>
+    <string name="btn_search_services">Sök efter köksenheter</string>
+    <string name="btn_search_again">Sök igen</string>
+    <string name="btn_continue">Fortsätt</string>
+    <string name="btn_back">Tillbaka</string>
+    <string name="btn_input_ip">Skriv in manuellt</string>
+    <string name="btn_save_ip">Spara IP-adress</string>
+    <string name="btn_upload_screensaver">Hämta bild från mitt galleri</string>
+
+    <!-- Notifications -->
+    <string name="foreground_started">Lyssnar</string>
+
+</resources>

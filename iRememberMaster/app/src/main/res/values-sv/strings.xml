@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">iRememberMaster</string>
+    <string name="btn_breakfast">BREAKFAST</string>
+    <string name="btn_lunch">MIDDAG</string>
+    <string name="btn_dinner">KVÄLLSMAT</string>
+    <string name="btn_coffee">KAFFE</string>
+    <string name="btn_store_master_name">SPARA</string>
+    <string name="btn_settings">INSTÄLLNINGAR</string>
+    <string name="hint_master_name">Ange masterns namn</string>
+    <string name="toast_mastername_invalid">Det blev fel namn, försök igen!</string>
+    <string name="btn_start_master">Starta master</string>
+    <string name="btn_stop_master">Stoppa master</string>
+    <string name="btn_master_menu">Tillbaka till måltidsmeny</string>
+    <string name="tv_answers">Svar från rum</string>
+    <string name="btn_act_reg_sub">Registredade rumsenheter</string>
+    <string name="btn_update_reg_sub">Uppdatera</string>
+    <string name="btn_settings_menu">Tillbaka till inställningar</string>
+    <string name="set_master_name">Hoppsan, du måste ange namn för köksenheten</string>
+    <string name="master_name_saved">sparat</string>
+    <string name="btn_show_ip">Visa IP-adress</string>
+    <string name="txt_answer_message">Följande rumsenheter har fått meddelandet:</string>
+    <string name="txt_no_answer_message">Följande rumsenheter har inte fått meddelandet:</string>
+    <string name="txt_registered_rooms">Följande rumsenheter är registrerade:</string>
+</resources>

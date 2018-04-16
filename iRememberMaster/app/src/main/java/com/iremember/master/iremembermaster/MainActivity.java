@@ -17,6 +17,8 @@ import com.iremember.master.iremembermaster.Constants.Protocol;
 import com.iremember.master.iremembermaster.Services.NetworkService;
 import com.iremember.master.iremembermaster.Utils.PreferenceUtils;
 
+import java.util.Set;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -26,6 +28,20 @@ public class MainActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        startMaster();
+    }
+
+    private void startMaster(){
+        log("startMaster()");
+        // If the master already has a name...
+        String masterName = PreferenceUtils.readMasterName(this);
+        //  Then start the service direct.
+        if (masterName != null && !masterName.isEmpty()) {
+            log("in if...");
+            Intent startSettingsIntent = new Intent(this, SettingsActivity.class);
+            startSettingsIntent.putExtra(Command.START_SERVICE_DIRECT, Command.START_DIRECT);
+            startActivity(startSettingsIntent);
+        }
     }
 
     @Override
@@ -40,8 +56,18 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        stopNetworkService();
     }
+
+    /**
+     * Stops the networkService
+     */
+    private void stopNetworkService() {
+        log("stopNetworkService()");
+        Intent stopNetworkServiceIntent = new Intent(this, NetworkService.class);
+        stopService(stopNetworkServiceIntent);
+    }
+
 
     public void onCoffeeClick(View view) {
         Intent netWorkServiceIntent = new Intent(this, NetworkService.class);

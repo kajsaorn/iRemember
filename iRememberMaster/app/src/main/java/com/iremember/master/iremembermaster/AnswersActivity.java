@@ -31,7 +31,7 @@ public class AnswersActivity extends AppCompatActivity {
         String[] noAnswers = intent.getStringArrayExtra(Command.NO_ANSWERS);
 
         if (answers != null && answers.length > 0) {
-            displayString = displayString + Command.ANSWER_MESSAGE + "\n";
+            displayString = displayString + getString(R.string.txt_answer_message) + "\n";
             for (int i=0; i < answers.length; i++) {
                 displayString = displayString + answers[i] + "\n";
             }
@@ -41,7 +41,7 @@ public class AnswersActivity extends AppCompatActivity {
             if (!displayString.equals("")) {
                  displayString = displayString + "\n";
             }
-            displayString = displayString + Command.NO_ANSWER_MESSAGE + "\n";
+            displayString = displayString + getString(R.string.txt_no_answer_message) + "\n";
             for (int i=0; i < noAnswers.length; i++) {
                 displayString = displayString + noAnswers[i] + "\n";
             }

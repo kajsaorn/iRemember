@@ -89,6 +89,9 @@ public class NetworkService extends Service {
      * Unregister NSD service so the master is not discoverable anymore
      */
     private void unregisterNSD() {
+        if (mNsdManager == null) {
+            log("mNsdManager är null: " + mNsdManager);
+        }
         mNsdManager.unregisterService(mRegistrationListener);
     }
 
@@ -174,6 +177,7 @@ public class NetworkService extends Service {
      * Register the system with NSD, to make it discoverable for subscribers
      */
     private void registerNSDService() {
+        log("registerNSDService");
         NsdServiceInfo serviceInfo = new NsdServiceInfo();
         serviceInfo.setServiceName(PreferenceUtils.readMasterName(this));
         serviceInfo.setServiceType(SERVICE_TYPE);
@@ -182,6 +186,7 @@ public class NetworkService extends Service {
         mNsdManager = (NsdManager) getApplicationContext().getSystemService(Context.NSD_SERVICE);
         mNsdManager.registerService(
                     serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
+        log("registerNSDService() mNsdManager: " + mNsdManager);
     }
 
     private void acquireWiFiLock() {

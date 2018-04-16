@@ -2,7 +2,7 @@
 <resources>
     <dimen name="layout_padding">80dp</dimen>
 
-    <dimen name="btn_text_size">40sp</dimen>
+    <dimen name="btn_text_size">36sp</dimen>
     <dimen name="btn_padding">40dp</dimen>
     <dimen name="btn_margin">40dp</dimen>
 
